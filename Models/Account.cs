@@ -1,9 +1,12 @@
-﻿namespace BankRestApi.Models;
+﻿using System.ComponentModel.DataAnnotations;
 
-public class Account(Guid id, string name, decimal balance)
+namespace BankRestApi.Models;
+
+public class Account
 {
+    [Key]
     public int InternalId { get; set; }
-    public Guid Id { get; } = id;
-    public string Name { get; set; } = name;
-    public decimal Balance { get; set; } = balance;
+    public Guid Id { get; set; }
+    public string Name { get; set; } 
+    public decimal Balance { get; set; }
 }
