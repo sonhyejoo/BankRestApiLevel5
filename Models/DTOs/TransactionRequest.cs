@@ -3,5 +3,5 @@
 public record TransactionRequest(
     decimal Amount,
     Guid Id,
-    Guid? RecipientId
+    Guid? RecipientId = null
     );
