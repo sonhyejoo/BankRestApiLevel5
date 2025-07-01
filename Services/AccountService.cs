@@ -145,7 +145,7 @@ public class AccountService : IAccountService
             );
         }
         
-        foundAccount.Balance += request.Amount;
+        foundAccount.Balance -= request.Amount;
         try
         {
             await _context.SaveChangesAsync();
