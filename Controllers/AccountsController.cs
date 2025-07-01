@@ -56,7 +56,7 @@ namespace BankRestApi.Controllers
             return CreatedAtAction(nameof(GetAccount), new { id = createdAccount.Id }, createdAccount);
         }
 
-        // POST: api/Accounts/0b4b7e2b-ffd1-4acf-81b3-e51d48155217/deposiits
+        // POST: api/Accounts/0b4b7e2b-ffd1-4acf-81b3-e51d48155217/deposits
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("{id}/deposits")]
         public async Task<ActionResult<Account>> DepositAccount(Guid id, [FromBody] decimal amount)
