@@ -49,4 +49,32 @@ public class AccountService : IAccountService
             }
         );
     }
+
+    public async Task<AccountResult<Account>> Get(GetAccountRequest request)
+    {
+        var foundAccount = await  _context.Accounts.FindAsync(request.Id);
+
+        if (foundAccount == null)
+        {
+            return new AccountResult<Account>
+            (
+                result: new Account{
+                    Id = Guid.Empty,
+                    Name = "",
+                    Balance = 0
+                },
+                errorMessage: "No account found with that id."
+            );
+        }
+        
+        return new AccountResult<Account>
+        (
+            result: new Account
+            {
+                Id = foundAccount.Id,
+                Name = foundAccount.Name,
+                Balance = foundAccount.Balance
+            }
+        );
+    }
 }

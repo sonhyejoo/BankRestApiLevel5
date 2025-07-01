@@ -5,4 +5,5 @@ namespace BankRestApi.Services;
 public interface IAccountService
 {
     Task<AccountResult<Account>> Create(CreateAccountRequest request);
+    Task<AccountResult<Account>> Get(GetAccountRequest request);
 }
