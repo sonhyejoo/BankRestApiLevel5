@@ -17,9 +17,9 @@ namespace BankRestApi.Controllers
     public class AccountsController : ControllerBase
     {
         private readonly AccountContext _context;
-        private readonly AccountService _service;
+        private readonly IAccountService _service;
 
-        public AccountsController(AccountContext context, AccountService accountService)
+        public AccountsController(AccountContext context, IAccountService accountService)
         {
             _context = context;
             _service = accountService;
