@@ -160,4 +160,62 @@ public class AccountService : IAccountService
         
         return new AccountResult<decimal>(result: foundAccount.Balance);
     }
+    
+    public async Task<AccountResult<TransferBalances>> Transfer(TransactionRequest request)
+    {
+        var (amount, senderId, recipientId) = request;
+
+        if (senderId == recipientId)
+        {
+            return new AccountResult<TransferBalances>
+            (
+                result: new TransferBalances(0, 0),
+                errorMessage: "Duplicate ids given for sender and recipient."
+            );
+        }
+        
+        var sender = await  _context.Accounts.FindAsync(senderId);
+        var recipient = await  _context.Accounts.FindAsync(recipientId);
+
+        if (sender == null  || recipient == null)
+        {
+            return new AccountResult<TransferBalances>
+            (
+                result: new TransferBalances(0, 0),
+                errorMessage: "No account found with that id for sender or recipient."
+            );
+        }
+
+        if (amount <= 0)
+        {
+            return new AccountResult<TransferBalances>(
+                result: new TransferBalances(0, 0), 
+                errorMessage: "Please enter valid decimal withdrawal amount greater than zero."
+            );
+        }
+        
+        if (amount > sender.Balance)
+        {
+            return new AccountResult<TransferBalances>(
+                result: new TransferBalances(0, 0), 
+                errorMessage: "Insufficient funds."
+            );
+        }
+        
+        sender.Balance -= request.Amount;
+        recipient.Balance +=  request.Amount;
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException ex) 
+        {
+            return new AccountResult<TransferBalances>(
+                result: new TransferBalances(0, 0), 
+                errorMessage: ex.Message
+            );
+        }
+        
+        return new AccountResult<TransferBalances>(result: new TransferBalances(sender.Balance, recipient.Balance));
+    }
 }
