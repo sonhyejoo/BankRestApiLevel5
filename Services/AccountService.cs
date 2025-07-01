@@ -150,17 +150,17 @@ public class AccountService : IAccountService
 
         if (sender == null  || recipient == null)
         {
-            return AccountResult<TransferBalances>.NotFoundError(new TransferBalances(0, 0));
+            return AccountResult<TransferBalances>.NotFoundError(TransferBalances.Empty);
         }
 
         if (amount <= 0)
         {
-            return AccountResult<TransferBalances>.GreaterThanZeroError(new TransferBalances(0, 0));
+            return AccountResult<TransferBalances>.GreaterThanZeroError(TransferBalances.Empty);
         }
         
         if (amount > sender.Balance)
         {
-            return AccountResult<TransferBalances>.InsufficientFundsError(new TransferBalances(0, 0));
+            return AccountResult<TransferBalances>.InsufficientFundsError(TransferBalances.Empty);
         }
         
         sender.Balance -= request.Amount;
@@ -172,7 +172,7 @@ public class AccountService : IAccountService
         catch (DbUpdateConcurrencyException ex) 
         {
             return new AccountResult<TransferBalances>(
-                result: new TransferBalances(0, 0), 
+                result: TransferBalances.Empty, 
                 errorMessage: ex.Message
             );
         }
