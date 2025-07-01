@@ -59,7 +59,7 @@ namespace BankRestApi.Controllers
         // POST: api/Accounts/0b4b7e2b-ffd1-4acf-81b3-e51d48155217/deposits
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("{id}/deposits")]
-        public async Task<ActionResult<Account>> DepositAccount(Guid id, [FromBody] decimal amount)
+        public async Task<IActionResult> DepositAccount(Guid id, [FromBody] decimal amount)
         {
             var depositRequest = new TransactionRequest(Amount: amount, Id: id);
             var depositResult = await _service.Deposit(depositRequest);
@@ -68,7 +68,7 @@ namespace BankRestApi.Controllers
                 return BadRequest(new { Error = depositResult.ErrorMessage });
             }
 
-            return Ok(new { updatedBalance = depositResult.Result });
+            return NoContent();
         }
         
         // POST: api/Accounts/0b4b7e2b-ffd1-4acf-81b3-e51d48155217/withdrawals
