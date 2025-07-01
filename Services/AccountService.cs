@@ -94,10 +94,7 @@ public class AccountService : IAccountService
 
         if (request.Amount <= 0)
         {
-            return new AccountResult<decimal>(
-                result: 0, 
-                errorMessage: "Please enter valid decimal deposit amount greater than zero."
-            );
+            return AccountResult<decimal>.GreaterThanZeroError(0);
         }
         
         foundAccount.Balance += request.Amount;
