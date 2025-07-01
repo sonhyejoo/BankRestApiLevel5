@@ -105,11 +105,11 @@ public class AccountService : IAccountService
         {
             await _context.SaveChangesAsync();
         }
-        catch (DbUpdateConcurrencyException) 
+        catch (DbUpdateConcurrencyException ex) 
         {
             return new AccountResult<decimal>(
                 result: 0, 
-                errorMessage: "Something went wrong while saving changes to account."
+                errorMessage: ex.Message
             );
         }
         
