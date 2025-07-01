@@ -25,7 +25,7 @@ namespace BankRestApi.Controllers
             _service = accountService;
         }
 
-        // GET: api/Accounts/5
+        // GET: api/Accounts/0b4b7e2b-ffd1-4acf-81b3-e51d48155217
         [HttpGet("{id}")]
         public async Task<ActionResult<Account>> GetAccount(Guid id)
         {
