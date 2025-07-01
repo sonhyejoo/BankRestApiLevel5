@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Transactions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -84,6 +85,20 @@ namespace BankRestApi.Controllers
             }
 
             return NoContent();
+        }
+        
+        // POST: api/Accounts/transfers
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost("transfers")]
+        public async Task<ActionResult<TransferBalances>> Transfer(TransactionRequest request)
+        {
+            var result = await _service.Transfer(request);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(new { Error = result.ErrorMessage });
+            }
+
+            return Ok(result.Result);
         }
     }
 }
