@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BankRestApi.Models;
+using BankRestApi.Services;
 
 namespace BankRestApi.Controllers
 {
@@ -14,10 +15,12 @@ namespace BankRestApi.Controllers
     public class AccountsController : ControllerBase
     {
         private readonly AccountContext _context;
+        private readonly AccountService _service;
 
-        public AccountsController(AccountContext context)
+        public AccountsController(AccountContext context, AccountService accountService)
         {
             _context = context;
+            _service = accountService;
         }
 
         // GET: api/Accounts/5
