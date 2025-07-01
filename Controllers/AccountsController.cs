@@ -50,22 +50,22 @@ namespace BankRestApi.Controllers
         // POST: api/Accounts/0b4b7e2b-ffd1-4acf-81b3-e51d48155217/deposits
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("{id}/deposits")]
-        public async Task<IActionResult> DepositAccount(Guid id, [FromBody] decimal amount)
+        public async Task<ActionResult<AccountResult<decimal>>> DepositAccount(Guid id, [FromBody] decimal amount)
         {
             var depositRequest = new TransactionRequest(Amount: amount, Id: id);
             var depositResult = await _service.Deposit(depositRequest);
             if (!depositResult.IsSuccess)
             {
-                return BadRequest(new { Error = depositResult.ErrorMessage });
+                return BadRequest(depositResult.ErrorMessage);
             }
 
-            return NoContent();
+            return Ok(depositResult.Result);
         }
         
         // POST: api/Accounts/0b4b7e2b-ffd1-4acf-81b3-e51d48155217/withdrawals
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("{id}/withdrawals")]
-        public async Task<IActionResult> WithdrawAccount(Guid id, [FromBody] decimal amount)
+        public async Task<ActionResult<AccountResult<decimal>>> WithdrawAccount(Guid id, [FromBody] decimal amount)
         {
             var withdrawRequest = new TransactionRequest(Amount: amount, Id: id);
             var withdrawResult = await _service.Withdraw(withdrawRequest);
@@ -74,7 +74,7 @@ namespace BankRestApi.Controllers
                 return BadRequest(new { Error = withdrawResult.ErrorMessage });
             }
 
-            return NoContent();
+            return Ok(withdrawResult.Result);
         }
         
         // POST: api/Accounts/transfers
