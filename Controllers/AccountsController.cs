@@ -1,12 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Transactions;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using BankRestApi.Models;
 using BankRestApi.Models.DTOs;
 using BankRestApi.Services;
 using Account = BankRestApi.Models.Account;
@@ -17,12 +9,10 @@ namespace BankRestApi.Controllers
     [ApiController]
     public class AccountsController : ControllerBase
     {
-        private readonly AccountContext _context;
         private readonly IAccountService _service;
 
-        public AccountsController(AccountContext context, IAccountService accountService)
+        public AccountsController(IAccountService accountService)
         {
-            _context = context;
             _service = accountService;
         }
 
