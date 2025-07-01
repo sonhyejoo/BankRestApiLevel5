@@ -5,6 +5,9 @@ using Account = BankRestApi.Models.Account;
 
 namespace BankRestApi.Controllers
 {
+    /// <summary>
+    /// Controller for managing bank interactions.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class AccountsController : ControllerBase
@@ -15,7 +18,12 @@ namespace BankRestApi.Controllers
         {
             _service = accountService;
         }
-
+        
+        /// <summary>
+        /// Get specific account by unique id
+        /// </summary>
+        /// <param name="id">Account ID.</param>
+        /// <returns>Account details.</returns>
         // GET: api/Accounts/0b4b7e2b-ffd1-4acf-81b3-e51d48155217
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -33,6 +41,11 @@ namespace BankRestApi.Controllers
             return Ok(getResult.Result);
         }
 
+        /// <summary>
+        /// Create a new account.
+        /// </summary>
+        /// <param name="request">Name of account holder.</param>
+        /// <returns>Created account details.</returns>
         // POST: api/Accounts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
@@ -51,6 +64,12 @@ namespace BankRestApi.Controllers
             return CreatedAtAction(nameof(GetAccount), new { id = createdAccount.Id }, createdAccount);
         }
 
+        /// <summary>
+        /// Deposit funds into account
+        /// </summary>
+        /// <param name="id">Account ID.</param>
+        /// <param name="amount">Deposit amount.</param>
+        /// <returns>Updated account details.</returns>
         // POST: api/Accounts/0b4b7e2b-ffd1-4acf-81b3-e51d48155217/deposits
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("{id}/deposits")]
@@ -68,6 +87,12 @@ namespace BankRestApi.Controllers
             return Ok(depositResult.Result);
         }
         
+        /// <summary>
+        /// Withdraws funds from an account.
+        /// </summary>
+        /// <param name="id">Account ID.</param>
+        /// <param name="amount">Withdrawal amount.</param>
+        /// <returns>Updated account details.</returns>
         // POST: api/Accounts/0b4b7e2b-ffd1-4acf-81b3-e51d48155217/withdrawals
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("{id}/withdrawals")]
@@ -85,6 +110,11 @@ namespace BankRestApi.Controllers
             return Ok(withdrawResult.Result);
         }
         
+        /// <summary>
+        /// Transfers funds between two accounts.
+        /// </summary>
+        /// <param name="request">Amount to transfer, sender's ID, recipient's ID.</param>
+        /// <returns>Updated account details.</returns>
         // POST: api/Accounts/transfers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("transfers")]
