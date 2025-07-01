@@ -1,6 +1,6 @@
 ﻿namespace BankRestApi.Models.DTOs;
 
-public class AccountResult<T>(T result, string errorMessage)
+public class AccountResult<T>(T result, string errorMessage = "")
 {
     public T Result => result;
     public string ErrorMessage => errorMessage;
