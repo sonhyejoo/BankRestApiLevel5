@@ -1,8 +1,8 @@
 ﻿namespace BankRestApi.Models.DTOs;
 
-public class AccountResult<T>()
+public class AccountResult<T>(T result, string errorMessage)
 {
-    public T Result { get; set; }
-    public string Message { get; set; } = "";
-    public bool Success { get; set; } = string.IsNullOrEmpty(message);
+    public T Result => result;
+    public string ErrorMessage => errorMessage;
+    public bool IsSuccess => string.IsNullOrEmpty(errorMessage);
 }
