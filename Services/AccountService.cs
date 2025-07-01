@@ -63,18 +63,18 @@ public class AccountService : IAccountService
         );
     }
     
-    public async Task<AccountResult<decimal>> Deposit(TransactionRequest request)
+    public async Task<AccountResult<Account>> Deposit(TransactionRequest request)
     {
         var foundAccount = await  _context.Accounts.FindAsync(request.Id);
 
         if (foundAccount == null)
         {
-            return AccountResult<decimal>.NotFoundError(0);
+            return AccountResult<Account>.NotFoundError(Account.Empty);
         }
 
         if (request.Amount <= 0)
         {
-            return AccountResult<decimal>.GreaterThanZeroError(0);
+            return AccountResult<Account>.GreaterThanZeroError(Account.Empty);
         }
         
         foundAccount.Balance += request.Amount;
@@ -84,32 +84,37 @@ public class AccountService : IAccountService
         }
         catch (DbUpdateConcurrencyException ex) 
         {
-            return new AccountResult<decimal>(
-                result: 0, 
+            return new AccountResult<Account>(
+                result: Account.Empty, 
                 errorMessage: ex.Message
             );
         }
         
-        return new AccountResult<decimal>(result: foundAccount.Balance);
+        return new AccountResult<Account>(new Account
+        {
+            Id = foundAccount.Id,
+            Name = foundAccount.Name,
+            Balance = foundAccount.Balance
+        });
     }
     
-    public async Task<AccountResult<decimal>> Withdraw(TransactionRequest request)
+    public async Task<AccountResult<Account>> Withdraw(TransactionRequest request)
     {
         var foundAccount = await  _context.Accounts.FindAsync(request.Id);
 
         if (foundAccount == null)
         {
-            return AccountResult<decimal>.NotFoundError(0);
+            return AccountResult<Account>.NotFoundError(Account.Empty);
         }
 
         if (request.Amount <= 0)
         {
-            return AccountResult<decimal>.GreaterThanZeroError(0);
+            return AccountResult<Account>.GreaterThanZeroError(Account.Empty);
         }
         
         if (request.Amount > foundAccount.Balance)
         {
-            return AccountResult<decimal>.InsufficientFundsError(0);
+            return AccountResult<Account>.InsufficientFundsError(Account.Empty);
         }
         
         foundAccount.Balance -= request.Amount;
@@ -119,13 +124,18 @@ public class AccountService : IAccountService
         }
         catch (DbUpdateConcurrencyException ex) 
         {
-            return new AccountResult<decimal>(
-                result: 0, 
+            return new AccountResult<Account>(
+                result: Account.Empty, 
                 errorMessage: ex.Message
             );
         }
         
-        return new AccountResult<decimal>(result: foundAccount.Balance);
+        return new AccountResult<Account> (new Account
+        {
+            Id = foundAccount.Id,
+            Name = foundAccount.Name,
+            Balance = foundAccount.Balance
+        });
     }
     
     public async Task<AccountResult<TransferBalances>> Transfer(TransactionRequest request)
