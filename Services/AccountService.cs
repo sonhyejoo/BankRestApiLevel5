@@ -1,5 +1,6 @@
 ﻿using BankRestApi.Models;
 using BankRestApi.Models.DTOs;
+using Microsoft.EntityFrameworkCore;
 using Account = BankRestApi.Models.DTOs.Account;
 
 namespace BankRestApi.Services;
@@ -76,5 +77,42 @@ public class AccountService : IAccountService
                 Balance = foundAccount.Balance
             }
         );
+    }
+    
+    public async Task<AccountResult<decimal>> Deposit(TransactionRequest request)
+    {
+        var foundAccount = await  _context.Accounts.FindAsync(request.Id);
+
+        if (foundAccount == null)
+        {
+            return new AccountResult<decimal>
+            (
+                result: 0,
+                errorMessage: "No account found with that id."
+            );
+        }
+
+        if (request.Amount <= 0)
+        {
+            return new AccountResult<decimal>(
+                result: 0, 
+                errorMessage: "Please enter valid decimal deposit amount greater than zero."
+            );
+        }
+        
+        foundAccount.Balance += request.Amount;
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException) 
+        {
+            return new AccountResult<decimal>(
+                result: 0, 
+                errorMessage: "Something went wrong while saving changes to account."
+            );
+        }
+        
+        return new AccountResult<decimal>(result: foundAccount.Balance);
     }
 }
