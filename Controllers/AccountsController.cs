@@ -34,7 +34,7 @@ namespace BankRestApi.Controllers
 
             if (!getResult.IsSuccess)
             {
-                return NotFound(new {Error = getResult.ErrorMessage});
+                return NotFound(new { Error = getResult.ErrorMessage });
             }
 
             return Ok(getResult.Result);
@@ -47,21 +47,22 @@ namespace BankRestApi.Controllers
         {
             var createdResult = await _service.Create(request);
             var success = createdResult.IsSuccess;
-            var createdAccount =  createdResult.Result;
+            var createdAccount = createdResult.Result;
             if (!success)
             {
-                return BadRequest(new {Error = createdResult.ErrorMessage});
+                return BadRequest(new { Error = createdResult.ErrorMessage });
             }
 
             return CreatedAtAction(nameof(GetAccount), new { id = createdAccount.Id }, createdAccount);
         }
-        
+
         // POST: api/Accounts/0b4b7e2b-ffd1-4acf-81b3-e51d48155217/deposiits
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("{id}/deposits")]
-        public async Task<ActionResult<Account>> DepositAccount(TransactionRequest request)
+        public async Task<ActionResult<Account>> DepositAccount(Guid id, [FromBody] decimal amount)
         {
-            var depositResult = await _service.Deposit(request);
+            var depositRequest = new TransactionRequest(Amount: amount, Id: id);
+            var depositResult = await _service.Deposit(depositRequest);
             if (!depositResult.IsSuccess)
             {
                 return BadRequest(new { Error = depositResult.ErrorMessage });
