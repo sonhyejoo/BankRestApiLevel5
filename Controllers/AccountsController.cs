@@ -70,5 +70,20 @@ namespace BankRestApi.Controllers
 
             return Ok(new { updatedBalance = depositResult.Result });
         }
+        
+        // POST: api/Accounts/0b4b7e2b-ffd1-4acf-81b3-e51d48155217/withdrawals
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost("{id}/withdrawals")]
+        public async Task<IActionResult> WithdrawAccount(Guid id, [FromBody] decimal amount)
+        {
+            var withdrawRequest = new TransactionRequest(Amount: amount, Id: id);
+            var withdrawResult = await _service.Withdraw(withdrawRequest);
+            if (!withdrawResult.IsSuccess)
+            {
+                return BadRequest(new { Error = withdrawResult.ErrorMessage });
+            }
+
+            return NoContent();
+        }
     }
 }
