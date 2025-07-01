@@ -53,7 +53,7 @@ public class AccountService : IAccountService
 
         if (foundAccount == null)
         {
-            return AccountResult<Account>.AccountNotFoundError(Account.Empty);
+            return AccountResult<Account>.NotFoundError(Account.Empty);
         }
         
         return new AccountResult<Account>
@@ -73,7 +73,7 @@ public class AccountService : IAccountService
 
         if (foundAccount == null)
         {
-            return AccountResult<decimal>.AccountNotFoundError(0);
+            return AccountResult<decimal>.NotFoundError(0);
         }
 
         if (request.Amount <= 0)
@@ -103,7 +103,7 @@ public class AccountService : IAccountService
 
         if (foundAccount == null)
         {
-            return AccountResult<decimal>.AccountNotFoundError(0);
+            return AccountResult<decimal>.NotFoundError(0);
         }
 
         if (request.Amount <= 0)
@@ -153,7 +153,7 @@ public class AccountService : IAccountService
 
         if (sender == null  || recipient == null)
         {
-            return AccountResult<TransferBalances>.AccountNotFoundError(new TransferBalances(0, 0));
+            return AccountResult<TransferBalances>.NotFoundError(new TransferBalances(0, 0));
         }
 
         if (amount <= 0)
