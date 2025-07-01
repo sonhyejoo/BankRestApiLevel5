@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BankRestApi.Models;
+using BankRestApi.Models.DTOs;
 using BankRestApi.Services;
+using Account = BankRestApi.Models.Account;
 
 namespace BankRestApi.Controllers
 {
@@ -41,12 +43,17 @@ namespace BankRestApi.Controllers
         // POST: api/Accounts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Account>> PostAccount(Account account)
+        public async Task<ActionResult<Account>> CreateAccount(CreateAccountRequest request)
         {
-            _context.Accounts.Add(account);
-            await _context.SaveChangesAsync();
+            var createdResult = await _service.Create(request);
+            var success = createdResult.IsSuccess;
+            var createdAccount =  createdResult.Result;
+            if (!success)
+            {
+                return BadRequest(new {Error = createdResult.ErrorMessage});
+            }
 
-            return CreatedAtAction("GetAccount", new { id = account.InternalId }, account);
+            return CreatedAtAction(nameof(GetAccount), new { id = createdAccount.Id }, createdAccount);
         }
         
         private bool AccountExists(int id)
