@@ -53,11 +53,7 @@ public class AccountService : IAccountService
 
         if (foundAccount == null)
         {
-            return new AccountResult<Account>
-            (
-                result: Account.Empty,
-                errorMessage: "No account found with that id."
-            );
+            return AccountResult<Account>.AccountNotFoundError(Account.Empty);
         }
         
         return new AccountResult<Account>
@@ -77,11 +73,7 @@ public class AccountService : IAccountService
 
         if (foundAccount == null)
         {
-            return new AccountResult<decimal>
-            (
-                result: 0,
-                errorMessage: "No account found with that id."
-            );
+            return AccountResult<decimal>.AccountNotFoundError(0);
         }
 
         if (request.Amount <= 0)
@@ -111,11 +103,7 @@ public class AccountService : IAccountService
 
         if (foundAccount == null)
         {
-            return new AccountResult<decimal>
-            (
-                result: 0,
-                errorMessage: "No account found with that id."
-            );
+            return AccountResult<decimal>.AccountNotFoundError(0);
         }
 
         if (request.Amount <= 0)
@@ -165,11 +153,7 @@ public class AccountService : IAccountService
 
         if (sender == null  || recipient == null)
         {
-            return new AccountResult<TransferBalances>
-            (
-                result: new TransferBalances(0, 0),
-                errorMessage: "No account found with that id for sender or recipient."
-            );
+            return AccountResult<TransferBalances>.AccountNotFoundError(new TransferBalances(0, 0));
         }
 
         if (amount <= 0)

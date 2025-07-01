@@ -9,5 +9,5 @@ public class AccountResult<T>(T result, string errorMessage = "")
     public static AccountResult<T> GreaterThanZeroError(T result) =>
         new(result, "Please enter valid decimal amount greater than zero.");
     public static AccountResult<T> AccountNotFoundError(T result) =>
-        new(result, "Please enter valid decimal amount greater than zero.");
+        new(result, "No account found with that id.");
 }
