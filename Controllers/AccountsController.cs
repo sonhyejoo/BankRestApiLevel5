@@ -55,10 +55,5 @@ namespace BankRestApi.Controllers
 
             return CreatedAtAction(nameof(GetAccount), new { id = createdAccount.Id }, createdAccount);
         }
-        
-        // private bool AccountExists(int id)
-        // {
-        //     return _context.Accounts.Any(e => e.InternalId == id);
-        // }
     }
 }
