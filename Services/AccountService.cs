@@ -4,7 +4,7 @@ using Account = BankRestApi.Models.DTOs.Account;
 
 namespace BankRestApi.Services;
 
-public class AccountService
+public class AccountService : IAccountService
 {
     private readonly AccountContext _context;
 
