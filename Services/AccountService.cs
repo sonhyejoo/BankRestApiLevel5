@@ -13,7 +13,7 @@ public class AccountService
         _context = context;
     }
 
-    async Task<AccountResult<Account>> Create(CreateAccountRequest request)
+    public async Task<AccountResult<Account>> Create(CreateAccountRequest request)
     {
         var name = request.Name;
         if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
