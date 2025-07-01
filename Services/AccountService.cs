@@ -21,11 +21,7 @@ public class AccountService : IAccountService
         {
             return new AccountResult<Account>
             (
-                result: new Account{
-                    Id = Guid.Empty,
-                    Name = "",
-                    Balance = 0
-                },
+                result: Account.Empty,
                 errorMessage: "Name cannot be empty or whitespace."
             );
         }
@@ -59,11 +55,7 @@ public class AccountService : IAccountService
         {
             return new AccountResult<Account>
             (
-                result: new Account{
-                    Id = Guid.Empty,
-                    Name = "",
-                    Balance = 0
-                },
+                result: Account.Empty,
                 errorMessage: "No account found with that id."
             );
         }
@@ -128,10 +120,7 @@ public class AccountService : IAccountService
 
         if (request.Amount <= 0)
         {
-            return new AccountResult<decimal>(
-                result: 0, 
-                errorMessage: "Please enter valid decimal withdrawal amount greater than zero."
-            );
+            return AccountResult<decimal>.GreaterThanZeroError(0);
         }
         
         if (request.Amount > foundAccount.Balance)
@@ -185,10 +174,7 @@ public class AccountService : IAccountService
 
         if (amount <= 0)
         {
-            return new AccountResult<TransferBalances>(
-                result: new TransferBalances(0, 0), 
-                errorMessage: "Please enter valid decimal withdrawal amount greater than zero."
-            );
+            return AccountResult<TransferBalances>.GreaterThanZeroError(new TransferBalances(0, 0));
         }
         
         if (amount > sender.Balance)
