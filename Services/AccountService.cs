@@ -19,11 +19,7 @@ public class AccountService : IAccountService
         var name = request.Name;
         if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
         {
-            return new AccountResult<Account>
-            (
-                result: Account.Empty,
-                errorMessage: "Name cannot be empty or whitespace."
-            );
+            return AccountResult<Account>.EmptyNameError(Account.Empty);
         }
 
         var accountToAdd = new Models.Account

@@ -12,4 +12,7 @@ public class AccountResult<T>(T result, string errorMessage = "")
         new(result, "No account found with that id.");
     public static AccountResult<T> InsufficientFundsError(T result) =>
         new(result, "Insufficient funds.");
+    public static AccountResult<T> EmptyNameError(T result) =>
+        new(result, "Name cannot be empty or whitespace.");
+
 }
