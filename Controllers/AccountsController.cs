@@ -18,6 +18,8 @@ namespace BankRestApi.Controllers
 
         // GET: api/Accounts/0b4b7e2b-ffd1-4acf-81b3-e51d48155217
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Account>> GetAccount(Guid id)
         {
             var request = new GetAccountRequest(id);
@@ -34,6 +36,8 @@ namespace BankRestApi.Controllers
         // POST: api/Accounts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Account>> CreateAccount(CreateAccountRequest request)
         {
             var createdResult = await _service.Create(request);
@@ -50,6 +54,8 @@ namespace BankRestApi.Controllers
         // POST: api/Accounts/0b4b7e2b-ffd1-4acf-81b3-e51d48155217/deposits
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("{id}/deposits")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<AccountResult<decimal>>> DepositAccount(Guid id, [FromBody] decimal amount)
         {
             var depositRequest = new TransactionRequest(Amount: amount, Id: id);
@@ -65,6 +71,8 @@ namespace BankRestApi.Controllers
         // POST: api/Accounts/0b4b7e2b-ffd1-4acf-81b3-e51d48155217/withdrawals
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("{id}/withdrawals")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<AccountResult<decimal>>> WithdrawAccount(Guid id, [FromBody] decimal amount)
         {
             var withdrawRequest = new TransactionRequest(Amount: amount, Id: id);
@@ -80,6 +88,8 @@ namespace BankRestApi.Controllers
         // POST: api/Accounts/transfers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("transfers")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<TransferBalances>> Transfer(TransactionRequest request)
         {
             var result = await _service.Transfer(request);
