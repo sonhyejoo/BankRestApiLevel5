@@ -27,18 +27,18 @@ namespace BankRestApi.Controllers
 
         // GET: api/Accounts/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Account>> GetAccount(int id)
+        public async Task<ActionResult<Account>> GetAccount(Guid id)
         {
-            var account = await _context.Accounts.FindAsync(id);
+            var request = new GetAccountRequest(id);
+            var getResult = await _service.Get(request);
 
-            if (account == null)
+            if (!getResult.IsSuccess)
             {
-                return NotFound();
+                return NotFound(new {Error = getResult.ErrorMessage});
             }
 
-            return account;
+            return Ok(getResult.Result);
         }
-
 
         // POST: api/Accounts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -56,9 +56,9 @@ namespace BankRestApi.Controllers
             return CreatedAtAction(nameof(GetAccount), new { id = createdAccount.Id }, createdAccount);
         }
         
-        private bool AccountExists(int id)
-        {
-            return _context.Accounts.Any(e => e.InternalId == id);
-        }
+        // private bool AccountExists(int id)
+        // {
+        //     return _context.Accounts.Any(e => e.InternalId == id);
+        // }
     }
 }
