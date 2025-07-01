@@ -10,4 +10,6 @@ public class AccountResult<T>(T result, string errorMessage = "")
         new(result, "Please enter valid decimal amount greater than zero.");
     public static AccountResult<T> NotFoundError(T result) =>
         new(result, "No account found with that id.");
+    public static AccountResult<T> InsufficientFundsError(T result) =>
+        new(result, "Insufficient funds.");
 }

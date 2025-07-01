@@ -113,10 +113,7 @@ public class AccountService : IAccountService
         
         if (request.Amount > foundAccount.Balance)
         {
-            return new AccountResult<decimal>(
-                result: 0, 
-                errorMessage: "Insufficient funds."
-            );
+            return AccountResult<decimal>.InsufficientFundsError(0);
         }
         
         foundAccount.Balance -= request.Amount;
@@ -163,10 +160,7 @@ public class AccountService : IAccountService
         
         if (amount > sender.Balance)
         {
-            return new AccountResult<TransferBalances>(
-                result: new TransferBalances(0, 0), 
-                errorMessage: "Insufficient funds."
-            );
+            return AccountResult<TransferBalances>.InsufficientFundsError(new TransferBalances(0, 0));
         }
         
         sender.Balance -= request.Amount;
