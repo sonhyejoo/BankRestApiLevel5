@@ -2,7 +2,7 @@
 
 public record TransferDetails(
     Account Sender,
-    Account Receiver)
+    Account Recipient)
 {
     public static readonly TransferDetails Empty = new TransferDetails(Account.Empty, Account.Empty);
 }
