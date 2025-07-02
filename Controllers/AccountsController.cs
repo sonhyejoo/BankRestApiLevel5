@@ -81,7 +81,7 @@ namespace BankRestApi.Controllers
             var result = await _service.Deposit(request);
             if (!result.IsSuccess)
             {
-                return BadRequest(result.ErrorMessage);
+                return BadRequest(new { Error = result.ErrorMessage });
             }
 
             return Ok(result.Result);
