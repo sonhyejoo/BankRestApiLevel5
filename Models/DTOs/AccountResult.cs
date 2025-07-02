@@ -1,10 +1,20 @@
 ﻿namespace BankRestApi.Models.DTOs;
 
-public class AccountResult<T>(T result, string errorMessage = "")
+public class AccountResult<T>
 {
-    public T Result => result;
-    public string ErrorMessage => errorMessage;
-    public bool IsSuccess => string.IsNullOrEmpty(errorMessage);
+    public T? Result { get; }
+    public string ErrorMessage { get; }
+    public bool IsSuccess => string.IsNullOrEmpty(ErrorMessage);
+
+    public AccountResult(T result, string errorMessage = "")
+    {
+        Result = result;
+        ErrorMessage = errorMessage;
+    }
+    public AccountResult(string errorMessage)
+    {
+        ErrorMessage = errorMessage;
+    }
 
     public static AccountResult<T> GreaterThanZeroError(T result) =>
         new(result, "Please enter valid decimal amount greater than zero.");
