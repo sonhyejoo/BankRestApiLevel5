@@ -144,11 +144,7 @@ public class AccountService : IAccountService
 
         if (senderId == recipientId)
         {
-            return new AccountResult<TransferDetails>
-            (
-                result: new TransferDetails(0, 0),
-                errorMessage: "Duplicate ids given for sender and recipient."
-            );
+            return AccountResult<TransferDetails>.DuplicateIdError(TransferDetails.Empty);
         }
         
         var sender = await  _context.Accounts.FindAsync(senderId);

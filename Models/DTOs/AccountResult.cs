@@ -14,5 +14,6 @@ public class AccountResult<T>(T result, string errorMessage = "")
         new(result, "Insufficient funds.");
     public static AccountResult<T> EmptyNameError(T result) =>
         new(result, "Name cannot be empty or whitespace.");
-
+    public static AccountResult<T> DuplicateIdError(T result) =>
+        new(result, "Duplicate ids given for sender and recipient.");
 }
