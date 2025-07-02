@@ -47,7 +47,7 @@ public class AccountService : IAccountService
     {
         var foundAccount = await  _context.Accounts.FindAsync(request.Id);
 
-        if (foundAccount == null)
+        if (foundAccount is null)
         {
             return AccountResult<Account>.NotFoundError();
         }
@@ -67,7 +67,7 @@ public class AccountService : IAccountService
     {
         var foundAccount = await  _context.Accounts.FindAsync(request.Id);
 
-        if (foundAccount == null)
+        if (foundAccount is null)
         {
             return AccountResult<Account>.NotFoundError();
         }
@@ -99,7 +99,7 @@ public class AccountService : IAccountService
     {
         var foundAccount = await  _context.Accounts.FindAsync(request.Id);
 
-        if (foundAccount == null)
+        if (foundAccount is null)
         {
             return AccountResult<Account>.NotFoundError();
         }
@@ -136,7 +136,7 @@ public class AccountService : IAccountService
     {
         var (amount, senderId, recipientId) = request;
 
-        if (senderId == recipientId)
+        if (senderId is recipientId)
         {
             return AccountResult<TransferDetails>.DuplicateIdError();
         }
@@ -144,7 +144,7 @@ public class AccountService : IAccountService
         var sender = await  _context.Accounts.FindAsync(senderId);
         var recipient = await  _context.Accounts.FindAsync(recipientId);
 
-        if (sender == null  || recipient == null)
+        if (sender is null  || recipient is null)
         {
             return AccountResult<TransferDetails>.NotFoundError();
         }
