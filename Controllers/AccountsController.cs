@@ -31,14 +31,14 @@ namespace BankRestApi.Controllers
         public async Task<ActionResult<Account>> GetAccount(Guid id)
         {
             var request = new GetAccountRequest(id);
-            var getResult = await _service.Get(request);
+            var result = await _service.Get(request);
 
-            if (!getResult.IsSuccess)
+            if (!result.IsSuccess)
             {
-                return BadRequest(new { Error = getResult.ErrorMessage });
+                return BadRequest(new { Error = result.ErrorMessage });
             }
 
-            return Ok(getResult.Result);
+            return Ok(result.Result);
         }
 
         /// <summary>
@@ -53,13 +53,13 @@ namespace BankRestApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Account>> CreateAccount(CreateAccountRequest request)
         {
-            var createdResult = await _service.Create(request);
-            var success = createdResult.IsSuccess;
+            var result = await _service.Create(request);
+            var success = result.IsSuccess;
             if (!success)
             {
-                return BadRequest(new { Error = createdResult.ErrorMessage });
+                return BadRequest(new { Error = result.ErrorMessage });
             }
-            var createdAccount = createdResult.Result;
+            var createdAccount = result.Result;
 
             return CreatedAtAction(nameof(GetAccount), new { id = createdAccount.Id }, createdAccount);
         }
@@ -77,14 +77,14 @@ namespace BankRestApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<AccountResult<Account>>> DepositAccount(Guid id, [FromBody] decimal amount)
         {
-            var depositRequest = new TransactionRequest(Amount: amount, Id: id);
-            var depositResult = await _service.Deposit(depositRequest);
-            if (!depositResult.IsSuccess)
+            var request = new TransactionRequest(Amount: amount, Id: id);
+            var result = await _service.Deposit(request);
+            if (!result.IsSuccess)
             {
-                return BadRequest(depositResult.ErrorMessage);
+                return BadRequest(result.ErrorMessage);
             }
 
-            return Ok(depositResult.Result);
+            return Ok(result.Result);
         }
         
         /// <summary>
@@ -100,14 +100,14 @@ namespace BankRestApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<AccountResult<Account>>> WithdrawAccount(Guid id, [FromBody] decimal amount)
         {
-            var withdrawRequest = new TransactionRequest(Amount: amount, Id: id);
-            var withdrawResult = await _service.Withdraw(withdrawRequest);
-            if (!withdrawResult.IsSuccess)
+            var request = new TransactionRequest(Amount: amount, Id: id);
+            var result = await _service.Withdraw(request);
+            if (!result.IsSuccess)
             {
-                return BadRequest(new { Error = withdrawResult.ErrorMessage });
+                return BadRequest(new { Error = result.ErrorMessage });
             }
 
-            return Ok(withdrawResult.Result);
+            return Ok(result.Result);
         }
         
         /// <summary>
