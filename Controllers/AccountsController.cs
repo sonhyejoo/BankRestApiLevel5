@@ -23,7 +23,7 @@ namespace BankRestApi.Controllers
         /// Get specific account by unique id
         /// </summary>
         /// <param name="id">Account ID.</param>
-        /// <returns>Account details if successful, otherwise returns NotFound.</returns>
+        /// <returns>Account details if successful, otherwise returns BadRequest.</returns>
         // GET: api/Accounts/0b4b7e2b-ffd1-4acf-81b3-e51d48155217
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
