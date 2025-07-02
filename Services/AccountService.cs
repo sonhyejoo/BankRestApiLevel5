@@ -84,10 +84,7 @@ public class AccountService : IAccountService
         }
         catch (DbUpdateConcurrencyException ex) 
         {
-            return new AccountResult<Account>(
-                result: Account.Empty, 
-                errorMessage: ex.Message
-            );
+            return new AccountResult<Account>(ex.Message);
         }
         
         return new AccountResult<Account>(new Account
@@ -124,10 +121,7 @@ public class AccountService : IAccountService
         }
         catch (DbUpdateConcurrencyException ex) 
         {
-            return new AccountResult<Account>(
-                result: Account.Empty, 
-                errorMessage: ex.Message
-            );
+            return new AccountResult<Account>(ex.Message);
         }
         
         return new AccountResult<Account> (new Account
@@ -173,10 +167,7 @@ public class AccountService : IAccountService
         }
         catch (DbUpdateConcurrencyException ex) 
         {
-            return new AccountResult<TransferDetails>(
-                result: TransferDetails.Empty, 
-                errorMessage: ex.Message
-            );
+            return new AccountResult<TransferDetails>(ex.Message);
         }
         var senderDto = new Account
         {
