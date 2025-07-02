@@ -35,7 +35,7 @@ namespace BankRestApi.Controllers
 
             if (!getResult.IsSuccess)
             {
-                return NotFound(new { Error = getResult.ErrorMessage });
+                return BadRequest(new { Error = getResult.ErrorMessage });
             }
 
             return Ok(getResult.Result);
