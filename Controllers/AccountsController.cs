@@ -27,7 +27,7 @@ namespace BankRestApi.Controllers
         // GET: api/Accounts/0b4b7e2b-ffd1-4acf-81b3-e51d48155217
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type=typeof(Account))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type=typeof(object))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type=typeof(string))]
         public async Task<ActionResult<Account>> GetAccount(Guid id)
         {
             var request = new GetAccountRequest(id);
@@ -35,7 +35,7 @@ namespace BankRestApi.Controllers
 
             if (!result.IsSuccess)
             {
-                return NotFound(new { Error = result.ErrorMessage });
+                return NotFound(result.ErrorMessage);
             }
 
             return Ok(result.Result);
@@ -50,13 +50,13 @@ namespace BankRestApi.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type=typeof(Account))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type=typeof(object))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type=typeof(string))]
         public async Task<ActionResult<Account>> CreateAccount(CreateAccountRequest request)
         {
             var result = await _service.Create(request);
             if (!result.IsSuccess)
             {
-                return BadRequest(new { Error = result.ErrorMessage });
+                return BadRequest(result.ErrorMessage );
             }
             var createdAccount = result.Result;
 
@@ -73,16 +73,16 @@ namespace BankRestApi.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("{id}/deposits")]
         [ProducesResponseType(StatusCodes.Status200OK, Type=typeof(Account))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest,  Type=typeof(object))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type=typeof(object))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest,  Type=typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type=typeof(string))]
         public async Task<ActionResult<AccountResult<Account>>> DepositAccount(Guid id, [FromBody] decimal amount)
         {
             var request = new TransactionRequest(Amount: amount, Id: id);
             var result = await _service.Deposit(request);
             return result.IsSuccess switch
             {
-                false when result.ErrorMessage.StartsWith("No") => NotFound(new { Error = result.ErrorMessage }),
-                false => BadRequest(new { Error = result.ErrorMessage }),
+                false when result.ErrorMessage.StartsWith("No") => NotFound(result.ErrorMessage),
+                false => BadRequest(result.ErrorMessage),
                 _ => Ok(result.Result)
             };
         }
@@ -97,16 +97,16 @@ namespace BankRestApi.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("{id}/withdrawals")]
         [ProducesResponseType(StatusCodes.Status200OK, Type=typeof(Account))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type=typeof(object))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type=typeof(object))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type=typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type=typeof(string))]
         public async Task<ActionResult<AccountResult<Account>>> WithdrawAccount(Guid id, [FromBody] decimal amount)
         {
             var request = new TransactionRequest(Amount: amount, Id: id);
             var result = await _service.Withdraw(request);
             return result.IsSuccess switch
             {
-                false when result.ErrorMessage.StartsWith("No") => NotFound(new { Error = result.ErrorMessage }),
-                false => BadRequest(new { Error = result.ErrorMessage }),
+                false when result.ErrorMessage.StartsWith("No") => NotFound(result.ErrorMessage),
+                false => BadRequest(result.ErrorMessage),
                 _ => Ok(result.Result)
             };
         }
@@ -120,15 +120,15 @@ namespace BankRestApi.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("transfers")]
         [ProducesResponseType(StatusCodes.Status200OK, Type=typeof(Account))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type=typeof(object))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type=typeof(object))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type=typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type=typeof(string))]
         public async Task<ActionResult<TransferDetails>> Transfer(TransactionRequest request)
         {
             var result = await _service.Transfer(request);
             return result.IsSuccess switch
             {
-                false when result.ErrorMessage.StartsWith("No") => NotFound(new { Error = result.ErrorMessage }),
-                false => BadRequest(new { Error = result.ErrorMessage }),
+                false when result.ErrorMessage.StartsWith("No") => NotFound(result.ErrorMessage),
+                false => BadRequest(result.ErrorMessage),
                 _ => Ok(result.Result)
             };
         }
