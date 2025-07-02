@@ -54,8 +54,7 @@ namespace BankRestApi.Controllers
         public async Task<ActionResult<Account>> CreateAccount(CreateAccountRequest request)
         {
             var result = await _service.Create(request);
-            var success = result.IsSuccess;
-            if (!success)
+            if (!result.IsSuccess)
             {
                 return BadRequest(new { Error = result.ErrorMessage });
             }
