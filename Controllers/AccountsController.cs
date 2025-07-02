@@ -55,11 +55,11 @@ namespace BankRestApi.Controllers
         {
             var createdResult = await _service.Create(request);
             var success = createdResult.IsSuccess;
-            var createdAccount = createdResult.Result;
             if (!success)
             {
                 return BadRequest(new { Error = createdResult.ErrorMessage });
             }
+            var createdAccount = createdResult.Result;
 
             return CreatedAtAction(nameof(GetAccount), new { id = createdAccount.Id }, createdAccount);
         }
