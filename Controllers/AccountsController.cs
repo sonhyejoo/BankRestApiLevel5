@@ -75,7 +75,7 @@ namespace BankRestApi.Controllers
         [HttpPost("{id}/deposits")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<AccountResult<decimal>>> DepositAccount(Guid id, [FromBody] decimal amount)
+        public async Task<ActionResult<AccountResult<Account>>> DepositAccount(Guid id, [FromBody] decimal amount)
         {
             var depositRequest = new TransactionRequest(Amount: amount, Id: id);
             var depositResult = await _service.Deposit(depositRequest);
@@ -98,7 +98,7 @@ namespace BankRestApi.Controllers
         [HttpPost("{id}/withdrawals")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<AccountResult<decimal>>> WithdrawAccount(Guid id, [FromBody] decimal amount)
+        public async Task<ActionResult<AccountResult<Account>>> WithdrawAccount(Guid id, [FromBody] decimal amount)
         {
             var withdrawRequest = new TransactionRequest(Amount: amount, Id: id);
             var withdrawResult = await _service.Withdraw(withdrawRequest);
