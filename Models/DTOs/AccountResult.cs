@@ -8,8 +8,8 @@ public class AccountResult<T>(T result, string errorMessage = "")
 
     public static AccountResult<T> GreaterThanZeroError(T result) =>
         new(result, "Please enter valid decimal amount greater than zero.");
-    public static AccountResult<T> NotFoundError(T result) =>
-        new(result, "No account found with that id.");
+    public static AccountResult<T> InvalidIdError(T result) =>
+        new(result, "Invalid ID. No account found with that ID.");
     public static AccountResult<T> InsufficientFundsError(T result) =>
         new(result, "Insufficient funds.");
     public static AccountResult<T> EmptyNameError(T result) =>
