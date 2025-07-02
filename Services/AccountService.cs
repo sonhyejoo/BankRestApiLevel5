@@ -178,7 +178,19 @@ public class AccountService : IAccountService
                 errorMessage: ex.Message
             );
         }
+        var senderDto = new Account
+        {
+            Id = sender.Id,
+            Name = sender.Name,
+            Balance = sender.Balance
+        };
+        var recipientDto = new Account
+        {
+            Id = recipient.Id,
+            Name = recipient.Name,
+            Balance = recipient.Balance
+        };
         
-        return new AccountResult<TransferDetails>(result: new TransferDetails(sender.Balance, recipient.Balance));
+        return new AccountResult<TransferDetails>(result: new TransferDetails(senderDto, recipientDto));
     }
 }
