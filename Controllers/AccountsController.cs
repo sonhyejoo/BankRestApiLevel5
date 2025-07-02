@@ -26,8 +26,8 @@ namespace BankRestApi.Controllers
         /// <returns>Account details if successful, otherwise returns  NotFound.</returns>
         // GET: api/Accounts/0b4b7e2b-ffd1-4acf-81b3-e51d48155217
         [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type=typeof(Account))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type=typeof(object))]
         public async Task<ActionResult<Account>> GetAccount(Guid id)
         {
             var request = new GetAccountRequest(id);
@@ -49,8 +49,8 @@ namespace BankRestApi.Controllers
         // POST: api/Accounts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status201Created, Type=typeof(Account))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type=typeof(object))]
         public async Task<ActionResult<Account>> CreateAccount(CreateAccountRequest request)
         {
             var result = await _service.Create(request);
@@ -72,9 +72,9 @@ namespace BankRestApi.Controllers
         // POST: api/Accounts/0b4b7e2b-ffd1-4acf-81b3-e51d48155217/deposits
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("{id}/deposits")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type=typeof(Account))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest,  Type=typeof(object))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type=typeof(object))]
         public async Task<ActionResult<AccountResult<Account>>> DepositAccount(Guid id, [FromBody] decimal amount)
         {
             var request = new TransactionRequest(Amount: amount, Id: id);
@@ -96,9 +96,9 @@ namespace BankRestApi.Controllers
         // POST: api/Accounts/0b4b7e2b-ffd1-4acf-81b3-e51d48155217/withdrawals
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("{id}/withdrawals")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type=typeof(Account))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type=typeof(object))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type=typeof(object))]
         public async Task<ActionResult<AccountResult<Account>>> WithdrawAccount(Guid id, [FromBody] decimal amount)
         {
             var request = new TransactionRequest(Amount: amount, Id: id);
@@ -119,9 +119,9 @@ namespace BankRestApi.Controllers
         // POST: api/Accounts/transfers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("transfers")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type=typeof(Account))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type=typeof(object))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type=typeof(object))]
         public async Task<ActionResult<TransferDetails>> Transfer(TransactionRequest request)
         {
             var result = await _service.Transfer(request);
