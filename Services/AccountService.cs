@@ -119,7 +119,7 @@ public class AccountService : IAccountService
     {
         var (amount, senderId, recipientId) = request;
 
-        if (senderId is recipientId)
+        if (senderId == recipientId)
         {
             return AccountResult<TransferDetails>.DuplicateIdError();
         }
