@@ -1,4 +1,5 @@
-﻿using BankRestApi.Models;
+﻿using BankRestApi.ExtensionMethods;
+using BankRestApi.Models;
 using BankRestApi.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
 using Account = BankRestApi.Models.DTOs.Account;
@@ -52,15 +53,7 @@ public class AccountService : IAccountService
             return AccountResult<Account>.NotFoundError();
         }
         
-        return new AccountResult<Account>
-        (
-            result: new Account
-            {
-                Id = foundAccount.Id,
-                Name = foundAccount.Name,
-                Balance = foundAccount.Balance
-            }
-        );
+        return foundAccount.CreateResult();
     }
     
     public async Task<AccountResult<Account>> Deposit(TransactionRequest request)
@@ -87,12 +80,7 @@ public class AccountService : IAccountService
             return new AccountResult<Account>(ex.Message);
         }
         
-        return new AccountResult<Account>(new Account
-        {
-            Id = foundAccount.Id,
-            Name = foundAccount.Name,
-            Balance = foundAccount.Balance
-        });
+        return foundAccount.CreateResult();
     }
     
     public async Task<AccountResult<Account>> Withdraw(TransactionRequest request)
@@ -124,12 +112,7 @@ public class AccountService : IAccountService
             return new AccountResult<Account>(ex.Message);
         }
         
-        return new AccountResult<Account> (new Account
-        {
-            Id = foundAccount.Id,
-            Name = foundAccount.Name,
-            Balance = foundAccount.Balance
-        });
+        return foundAccount.CreateResult();
     }
     
     public async Task<AccountResult<TransferDetails>> Transfer(TransactionRequest request)
