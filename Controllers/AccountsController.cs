@@ -23,11 +23,12 @@ namespace BankRestApi.Controllers
         /// Get specific account by unique id
         /// </summary>
         /// <param name="id">Account ID.</param>
-        /// <returns>Account details if successful, otherwise returns BadRequest.</returns>
+        /// <returns>Account details if successful, otherwise returns BadRequest or NotFound.</returns>
         // GET: api/Accounts/0b4b7e2b-ffd1-4acf-81b3-e51d48155217
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Account>> GetAccount(Guid id)
         {
             var request = new GetAccountRequest(id);
@@ -69,12 +70,13 @@ namespace BankRestApi.Controllers
         /// </summary>
         /// <param name="id">Account ID.</param>
         /// <param name="amount">Deposit amount.</param>
-        /// <returns>Updated account details if successful, otherwise BadRequest.</returns>
+        /// <returns>Updated account details if successful, otherwise BadRequest or NotFound.</returns>
         // POST: api/Accounts/0b4b7e2b-ffd1-4acf-81b3-e51d48155217/deposits
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("{id}/deposits")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<AccountResult<Account>>> DepositAccount(Guid id, [FromBody] decimal amount)
         {
             var request = new TransactionRequest(Amount: amount, Id: id);
@@ -92,12 +94,13 @@ namespace BankRestApi.Controllers
         /// </summary>
         /// <param name="id">Account ID.</param>
         /// <param name="amount">Withdrawal amount.</param>
-        /// <returns>Updated account details if successful, otherwise BadRequest.</returns>
+        /// <returns>Updated account details if successful, otherwise BadRequest or NotFound.</returns>
         // POST: api/Accounts/0b4b7e2b-ffd1-4acf-81b3-e51d48155217/withdrawals
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("{id}/withdrawals")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<AccountResult<Account>>> WithdrawAccount(Guid id, [FromBody] decimal amount)
         {
             var request = new TransactionRequest(Amount: amount, Id: id);
@@ -114,13 +117,13 @@ namespace BankRestApi.Controllers
         /// Transfers funds between two accounts.
         /// </summary>
         /// <param name="request">Amount to transfer, sender's ID, recipient's ID.</param>
-        /// <returns>Updated accounts' balances if successful, otherwise BadRequest.
-        /// </returns>
+        /// <returns>Updated accounts' balances if successful, otherwise BadRequest or NotFound.</returns>
         // POST: api/Accounts/transfers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("transfers")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<TransferDetails>> Transfer(TransactionRequest request)
         {
             var result = await _service.Transfer(request);
