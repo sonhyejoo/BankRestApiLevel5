@@ -23,23 +23,22 @@ namespace BankRestApi.Controllers
         /// Get specific account by unique id
         /// </summary>
         /// <param name="id">Account ID.</param>
-        /// <returns>Account details if successful, otherwise returns BadRequest or NotFound.</returns>
+        /// <returns>Account details if successful, otherwise returns  NotFound.</returns>
         // GET: api/Accounts/0b4b7e2b-ffd1-4acf-81b3-e51d48155217
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Account>> GetAccount(Guid id)
         {
             var request = new GetAccountRequest(id);
             var result = await _service.Get(request);
 
-            return result.IsSuccess switch
+            if (!result.IsSuccess)
             {
-                false when result.ErrorMessage.StartsWith("No") => NotFound(new { Error = result.ErrorMessage }),
-                false => BadRequest(new { Error = result.ErrorMessage }),
-                _ => Ok(result.Result)
-            };
+                return NotFound(new { Error = result.ErrorMessage });
+            }
+
+            return Ok(result.Result);
         }
 
         /// <summary>
