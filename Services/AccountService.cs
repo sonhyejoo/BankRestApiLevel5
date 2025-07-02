@@ -33,15 +33,7 @@ public class AccountService : IAccountService
         _context.Accounts.Add(accountToAdd);
         await _context.SaveChangesAsync();
 
-        return new AccountResult<Account>
-        (
-            result: new Account
-            {
-                Id = accountToAdd.Id,
-                Name = accountToAdd.Name,
-                Balance = accountToAdd.Balance
-            }
-        );
+        return accountToAdd.CreateResult();
     }
 
     public async Task<AccountResult<Account>> Get(GetAccountRequest request)
