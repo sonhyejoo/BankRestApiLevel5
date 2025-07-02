@@ -144,21 +144,19 @@ The `Account` class has the following attributes:
     }
     ```
 - **Response**
-   - `200 OK`
-   
-  
-```json
-{
-"sender": {
-"id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-"name": "Alice Smith",
-"balance": 50
-},
-"recipient": {
-"id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-"name": "John Smith",
-"balance": 75
-}
-}
-```
-   - `400 Bad Request` if invalid amount, insufficient funds, or invalid account(s)
+  - `200 OK`
+    ```json
+    {
+      "sender": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "name": "Alice Smith",
+        "balance": 50
+      },
+      "recipient": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "name": "John Smith",
+        "balance": 75
+    }
+    }
+    ```
+    - `400 Bad Request` if invalid amount, insufficient funds, or invalid account(s)
