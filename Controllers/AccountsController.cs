@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using BankRestApi.Models.DTOs;
 using BankRestApi.Services;
-using Account = BankRestApi.Models.Account;
+using Account = BankRestApi.Models.DTOs.Account;
 
 namespace BankRestApi.Controllers
 {
