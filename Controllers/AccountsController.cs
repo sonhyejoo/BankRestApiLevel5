@@ -1,3 +1,4 @@
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using BankRestApi.Models.DTOs;
 using BankRestApi.Services;
@@ -81,7 +82,7 @@ namespace BankRestApi.Controllers
             var result = await _service.Deposit(request);
             return result.IsSuccess switch
             {
-                false when result.ErrorMessage.StartsWith("No") => NotFound(result.ErrorMessage),
+                false when result.StatusCode is HttpStatusCode.NotFound => NotFound(result.ErrorMessage),
                 false => BadRequest(result.ErrorMessage),
                 _ => Ok(result.Result)
             };
@@ -105,7 +106,7 @@ namespace BankRestApi.Controllers
             var result = await _service.Withdraw(request);
             return result.IsSuccess switch
             {
-                false when result.ErrorMessage.StartsWith("No") => NotFound(result.ErrorMessage),
+                false when result.StatusCode is HttpStatusCode.NotFound => NotFound(result.ErrorMessage),
                 false => BadRequest(result.ErrorMessage),
                 _ => Ok(result.Result)
             };
@@ -127,7 +128,7 @@ namespace BankRestApi.Controllers
             var result = await _service.Transfer(request);
             return result.IsSuccess switch
             {
-                false when result.ErrorMessage.StartsWith("No") => NotFound(result.ErrorMessage),
+                false when result.StatusCode is HttpStatusCode.NotFound => NotFound(result.ErrorMessage),
                 false => BadRequest(result.ErrorMessage),
                 _ => Ok(result.Result)
             };
