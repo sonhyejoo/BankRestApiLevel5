@@ -1,4 +1,5 @@
-﻿using BankRestApi.ExtensionMethods;
+﻿using System.Net;
+using BankRestApi.ExtensionMethods;
 using BankRestApi.Models;
 using BankRestApi.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
@@ -69,7 +70,7 @@ public class AccountService : IAccountService
         }
         catch (DbUpdateConcurrencyException ex) 
         {
-            return new AccountResult<Account>(ex.Message);
+            return new AccountResult<Account>(HttpStatusCode.InternalServerError, ex.Message);
         }
         
         return foundAccount.CreateResult();
@@ -101,7 +102,7 @@ public class AccountService : IAccountService
         }
         catch (DbUpdateConcurrencyException ex) 
         {
-            return new AccountResult<Account>(ex.Message);
+            return new AccountResult<Account>(HttpStatusCode.InternalServerError, ex.Message);
         }
         
         return foundAccount.CreateResult();
@@ -142,7 +143,7 @@ public class AccountService : IAccountService
         }
         catch (DbUpdateConcurrencyException ex) 
         {
-            return new AccountResult<TransferDetails>(ex.Message);
+            return new AccountResult<TransferDetails>(HttpStatusCode.InternalServerError, ex.Message);
         }
         var senderDto = new Account
         {
@@ -157,6 +158,6 @@ public class AccountService : IAccountService
             Balance = recipient.Balance
         };
         
-        return new AccountResult<TransferDetails>(result: new TransferDetails(senderDto, recipientDto));
+        return new AccountResult<TransferDetails>(HttpStatusCode.OK, new TransferDetails(senderDto, recipientDto));
     }
 }
