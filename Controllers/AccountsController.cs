@@ -33,17 +33,12 @@ namespace BankRestApi.Controllers
             var request = new GetAccountRequest(id);
             var result = await _service.Get(request);
 
-            if (!result.IsSuccess && result.ErrorMessage.StartsWith("No"))
+            return result.IsSuccess switch
             {
-                return NotFound(new { Error = result.ErrorMessage });
-            }
-            
-            if (!result.IsSuccess)
-            {
-                return BadRequest(new { Error = result.ErrorMessage });
-            }
-
-            return Ok(result.Result);
+                false when result.ErrorMessage.StartsWith("No") => NotFound(new { Error = result.ErrorMessage }),
+                false => BadRequest(new { Error = result.ErrorMessage }),
+                _ => Ok(result.Result)
+            };
         }
 
         /// <summary>
@@ -84,17 +79,12 @@ namespace BankRestApi.Controllers
         {
             var request = new TransactionRequest(Amount: amount, Id: id);
             var result = await _service.Deposit(request);
-            if (!result.IsSuccess && result.ErrorMessage.StartsWith("No"))
+            return result.IsSuccess switch
             {
-                return NotFound(new { Error = result.ErrorMessage });
-            }
-            
-            if (!result.IsSuccess)
-            {
-                return BadRequest(new { Error = result.ErrorMessage });
-            }
-
-            return Ok(result.Result);
+                false when result.ErrorMessage.StartsWith("No") => NotFound(new { Error = result.ErrorMessage }),
+                false => BadRequest(new { Error = result.ErrorMessage }),
+                _ => Ok(result.Result)
+            };
         }
         
         /// <summary>
@@ -112,17 +102,12 @@ namespace BankRestApi.Controllers
         {
             var request = new TransactionRequest(Amount: amount, Id: id);
             var result = await _service.Withdraw(request);
-            if (!result.IsSuccess && result.ErrorMessage.StartsWith("No"))
+            return result.IsSuccess switch
             {
-                return NotFound(new { Error = result.ErrorMessage });
-            }
-            
-            if (!result.IsSuccess)
-            {
-                return BadRequest(new { Error = result.ErrorMessage });
-            }
-
-            return Ok(result.Result);
+                false when result.ErrorMessage.StartsWith("No") => NotFound(new { Error = result.ErrorMessage }),
+                false => BadRequest(new { Error = result.ErrorMessage }),
+                _ => Ok(result.Result)
+            };
         }
         
         /// <summary>
@@ -139,17 +124,12 @@ namespace BankRestApi.Controllers
         public async Task<ActionResult<TransferDetails>> Transfer(TransactionRequest request)
         {
             var result = await _service.Transfer(request);
-            if (!result.IsSuccess && result.ErrorMessage.StartsWith("No"))
+            return result.IsSuccess switch
             {
-                return NotFound(new { Error = result.ErrorMessage });
-            }
-            
-            if (!result.IsSuccess)
-            {
-                return BadRequest(new { Error = result.ErrorMessage });
-            }
-
-            return Ok(result.Result);
+                false when result.ErrorMessage.StartsWith("No") => NotFound(new { Error = result.ErrorMessage }),
+                false => BadRequest(new { Error = result.ErrorMessage }),
+                _ => Ok(result.Result)
+            };
         }
     }
 }
