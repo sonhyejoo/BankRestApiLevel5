@@ -19,7 +19,7 @@ public class AccountService : IAccountService
         var name = request.Name;
         if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
         {
-            return AccountResult<Account>.EmptyNameError(Account.Empty);
+            return AccountResult<Account>.EmptyNameError();
         }
 
         var accountToAdd = new Models.Account
@@ -49,7 +49,7 @@ public class AccountService : IAccountService
 
         if (foundAccount == null)
         {
-            return AccountResult<Account>.NotFoundError(Account.Empty);
+            return AccountResult<Account>.NotFoundError();
         }
         
         return new AccountResult<Account>
@@ -69,12 +69,12 @@ public class AccountService : IAccountService
 
         if (foundAccount == null)
         {
-            return AccountResult<Account>.NotFoundError(Account.Empty);
+            return AccountResult<Account>.NotFoundError();
         }
 
         if (request.Amount <= 0)
         {
-            return AccountResult<Account>.GreaterThanZeroError(Account.Empty);
+            return AccountResult<Account>.GreaterThanZeroError();
         }
         
         foundAccount.Balance += request.Amount;
@@ -104,17 +104,17 @@ public class AccountService : IAccountService
 
         if (foundAccount == null)
         {
-            return AccountResult<Account>.NotFoundError(Account.Empty);
+            return AccountResult<Account>.NotFoundError();
         }
 
         if (request.Amount <= 0)
         {
-            return AccountResult<Account>.GreaterThanZeroError(Account.Empty);
+            return AccountResult<Account>.GreaterThanZeroError();
         }
         
         if (request.Amount > foundAccount.Balance)
         {
-            return AccountResult<Account>.InsufficientFundsError(Account.Empty);
+            return AccountResult<Account>.InsufficientFundsError();
         }
         
         foundAccount.Balance -= request.Amount;
@@ -144,7 +144,7 @@ public class AccountService : IAccountService
 
         if (senderId == recipientId)
         {
-            return AccountResult<TransferDetails>.DuplicateIdError(TransferDetails.Empty);
+            return AccountResult<TransferDetails>.DuplicateIdError();
         }
         
         var sender = await  _context.Accounts.FindAsync(senderId);
@@ -152,17 +152,17 @@ public class AccountService : IAccountService
 
         if (sender == null  || recipient == null)
         {
-            return AccountResult<TransferDetails>.NotFoundError(TransferDetails.Empty);
+            return AccountResult<TransferDetails>.NotFoundError();
         }
 
         if (amount <= 0)
         {
-            return AccountResult<TransferDetails>.GreaterThanZeroError(TransferDetails.Empty);
+            return AccountResult<TransferDetails>.GreaterThanZeroError();
         }
         
         if (amount > sender.Balance)
         {
-            return AccountResult<TransferDetails>.InsufficientFundsError(TransferDetails.Empty);
+            return AccountResult<TransferDetails>.InsufficientFundsError();
         }
         
         sender.Balance -= request.Amount;
