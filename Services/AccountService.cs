@@ -138,15 +138,15 @@ public class AccountService : IAccountService
         });
     }
     
-    public async Task<AccountResult<TransferBalances>> Transfer(TransactionRequest request)
+    public async Task<AccountResult<TransferDetails>> Transfer(TransactionRequest request)
     {
         var (amount, senderId, recipientId) = request;
 
         if (senderId == recipientId)
         {
-            return new AccountResult<TransferBalances>
+            return new AccountResult<TransferDetails>
             (
-                result: new TransferBalances(0, 0),
+                result: new TransferDetails(0, 0),
                 errorMessage: "Duplicate ids given for sender and recipient."
             );
         }
@@ -156,17 +156,17 @@ public class AccountService : IAccountService
 
         if (sender == null  || recipient == null)
         {
-            return AccountResult<TransferBalances>.InvalidIdError(TransferBalances.Empty);
+            return AccountResult<TransferDetails>.InvalidIdError(TransferDetails.Empty);
         }
 
         if (amount <= 0)
         {
-            return AccountResult<TransferBalances>.GreaterThanZeroError(TransferBalances.Empty);
+            return AccountResult<TransferDetails>.GreaterThanZeroError(TransferDetails.Empty);
         }
         
         if (amount > sender.Balance)
         {
-            return AccountResult<TransferBalances>.InsufficientFundsError(TransferBalances.Empty);
+            return AccountResult<TransferDetails>.InsufficientFundsError(TransferDetails.Empty);
         }
         
         sender.Balance -= request.Amount;
@@ -177,12 +177,12 @@ public class AccountService : IAccountService
         }
         catch (DbUpdateConcurrencyException ex) 
         {
-            return new AccountResult<TransferBalances>(
-                result: TransferBalances.Empty, 
+            return new AccountResult<TransferDetails>(
+                result: TransferDetails.Empty, 
                 errorMessage: ex.Message
             );
         }
         
-        return new AccountResult<TransferBalances>(result: new TransferBalances(sender.Balance, recipient.Balance));
+        return new AccountResult<TransferDetails>(result: new TransferDetails(sender.Balance, recipient.Balance));
     }
 }

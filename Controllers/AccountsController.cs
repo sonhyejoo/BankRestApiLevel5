@@ -114,14 +114,14 @@ namespace BankRestApi.Controllers
         /// Transfers funds between two accounts.
         /// </summary>
         /// <param name="request">Amount to transfer, sender's ID, recipient's ID.</param>
-        /// <returns>Updated accounts' details if successful, otherwise BadRequest.
+        /// <returns>Updated accounts' balances if successful, otherwise BadRequest.
         /// </returns>
         // POST: api/Accounts/transfers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("transfers")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<TransferBalances>> Transfer(TransactionRequest request)
+        public async Task<ActionResult<TransferDetails>> Transfer(TransactionRequest request)
         {
             var result = await _service.Transfer(request);
             if (!result.IsSuccess)
