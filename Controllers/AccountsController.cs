@@ -57,7 +57,7 @@ namespace BankRestApi.Controllers
             var result = await _service.Create(request);
             if (!result.IsSuccess)
             {
-                return BadRequest(result.ErrorMessage );
+                return BadRequest(result.ErrorMessage);
             }
             var createdAccount = result.Result;
 
@@ -78,7 +78,7 @@ namespace BankRestApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound, Type=typeof(string))]
         public async Task<ActionResult<AccountResult<Account>>> DepositAccount(Guid id, [FromBody] decimal amount)
         {
-            var request = new TransactionRequest(Amount: amount, Id: id);
+            var request = new TransactionRequest(amount, id);
             var result = await _service.Deposit(request);
             return result.IsSuccess switch
             {
