@@ -60,7 +60,7 @@ public class AccountService : IAccountService
 
         if (request.Amount <= 0)
         {
-            return AccountResult<Account>.GreaterThanZeroError();
+            return AccountResult<Account>.NonpositiveAmountError();
         }
         
         foundAccount.Balance += request.Amount;
@@ -87,7 +87,7 @@ public class AccountService : IAccountService
 
         if (request.Amount <= 0)
         {
-            return AccountResult<Account>.GreaterThanZeroError();
+            return AccountResult<Account>.NonpositiveAmountError();
         }
         
         if (request.Amount > foundAccount.Balance)
@@ -127,7 +127,7 @@ public class AccountService : IAccountService
 
         if (amount <= 0)
         {
-            return AccountResult<TransferDetails>.GreaterThanZeroError();
+            return AccountResult<TransferDetails>.NonpositiveAmountError();
         }
         
         if (amount > sender.Balance)

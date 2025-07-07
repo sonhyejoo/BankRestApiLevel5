@@ -21,7 +21,7 @@ public class AccountResult<T>
         ErrorMessage = errorMessage;
     }
 
-    public static AccountResult<T> GreaterThanZeroError() =>
+    public static AccountResult<T> NonpositiveAmountError() =>
         new(HttpStatusCode.BadRequest, "Please enter valid decimal amount greater than zero.");
     public static AccountResult<T> NotFoundError() =>
         new(HttpStatusCode.NotFound, "No account found with that ID.");
