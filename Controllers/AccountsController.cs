@@ -102,7 +102,7 @@ namespace BankRestApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound, Type=typeof(string))]
         public async Task<ActionResult<AccountResult<Account>>> WithdrawAccount(Guid id, [FromBody] decimal amount)
         {
-            var request = new TransactionRequest(Amount: amount, Id: id);
+            var request = new TransactionRequest(amount, id);
             var result = await _service.Withdraw(request);
             return result.IsSuccess switch
             {
