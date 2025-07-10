@@ -30,11 +30,9 @@ public class AccountService : IAccountService
             Name = name,
             Balance = 0
         };
-        
-        _context.Accounts.Add(accountToAdd);
-        await _context.SaveChangesAsync();
+        var addedAccount = await _repository.Insert(accountToAdd);
 
-        return accountToAdd.CreateResult();
+        return addedAccount.CreateResult();
     }
 
     public async Task<AccountResult<Account>> Get(GetAccountRequest request)
