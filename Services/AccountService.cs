@@ -9,6 +9,13 @@ namespace BankRestApi.Services;
 
 public class AccountService : IAccountService
 {
+    private readonly IAccountRepository _repository;
+
+    public AccountService(IAccountRepository repository)
+    {
+        _repository = repository;
+    }
+
     public async Task<AccountResult<Account>> Create(CreateAccountRequest request)
     {
         var name = request.Name;
