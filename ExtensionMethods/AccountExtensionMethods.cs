@@ -11,10 +11,5 @@ public static class AccountExtensionMethods
             result: account.ToDto()
         );
     public static Account ToDto(this Models.Account account) => 
-        new Account
-        {
-            Id = account.Id, 
-            Name = account.Name, 
-            Balance = account.Balance
-        };
+        new Account(account.Id, account.Name, account.Balance);
 }

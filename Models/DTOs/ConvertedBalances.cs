@@ -1,6 +1,8 @@
 ﻿namespace BankRestApi.Models.DTOs;
 
-public class ConvertedBalances() : Account
-{
-    public Dictionary<string, decimal> Balances { get; set; } = new Dictionary<string, decimal>();
-}
+public record ConvertedBalances(
+    Guid Id,
+    string Name,
+    decimal Balance,
+    Dictionary<string, decimal> Balances
+    ) : Account(Id, Name, Balance);
