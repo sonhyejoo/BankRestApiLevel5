@@ -9,9 +9,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddDbContext<AccountContext>(opt =>
     opt.UseInMemoryDatabase("AccountsList"));
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddTransient<IAccountRepository, AccountRepository>();
 
 var app = builder.Build();
 
