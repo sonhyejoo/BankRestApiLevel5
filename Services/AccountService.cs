@@ -110,11 +110,6 @@ public class AccountService : IAccountService
         {
             return AccountResult<TransferDetails>.DuplicateIdError();
         }
-
-        if (recipientId is null)
-        {
-            return AccountResult<TransferDetails>.NullRecipientIdError();
-        }
         
         var sender = await  _repository.GetById(senderId);
         var recipient = await  _repository.GetById(recipientId);
