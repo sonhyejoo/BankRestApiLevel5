@@ -4,6 +4,7 @@ using BankRestApi.Models.DTOs;
 using BankRestApi.Models.DTOs.Requests;
 using BankRestApi.Services;
 using Account = BankRestApi.Models.DTOs.Account;
+using Convert = System.Convert;
 
 namespace BankRestApi.Controllers
 {
@@ -133,6 +134,16 @@ namespace BankRestApi.Controllers
                 false => BadRequest(result.ErrorMessage),
                 _ => Ok(result.Result)
             };
+        }
+        
+        [HttpPost("transfers")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type=typeof(Account))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type=typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type=typeof(string))]
+        public async Task<ActionResult<ConvertedBalances>> GetConvertedBalances(ConvertRequest request)
+        {
+            var result = await _service.ConvertBalances(request);
+            return Ok(result);
         }
     }
 }

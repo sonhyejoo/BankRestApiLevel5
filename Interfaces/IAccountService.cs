@@ -10,4 +10,5 @@ public interface IAccountService
     Task<AccountResult<Account>> Deposit(Transaction request);
     Task<AccountResult<Account>> Withdraw(Transaction request);
     Task<AccountResult<TransferDetails>> Transfer(Transaction request);
+    Task<AccountResult<ConvertedBalances>> ConvertBalances(ConvertRequest request);
 }

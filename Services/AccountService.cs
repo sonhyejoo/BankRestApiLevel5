@@ -144,4 +144,9 @@ public class AccountService : IAccountService
         
         return new AccountResult<TransferDetails>(HttpStatusCode.OK, new TransferDetails(sender.ToDto(), recipient.ToDto()));
     }
+
+    public Task<AccountResult<ConvertedBalances>> ConvertBalances(ConvertRequest request)
+    {
+        
+    }
 }
