@@ -145,18 +145,9 @@ public class AccountService : IAccountService
         {
             return new AccountResult<TransferDetails>(HttpStatusCode.InternalServerError, ex.Message);
         }
-        var senderDto = new Account
-        {
-            Id = sender.Id,
-            Name = sender.Name,
-            Balance = sender.Balance
-        };
-        var recipientDto = new Account
-        {
-            Id = recipient.Id,
-            Name = recipient.Name,
-            Balance = recipient.Balance
-        };
+
+        var senderDto = sender.ToDto();
+        var recipientDto = recipient.ToDto();
         
         return new AccountResult<TransferDetails>(HttpStatusCode.OK, new TransferDetails(senderDto, recipientDto));
     }
