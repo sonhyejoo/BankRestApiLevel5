@@ -44,22 +44,21 @@ public class AccountService : IAccountService
     
     public async Task<AccountResult<Account>> Deposit(TransactionRequest request)
     {
-        var foundAccount = await  _context.Accounts.FindAsync(request.Id);
-
-        if (foundAccount is null)
-        {
-            return AccountResult<Account>.NotFoundError();
-        }
-
         if (request.Amount <= 0)
         {
             return AccountResult<Account>.NonpositiveAmountError();
         }
         
+        var foundAccount = await  _repository.GetById(request.Id);
+        if (foundAccount is null)
+        {
+            return AccountResult<Account>.NotFoundError();
+        }
+        
         foundAccount.Balance += request.Amount;
         try
         {
-            await _context.SaveChangesAsync();
+            await _repository.Update(foundAccount);
         }
         catch (DbUpdateConcurrencyException ex) 
         {
