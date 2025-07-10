@@ -1,10 +1,10 @@
 using System.Net;
+using BankRestApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using BankRestApi.Models.DTOs;
 using BankRestApi.Models.DTOs.Requests;
 using BankRestApi.Services;
 using Account = BankRestApi.Models.DTOs.Account;
-using Convert = System.Convert;
 
 namespace BankRestApi.Controllers
 {
@@ -140,7 +140,7 @@ namespace BankRestApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type=typeof(ConvertedBalances))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type=typeof(string))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type=typeof(string))]
-        public async Task<ActionResult<ConvertedBalances>> GetConvertedBalances(Guid id, [FromBody] string currencies)
+        public async Task<ActionResult<ConvertedBalances>> GetConvertedBalances(Guid id, [FromBody] List<string> currencies)
         {
             var result = await _service.ConvertBalances(new ConvertRequest(id, currencies));
             return result.IsSuccess switch

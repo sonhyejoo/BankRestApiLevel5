@@ -1,6 +1,10 @@
-﻿namespace BankRestApi.Models.DTOs.Requests;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.IdentityModel.Tokens;
+
+namespace BankRestApi.Models.DTOs.Requests;
 
 public record ConvertRequest(
-    Guid Id,
-    string? Currencies
-    ) : GetAccount(Id);
+    Guid Id, 
+    [AllValidCurrenciesInList]
+    List<string> Currencies
+    );

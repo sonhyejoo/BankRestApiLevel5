@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Text;
 using BankRestApi.ExtensionMethods;
 using BankRestApi.Models;
 using BankRestApi.Models.DTOs;
@@ -12,7 +13,6 @@ public class AccountService : IAccountService
 {
     private readonly IAccountRepository _repository;
     private readonly IExchangeService _exchangeService;
-
     public AccountService(IAccountRepository accountRepository, IExchangeService exchangeService)
     {
         _repository = accountRepository;
@@ -158,7 +158,8 @@ public class AccountService : IAccountService
         
         var balanceInUsd = foundAccount.Balance;
         
-        var exchangeRates = await _exchangeService.GetExchangeRatesAsync(request.Currencies);
+        var exchangeRates = await _exchangeService.GetExchangeRatesAsync(
+            string.Join(',', request.Currencies));
         var balances = new Dictionary<string, decimal>();
         foreach (var (currency, rate) in exchangeRates)
         {
