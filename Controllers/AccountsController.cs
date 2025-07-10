@@ -136,14 +136,19 @@ namespace BankRestApi.Controllers
             };
         }
         
-        [HttpPost("transfers")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type=typeof(Account))]
+        [HttpPost("{id}/conversion")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type=typeof(ConvertedBalances))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type=typeof(string))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type=typeof(string))]
         public async Task<ActionResult<ConvertedBalances>> GetConvertedBalances(ConvertRequest request)
         {
             var result = await _service.ConvertBalances(request);
-            return Ok(result);
+            return result.IsSuccess switch
+            {
+                false when result.StatusCode is HttpStatusCode.NotFound => NotFound(result.ErrorMessage),
+                false => BadRequest(result.ErrorMessage),
+                _ => Ok(result.Result)
+            };
         }
     }
 }

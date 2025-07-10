@@ -14,6 +14,8 @@ builder.Services.AddDbContext<AccountContext>(opt =>
     opt.UseInMemoryDatabase("AccountsList"));
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddTransient<IAccountRepository, AccountRepository>();
+builder.Services.AddHttpClient<IExchangeService, ExchangeService>(client =>
+    client.BaseAddress = new Uri(builder.Configuration["ExchangeService:BaseAddress"]));
 
 var app = builder.Build();
 

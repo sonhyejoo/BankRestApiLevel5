@@ -11,10 +11,12 @@ namespace BankRestApi.Services;
 public class AccountService : IAccountService
 {
     private readonly IAccountRepository _repository;
+    private readonly IExchangeService _exchangeService;
 
-    public AccountService(IAccountRepository accountRepository)
+    public AccountService(IAccountRepository accountRepository, IExchangeService exchangeService)
     {
         _repository = accountRepository;
+        _exchangeService = exchangeService;
     }
 
     public async Task<AccountResult<Account>> Create(CreateAccount request)
@@ -144,9 +146,25 @@ public class AccountService : IAccountService
         
         return new AccountResult<TransferDetails>(HttpStatusCode.OK, new TransferDetails(sender.ToDto(), recipient.ToDto()));
     }
-
-    public Task<AccountResult<ConvertedBalances>> ConvertBalances(ConvertRequest request)
+    
+    public async Task<AccountResult<ConvertedBalances>> ConvertBalances(ConvertRequest request)
     {
+        var foundAccount = await _repository.GetById(request.Id);
+
+        if (foundAccount is null)
+        {
+            return AccountResult<ConvertedBalances>.NotFoundError();
+        }
         
+        var balanceInUsd = foundAccount.Balance;
+        
+        var exchangeRates = await _exchangeService.GetExchangeRatesAsync(request.Currencies);
+        var balances = new Dictionary<string, decimal>();
+        foreach (var (currency, rate) in exchangeRates)
+        {
+            balances.Add(currency, balanceInUsd * rate);
+        }
+        
+        return new AccountResult<ConvertedBalances>(HttpStatusCode.OK, new ConvertedBalances(foundAccount.Id, foundAccount.Name, foundAccount.Balance, balances));
     }
 }
