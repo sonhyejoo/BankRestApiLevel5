@@ -1,6 +1,5 @@
 ﻿using BankRestApi.Models;
 using BankRestApi.Services;
-using SQLitePCL;
 
 namespace BankRestApi.Repositories;
 
