@@ -12,7 +12,7 @@ public class AccountRepository : IAccountRepository
         _context = context;
     }
     
-    public async Task<Account?> GetById(Guid id)
+    public async Task<Account?> GetById(Guid? id)
     {
         return await _context.Accounts.FindAsync(id);
     }

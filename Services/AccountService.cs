@@ -19,6 +19,7 @@ public class AccountService : IAccountService
     public async Task<AccountResult<Account>> Create(CreateAccountRequest request)
     {
         var name = request.Name;
+        
         if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
         {
             return AccountResult<Account>.EmptyNameError();
@@ -50,6 +51,7 @@ public class AccountService : IAccountService
         }
         
         var foundAccount = await  _repository.GetById(request.Id);
+        
         if (foundAccount is null)
         {
             return AccountResult<Account>.NotFoundError();
@@ -70,16 +72,16 @@ public class AccountService : IAccountService
     
     public async Task<AccountResult<Account>> Withdraw(TransactionRequest request)
     {
-        var foundAccount = await  _context.Accounts.FindAsync(request.Id);
+        if (request.Amount <= 0)
+        {
+            return AccountResult<Account>.NonpositiveAmountError();
+        }
+        
+        var foundAccount = await  _repository.GetById(request.Id);
 
         if (foundAccount is null)
         {
             return AccountResult<Account>.NotFoundError();
-        }
-
-        if (request.Amount <= 0)
-        {
-            return AccountResult<Account>.NonpositiveAmountError();
         }
         
         if (request.Amount > foundAccount.Balance)
@@ -90,7 +92,7 @@ public class AccountService : IAccountService
         foundAccount.Balance -= request.Amount;
         try
         {
-            await _context.SaveChangesAsync();
+            await _repository.Update(foundAccount);
         }
         catch (DbUpdateConcurrencyException ex) 
         {
@@ -108,9 +110,14 @@ public class AccountService : IAccountService
         {
             return AccountResult<TransferDetails>.DuplicateIdError();
         }
+
+        if (recipientId is null)
+        {
+            return AccountResult<TransferDetails>.NullRecipientIdError();
+        }
         
-        var sender = await  _context.Accounts.FindAsync(senderId);
-        var recipient = await  _context.Accounts.FindAsync(recipientId);
+        var sender = await  _repository.GetById(senderId);
+        var recipient = await  _repository.GetById(recipientId);
 
         if (sender is null  || recipient is null)
         {
@@ -131,16 +138,14 @@ public class AccountService : IAccountService
         recipient.Balance +=  request.Amount;
         try
         {
-            await _context.SaveChangesAsync();
+            await _repository.Update(sender);
+            await _repository.Update(recipient);
         }
         catch (DbUpdateConcurrencyException ex) 
         {
             return new AccountResult<TransferDetails>(HttpStatusCode.InternalServerError, ex.Message);
         }
-
-        var senderDto = sender.ToDto();
-        var recipientDto = recipient.ToDto();
         
-        return new AccountResult<TransferDetails>(HttpStatusCode.OK, new TransferDetails(senderDto, recipientDto));
+        return new AccountResult<TransferDetails>(HttpStatusCode.OK, new TransferDetails(sender.ToDto(), recipient.ToDto()));
     }
 }
