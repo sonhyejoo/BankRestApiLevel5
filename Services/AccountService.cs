@@ -37,14 +37,9 @@ public class AccountService : IAccountService
 
     public async Task<AccountResult<Account>> Get(GetAccountRequest request)
     {
-        var foundAccount = await  _context.Accounts.FindAsync(request.Id);
+        var foundAccount = await _repository.GetById(request.Id);
 
-        if (foundAccount is null)
-        {
-            return AccountResult<Account>.NotFoundError();
-        }
-        
-        return foundAccount.CreateResult();
+        return foundAccount is null ? AccountResult<Account>.NotFoundError() : foundAccount.CreateResult();
     }
     
     public async Task<AccountResult<Account>> Deposit(TransactionRequest request)
