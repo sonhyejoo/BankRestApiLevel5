@@ -140,9 +140,9 @@ namespace BankRestApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type=typeof(ConvertedBalances))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type=typeof(string))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type=typeof(string))]
-        public async Task<ActionResult<ConvertedBalances>> GetConvertedBalances(ConvertRequest request)
+        public async Task<ActionResult<ConvertedBalances>> GetConvertedBalances(Guid id, [FromBody] string currencies)
         {
-            var result = await _service.ConvertBalances(request);
+            var result = await _service.ConvertBalances(new ConvertRequest(id, currencies));
             return result.IsSuccess switch
             {
                 false when result.StatusCode is HttpStatusCode.NotFound => NotFound(result.ErrorMessage),

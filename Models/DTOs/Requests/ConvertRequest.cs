@@ -2,5 +2,5 @@
 
 public record ConvertRequest(
     Guid Id,
-    string Currencies
+    string? Currencies
     ) : GetAccount(Id);

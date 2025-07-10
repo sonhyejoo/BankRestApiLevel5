@@ -5,17 +5,16 @@ namespace BankRestApi.Services;
 public class ExchangeService : IExchangeService
 {
     private readonly HttpClient _httpClient;
-    private const string BaseUrl = "https://api.freecurrencyapi.com/v1/currencies"; 
+    private readonly IConfiguration _config;
     
-    public ExchangeService(HttpClient httpClient)
+    public ExchangeService(HttpClient httpClient, IConfiguration config)
     {
         _httpClient = httpClient;
+        _config = config;
     }
     public async Task<Dictionary<string, decimal>> GetExchangeRatesAsync(string currencies)
     {
-        _httpClient.DefaultRequestHeaders.Add("apikey", "placeholder");
-        _httpClient.DefaultRequestHeaders.Add("currencies", currencies);
-        _httpClient.BaseAddress = new Uri(BaseUrl);
+        _httpClient.DefaultRequestHeaders.Add("apikey", _config["apikey"]);
         var response = await _httpClient.GetFromJsonAsync<FreeCurrencyApiResponse>("?currencies=" + currencies);
         return response.data;
     }
