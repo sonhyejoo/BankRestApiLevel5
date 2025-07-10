@@ -1,6 +1,7 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using BankRestApi.Models.DTOs;
+using BankRestApi.Models.DTOs.Requests;
 using BankRestApi.Services;
 using Account = BankRestApi.Models.DTOs.Account;
 
@@ -31,7 +32,7 @@ namespace BankRestApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound, Type=typeof(string))]
         public async Task<ActionResult<Account>> GetAccount(Guid id)
         {
-            var request = new GetAccountRequest(id);
+            var request = new GetAccount(id);
             var result = await _service.Get(request);
 
             if (!result.IsSuccess)
@@ -52,7 +53,7 @@ namespace BankRestApi.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type=typeof(Account))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type=typeof(string))]
-        public async Task<ActionResult<Account>> CreateAccount(CreateAccountRequest request)
+        public async Task<ActionResult<Account>> CreateAccount(CreateAccount request)
         {
             var result = await _service.Create(request);
             if (!result.IsSuccess)
@@ -78,7 +79,7 @@ namespace BankRestApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound, Type=typeof(string))]
         public async Task<ActionResult<AccountResult<Account>>> DepositAccount(Guid id, [FromBody] decimal amount)
         {
-            var request = new TransactionRequest(amount, id);
+            var request = new Transaction(amount, id);
             var result = await _service.Deposit(request);
             return result.IsSuccess switch
             {
@@ -102,7 +103,7 @@ namespace BankRestApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound, Type=typeof(string))]
         public async Task<ActionResult<AccountResult<Account>>> WithdrawAccount(Guid id, [FromBody] decimal amount)
         {
-            var request = new TransactionRequest(amount, id);
+            var request = new Transaction(amount, id);
             var result = await _service.Withdraw(request);
             return result.IsSuccess switch
             {
@@ -123,7 +124,7 @@ namespace BankRestApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type=typeof(Account))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type=typeof(string))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type=typeof(string))]
-        public async Task<ActionResult<TransferDetails>> Transfer(TransactionRequest request)
+        public async Task<ActionResult<TransferDetails>> Transfer(Transaction request)
         {
             var result = await _service.Transfer(request);
             return result.IsSuccess switch

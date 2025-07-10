@@ -2,6 +2,7 @@
 using BankRestApi.ExtensionMethods;
 using BankRestApi.Models;
 using BankRestApi.Models.DTOs;
+using BankRestApi.Models.DTOs.Requests;
 using Microsoft.EntityFrameworkCore;
 using Account = BankRestApi.Models.DTOs.Account;
 
@@ -16,7 +17,7 @@ public class AccountService : IAccountService
         _repository = accountRepository;
     }
 
-    public async Task<AccountResult<Account>> Create(CreateAccountRequest request)
+    public async Task<AccountResult<Account>> Create(CreateAccount request)
     {
         var name = request.Name;
         
@@ -36,14 +37,14 @@ public class AccountService : IAccountService
         return addedAccount.CreateResult();
     }
 
-    public async Task<AccountResult<Account>> Get(GetAccountRequest request)
+    public async Task<AccountResult<Account>> Get(GetAccount request)
     {
         var foundAccount = await _repository.GetById(request.Id);
 
         return foundAccount is null ? AccountResult<Account>.NotFoundError() : foundAccount.CreateResult();
     }
     
-    public async Task<AccountResult<Account>> Deposit(TransactionRequest request)
+    public async Task<AccountResult<Account>> Deposit(Transaction request)
     {
         if (request.Amount <= 0)
         {
@@ -70,7 +71,7 @@ public class AccountService : IAccountService
         return foundAccount.CreateResult();
     }
     
-    public async Task<AccountResult<Account>> Withdraw(TransactionRequest request)
+    public async Task<AccountResult<Account>> Withdraw(Transaction request)
     {
         if (request.Amount <= 0)
         {
@@ -102,7 +103,7 @@ public class AccountService : IAccountService
         return foundAccount.CreateResult();
     }
     
-    public async Task<AccountResult<TransferDetails>> Transfer(TransactionRequest request)
+    public async Task<AccountResult<TransferDetails>> Transfer(Transaction request)
     {
         var (amount, senderId, recipientId) = request;
 

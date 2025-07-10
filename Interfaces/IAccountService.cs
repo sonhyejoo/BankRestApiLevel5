@@ -1,12 +1,13 @@
 ﻿using BankRestApi.Models.DTOs;
+using BankRestApi.Models.DTOs.Requests;
 
 namespace BankRestApi.Services;
 
 public interface IAccountService
 {
-    Task<AccountResult<Account>> Create(CreateAccountRequest request);
-    Task<AccountResult<Account>> Get(GetAccountRequest request);
-    Task<AccountResult<Account>> Deposit(TransactionRequest request);
-    Task<AccountResult<Account>> Withdraw(TransactionRequest request);
-    Task<AccountResult<TransferDetails>> Transfer(TransactionRequest request);
+    Task<AccountResult<Account>> Create(CreateAccount request);
+    Task<AccountResult<Account>> Get(GetAccount request);
+    Task<AccountResult<Account>> Deposit(Transaction request);
+    Task<AccountResult<Account>> Withdraw(Transaction request);
+    Task<AccountResult<TransferDetails>> Transfer(Transaction request);
 }
