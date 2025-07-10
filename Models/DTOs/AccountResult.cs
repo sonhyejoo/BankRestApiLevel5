@@ -30,5 +30,7 @@ public class AccountResult<T>
     public static AccountResult<T> EmptyNameError() =>
         new(HttpStatusCode.BadRequest, "Name cannot be empty or whitespace.");
     public static AccountResult<T> DuplicateIdError() =>
-        new(HttpStatusCode.BadRequest, "Duplicate ids given for sender and recipient.");
+        new(HttpStatusCode.BadRequest, "Duplicate IDs given for sender and recipient.");
+    public static AccountResult<T> NullRecipientIdError() =>
+        new(HttpStatusCode.BadRequest, "Null recipient ID given for recipient.");
 }
