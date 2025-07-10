@@ -11,9 +11,9 @@ public class AccountService : IAccountService
 {
     private readonly IAccountRepository _repository;
 
-    public AccountService(IAccountRepository repository)
+    public AccountService(IAccountRepository accountRepository)
     {
-        _repository = repository;
+        _repository = accountRepository;
     }
 
     public async Task<AccountResult<Account>> Create(CreateAccountRequest request)
