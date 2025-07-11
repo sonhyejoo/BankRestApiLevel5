@@ -147,9 +147,9 @@ public class AccountService : IAccountService
         return new AccountResult<TransferDetails>(HttpStatusCode.OK, new TransferDetails(sender.ToDto(), recipient.ToDto()));
     }
     
-    public async Task<AccountResult<ConvertedBalances>> ConvertBalances(ConvertRequest request)
+    public async Task<AccountResult<ConvertedBalances>> ConvertBalances(ConvertCommand command)
     {
-        var foundAccount = await _repository.GetById(request.Id);
+        var foundAccount = await _repository.GetById(command.Id);
 
         if (foundAccount is null)
         {
@@ -159,7 +159,7 @@ public class AccountService : IAccountService
         var balanceInUsd = foundAccount.Balance;
         
         var exchangeRates = await _exchangeService.GetExchangeRatesAsync(
-            string.Join(',', request.Currencies));
+            string.Join(',', command.Currencies));
         var balances = new Dictionary<string, decimal>();
         foreach (var (currency, rate) in exchangeRates)
         {
