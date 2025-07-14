@@ -27,7 +27,6 @@ public class AccountService : IAccountService
         {
             return AccountResult<Account>.EmptyNameError();
         }
-
         var accountToAdd = new Models.Account
         {
             Id = Guid.NewGuid(),
@@ -52,14 +51,12 @@ public class AccountService : IAccountService
         {
             return AccountResult<Account>.NonpositiveAmountError();
         }
-        
         var foundAccount = await  _repository.GetById(request.Id);
         
         if (foundAccount is null)
         {
             return AccountResult<Account>.NotFoundError();
         }
-        
         foundAccount.Balance += request.Amount;
         try
         {
@@ -79,7 +76,6 @@ public class AccountService : IAccountService
         {
             return AccountResult<Account>.NonpositiveAmountError();
         }
-        
         var foundAccount = await  _repository.GetById(request.Id);
 
         if (foundAccount is null)
@@ -91,7 +87,6 @@ public class AccountService : IAccountService
         {
             return AccountResult<Account>.InsufficientFundsError();
         }
-        
         foundAccount.Balance -= request.Amount;
         try
         {
@@ -113,7 +108,6 @@ public class AccountService : IAccountService
         {
             return AccountResult<TransferDetails>.DuplicateIdError();
         }
-        
         var sender = await  _repository.GetById(senderId);
         var recipient = await  _repository.GetById(recipientId);
 
@@ -131,7 +125,6 @@ public class AccountService : IAccountService
         {
             return AccountResult<TransferDetails>.InsufficientFundsError();
         }
-        
         sender.Balance -= request.Amount;
         recipient.Balance +=  request.Amount;
         try
@@ -155,19 +148,17 @@ public class AccountService : IAccountService
         {
             return AccountResult<ConvertedBalances>.NotFoundError();
         }
-        
         var balanceInUsd = foundAccount.Balance;
-        FreeCurrencyApiResponse freeCurrencyApiResponse;
+        FreeCurrencyApiResponse? freeCurrencyApiResponse;
         try
         {
             freeCurrencyApiResponse = await _exchangeService.GetExchangeRatesAsync(
-                string.Join(',', command.Currencies));
+                string.Join(',', command.Currencies))!;
         }
         catch (HttpRequestException ex)
         {
             return new AccountResult<ConvertedBalances>(ex.StatusCode, ex.Message);
         }
-
         var exchangeRates = freeCurrencyApiResponse.data;
         var balances = new Dictionary<string, decimal>();
         foreach (var (currency, rate) in exchangeRates)

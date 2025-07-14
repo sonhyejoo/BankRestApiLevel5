@@ -85,7 +85,8 @@ namespace BankRestApi.Controllers
             return result.IsSuccess switch
             {
                 false when result.StatusCode is HttpStatusCode.NotFound => NotFound(result.ErrorMessage),
-                false => BadRequest(result.ErrorMessage),
+                false when result.StatusCode is HttpStatusCode.BadRequest => BadRequest(result.ErrorMessage),
+                false => StatusCode((int)result.StatusCode!, result.ErrorMessage),
                 _ => Ok(result.Result)
             };
         }
@@ -109,7 +110,8 @@ namespace BankRestApi.Controllers
             return result.IsSuccess switch
             {
                 false when result.StatusCode is HttpStatusCode.NotFound => NotFound(result.ErrorMessage),
-                false => BadRequest(result.ErrorMessage),
+                false when result.StatusCode is HttpStatusCode.BadRequest => BadRequest(result.ErrorMessage),
+                false => StatusCode((int)result.StatusCode!, result.ErrorMessage),
                 _ => Ok(result.Result)
             };
         }
@@ -131,7 +133,8 @@ namespace BankRestApi.Controllers
             return result.IsSuccess switch
             {
                 false when result.StatusCode is HttpStatusCode.NotFound => NotFound(result.ErrorMessage),
-                false => BadRequest(result.ErrorMessage),
+                false when result.StatusCode is HttpStatusCode.BadRequest => BadRequest(result.ErrorMessage),
+                false => StatusCode((int)result.StatusCode!, result.ErrorMessage),
                 _ => Ok(result.Result)
             };
         }
@@ -140,6 +143,7 @@ namespace BankRestApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type=typeof(ConvertedBalances))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type=typeof(string))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type=typeof(string))]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type=typeof(string))]
         public async Task<ActionResult<ConvertedBalances>> GetConvertedBalances(Guid id, ConvertRequest request)
         {
             var result = await _service.ConvertBalances(new ConvertCommand(id, request.Currencies));
@@ -147,7 +151,8 @@ namespace BankRestApi.Controllers
             {
                 false when result.StatusCode is HttpStatusCode.NotFound => NotFound(result.ErrorMessage),
                 false when result.StatusCode is HttpStatusCode.UnprocessableEntity => UnprocessableEntity(result.ErrorMessage),
-                false => BadRequest(result.ErrorMessage),
+                false when result.StatusCode is HttpStatusCode.BadRequest => BadRequest(result.ErrorMessage),
+                false => StatusCode((int)result.StatusCode!, result.ErrorMessage),
                 _ => Ok(result.Result)
             };
         }
