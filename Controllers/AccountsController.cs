@@ -139,6 +139,12 @@ namespace BankRestApi.Controllers
             };
         }
         
+        /// <summary>
+        /// Converts account balance value to other currencies
+        /// </summary>
+        /// <param name="id">Account ID to convert balance of</param>
+        /// <param name="request">List of comma separated currency codes</param>
+        /// <returns>Account information and balance in specified currencies (all if not specified)</returns>
         [HttpPost("{id}/conversion")]
         [ProducesResponseType(StatusCodes.Status200OK, Type=typeof(ConvertedBalances))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type=typeof(string))]
