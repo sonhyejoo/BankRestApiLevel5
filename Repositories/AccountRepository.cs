@@ -19,22 +19,22 @@ public class AccountRepository : IAccountRepository
 
     public async Task<Account> Insert(Account account)
     {
-        _context.Accounts.Add(account);
+        var result = _context.Accounts.Add(account);
         await _context.SaveChangesAsync();
 
-        return account;
+        return result.Entity;
     }
 
     public async Task<Account?> Update(Account account)
     {
-        var accountInDb = await _context.Accounts.FindAsync(account.Id);
-        if (accountInDb is not null)
+        var result = await _context.Accounts.FindAsync(account.Id);
+        if (result is not null)
         {
-            accountInDb.Name = account.Name;
-            accountInDb.Balance = account.Balance;
+            result.Name = account.Name;
+            result.Balance = account.Balance;
         }
         await _context.SaveChangesAsync();
 
-        return accountInDb;
+        return result;
     }
 }
