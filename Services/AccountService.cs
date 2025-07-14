@@ -157,9 +157,18 @@ public class AccountService : IAccountService
         }
         
         var balanceInUsd = foundAccount.Balance;
-        
-        var exchangeRates = await _exchangeService.GetExchangeRatesAsync(
-            string.Join(',', command.Currencies));
+        FreeCurrencyApiResponse freeCurrencyApiResponse;
+        try
+        {
+            freeCurrencyApiResponse = await _exchangeService.GetExchangeRatesAsync(
+                string.Join(',', command.Currencies));
+        }
+        catch (HttpRequestException ex)
+        {
+            return new AccountResult<ConvertedBalances>(ex.StatusCode, ex.Message);
+        }
+
+        var exchangeRates = freeCurrencyApiResponse.data;
         var balances = new Dictionary<string, decimal>();
         foreach (var (currency, rate) in exchangeRates)
         {

@@ -146,6 +146,7 @@ namespace BankRestApi.Controllers
             return result.IsSuccess switch
             {
                 false when result.StatusCode is HttpStatusCode.NotFound => NotFound(result.ErrorMessage),
+                false when result.StatusCode is HttpStatusCode.UnprocessableEntity => UnprocessableEntity(result.ErrorMessage),
                 false => BadRequest(result.ErrorMessage),
                 _ => Ok(result.Result)
             };

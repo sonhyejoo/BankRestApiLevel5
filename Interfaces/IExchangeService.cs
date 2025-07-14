@@ -1,6 +1,8 @@
-﻿namespace BankRestApi.Services;
+﻿using BankRestApi.Models.DTOs;
+
+namespace BankRestApi.Services;
 
 public interface IExchangeService
 {
-    Task<Dictionary<string, decimal>> GetExchangeRatesAsync(string currencies);
+    Task<FreeCurrencyApiResponse?>? GetExchangeRatesAsync(string currencies);
 }

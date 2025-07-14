@@ -4,7 +4,7 @@ namespace BankRestApi.Models.DTOs;
 
 public class AccountResult<T>
 {
-    public HttpStatusCode StatusCode { get; }
+    public HttpStatusCode? StatusCode { get; }
     public T? Result { get; }
     public string ErrorMessage { get; }
     public bool IsSuccess => string.IsNullOrEmpty(ErrorMessage);
@@ -15,7 +15,7 @@ public class AccountResult<T>
         StatusCode = statusCode;
         ErrorMessage = errorMessage;
     }
-    public AccountResult(HttpStatusCode statusCode, string errorMessage)
+    public AccountResult(HttpStatusCode? statusCode, string errorMessage)
     {
         StatusCode = statusCode;
         ErrorMessage = errorMessage;

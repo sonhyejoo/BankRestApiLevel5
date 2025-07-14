@@ -227,4 +227,6 @@ The `Account` class has the following attributes:
     }
   }
   ````
-  - `400 Bad Request` if invalid id, 
+  - `400 Bad Request` if invalid id
+  - `422 Unprocessable Entity` if invalid currencies
+    - see [freecurrencyapi.com/docs/status-codes#validation-errors](https://freecurrencyapi.com/docs/status-codes#validation-errors) for details
