@@ -4,5 +4,5 @@ namespace BankRestApi.Services;
 
 public interface IExchangeService
 {
-    Task<FreeCurrencyApiResponse?>? GetExchangeRatesAsync(string currencies);
+    Task<Dictionary<string, decimal>> GetExchangeRatesAsync(string currencies);
 }

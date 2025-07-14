@@ -149,18 +149,18 @@ public class AccountService : IAccountService
             return AccountResult<ConvertedBalances>.NotFoundError();
         }
         var balanceInUsd = foundAccount.Balance;
-        FreeCurrencyApiResponse? freeCurrencyApiResponse;
+        Dictionary<string, decimal> exchangeRates;
+        
         try
         {
-            freeCurrencyApiResponse = await _exchangeService.GetExchangeRatesAsync(
-                string.Join(',', command.Currencies))!;
+            exchangeRates = await _exchangeService.GetExchangeRatesAsync(string.Join(',', command.Currencies))!;
         }
         catch (HttpRequestException ex)
         {
             return new AccountResult<ConvertedBalances>(ex.StatusCode, ex.Message);
         }
-        var exchangeRates = freeCurrencyApiResponse.data;
         var balances = new Dictionary<string, decimal>();
+        
         foreach (var (currency, rate) in exchangeRates)
         {
             balances.Add(currency, balanceInUsd * rate);

@@ -15,9 +15,11 @@ public class ExchangeService : IExchangeService
         _config = config;
         _logger = logger;
     }
-    public async Task<FreeCurrencyApiResponse?> GetExchangeRatesAsync(string currencies)
+    public async Task<Dictionary<string, decimal>> GetExchangeRatesAsync(string currencies)
     {
         _httpClient.DefaultRequestHeaders.Add("apikey", _config["apikey"]);
-        return await _httpClient.GetFromJsonAsync<FreeCurrencyApiResponse>("?currencies=" + currencies);
+        var response = await _httpClient.GetFromJsonAsync<FreeCurrencyApiResponse>("?currencies=" + currencies);
+
+        return response.data;
     }
 }
