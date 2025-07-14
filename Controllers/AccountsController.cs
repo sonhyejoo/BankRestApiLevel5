@@ -82,13 +82,7 @@ namespace BankRestApi.Controllers
         {
             var request = new Transaction(amount, id);
             var result = await _service.Deposit(request);
-            return result.IsSuccess switch
-            {
-                false when result.StatusCode is HttpStatusCode.NotFound => NotFound(result.ErrorMessage),
-                false when result.StatusCode is HttpStatusCode.BadRequest => BadRequest(result.ErrorMessage),
-                false => StatusCode((int)result.StatusCode!, result.ErrorMessage),
-                _ => Ok(result.Result)
-            };
+            return result.IsSuccess ? Ok(result.Result) : StatusCode((int)result.StatusCode!, result.ErrorMessage);
         }
         
         /// <summary>
@@ -107,13 +101,7 @@ namespace BankRestApi.Controllers
         {
             var request = new Transaction(amount, id);
             var result = await _service.Withdraw(request);
-            return result.IsSuccess switch
-            {
-                false when result.StatusCode is HttpStatusCode.NotFound => NotFound(result.ErrorMessage),
-                false when result.StatusCode is HttpStatusCode.BadRequest => BadRequest(result.ErrorMessage),
-                false => StatusCode((int)result.StatusCode!, result.ErrorMessage),
-                _ => Ok(result.Result)
-            };
+            return result.IsSuccess ? Ok(result.Result) : StatusCode((int)result.StatusCode!, result.ErrorMessage);
         }
         
         /// <summary>
@@ -130,13 +118,7 @@ namespace BankRestApi.Controllers
         public async Task<ActionResult<TransferDetails>> Transfer(Transaction request)
         {
             var result = await _service.Transfer(request);
-            return result.IsSuccess switch
-            {
-                false when result.StatusCode is HttpStatusCode.NotFound => NotFound(result.ErrorMessage),
-                false when result.StatusCode is HttpStatusCode.BadRequest => BadRequest(result.ErrorMessage),
-                false => StatusCode((int)result.StatusCode!, result.ErrorMessage),
-                _ => Ok(result.Result)
-            };
+            return result.IsSuccess ? Ok(result.Result) : StatusCode((int)result.StatusCode!, result.ErrorMessage);
         }
         
         /// <summary>
@@ -152,15 +134,9 @@ namespace BankRestApi.Controllers
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type=typeof(string))]
         public async Task<ActionResult<ConvertedBalances>> GetConvertedBalances(Guid id, ConvertRequest request)
         {
-            var result = await _service.ConvertBalances(new ConvertCommand(id, request.Currencies));
-            return result.IsSuccess switch
-            {
-                false when result.StatusCode is HttpStatusCode.NotFound => NotFound(result.ErrorMessage),
-                false when result.StatusCode is HttpStatusCode.UnprocessableEntity => UnprocessableEntity(result.ErrorMessage),
-                false when result.StatusCode is HttpStatusCode.BadRequest => BadRequest(result.ErrorMessage),
-                false => StatusCode((int)result.StatusCode!, result.ErrorMessage),
-                _ => Ok(result.Result)
-            };
+            var convertCommand = new ConvertCommand(id, request.Currencies);
+            var result = await _service.ConvertBalances(convertCommand);
+            return result.IsSuccess ? Ok(result.Result) : StatusCode((int)result.StatusCode!, result.ErrorMessage);
         }
     }
 }

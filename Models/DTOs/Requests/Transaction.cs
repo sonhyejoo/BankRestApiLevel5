@@ -1,7 +1,3 @@
 ﻿namespace BankRestApi.Models.DTOs;
 
-public record Transaction(
-    decimal Amount,
-    Guid Id,
-    Guid? RecipientId = null
-    );
+public record Transaction(decimal Amount, Guid Id, Guid? RecipientId = null);

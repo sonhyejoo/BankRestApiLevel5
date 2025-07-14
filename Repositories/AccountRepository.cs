@@ -1,5 +1,6 @@
 ﻿using BankRestApi.Models;
 using BankRestApi.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace BankRestApi.Repositories;
 
@@ -12,28 +13,56 @@ public class AccountRepository : IAccountRepository
         _context = context;
     }
     
-    public async Task<Account?> GetById(Guid? id)
+    public async Task<Account?> TryGetById(Guid? id)
     {
-        return await _context.Accounts.FindAsync(id);
+        var result =  await _context.Accounts.FindAsync(id);
+        if (result is null)
+        {
+            throw new KeyNotFoundException("No account found with that ID.");
+        }
+
+        return result;
     }
 
-    public async Task<Account> Insert(Account account)
+    public async Task<Account> TryInsert(Account account)
     {
         var result = _context.Accounts.Add(account);
-        await _context.SaveChangesAsync();
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            throw new DbUpdateConcurrencyException("An internal service error occurred.", ex);
+        }
 
         return result.Entity;
     }
 
-    public async Task<Account?> Update(Account account)
+    public async Task<Account?> TryUpdate(Account account)
     {
-        var result = await _context.Accounts.FindAsync(account.Id);
+        var result = await TryGetById(account.Id);
+        
         if (result is not null)
         {
-            result.Name = account.Name;
-            result.Balance = account.Balance;
+            throw new KeyNotFoundException("No account found with that ID.");
         }
-        await _context.SaveChangesAsync();
+
+        if (account.Balance < 0)
+        {
+            throw new InvalidOperationException("Invalid transaction.");
+        }
+        result.Name = account.Name;
+        result.Balance = account.Balance;
+        
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            throw new DbUpdateConcurrencyException("An internal service error occurred.", ex);
+        }
 
         return result;
     }

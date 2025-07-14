@@ -4,7 +4,7 @@ namespace BankRestApi.Services;
 
 public interface IAccountRepository
 {
-    Task<Account?> GetById(Guid? id);
-    Task<Account> Insert(Account account);
-    Task<Account?> Update(Account account);
+    Task<Account?> TryGetById(Guid? id);
+    Task<Account> TryInsert(Account account);
+    Task<Account?> TryUpdate(Account account);
 }

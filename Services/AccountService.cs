@@ -33,16 +33,31 @@ public class AccountService : IAccountService
             Name = name,
             Balance = 0
         };
-        var addedAccount = await _repository.Insert(accountToAdd);
+        try
+        {
+            var addedAccount = await _repository.TryInsert(accountToAdd);
+            
+            return addedAccount.CreateResult();
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            return new AccountResult<Account>(HttpStatusCode.InternalServerError, ex.Message);
+        }
 
-        return addedAccount.CreateResult();
     }
 
     public async Task<AccountResult<Account>> Get(GetAccount request)
     {
-        var foundAccount = await _repository.GetById(request.Id);
+        try
+        {
+            var foundAccount = await _repository.TryGetById(request.Id);
 
-        return foundAccount is null ? AccountResult<Account>.NotFoundError() : foundAccount.CreateResult();
+            return foundAccount.CreateResult();
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return new AccountResult<Account>(HttpStatusCode.NotFound, ex.Message);
+        }
     }
     
     public async Task<AccountResult<Account>> Deposit(Transaction request)
@@ -51,23 +66,33 @@ public class AccountService : IAccountService
         {
             return AccountResult<Account>.NonpositiveAmountError();
         }
-        var foundAccount = await  _repository.GetById(request.Id);
-        
-        if (foundAccount is null)
-        {
-            return AccountResult<Account>.NotFoundError();
-        }
-        foundAccount.Balance += request.Amount;
+
         try
         {
-            await _repository.Update(foundAccount);
+            var foundAccount = await _repository.TryGetById(request.Id);
+
+            if (foundAccount is null)
+            {
+                return AccountResult<Account>.NotFoundError();
+            }
+
+            foundAccount.Balance += request.Amount;
+            await _repository.TryUpdate(foundAccount);
+
+            return foundAccount.CreateResult();
         }
-        catch (DbUpdateConcurrencyException ex) 
+        catch (KeyNotFoundException ex)
+        {
+            return new AccountResult<Account>(HttpStatusCode.NotFound, ex.Message);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return new AccountResult<Account>(HttpStatusCode.BadRequest, ex.Message);
+        }
+        catch (DbUpdateConcurrencyException ex)
         {
             return new AccountResult<Account>(HttpStatusCode.InternalServerError, ex.Message);
         }
-        
-        return foundAccount.CreateResult();
     }
     
     public async Task<AccountResult<Account>> Withdraw(Transaction request)
@@ -76,28 +101,32 @@ public class AccountService : IAccountService
         {
             return AccountResult<Account>.NonpositiveAmountError();
         }
-        var foundAccount = await  _repository.GetById(request.Id);
 
-        if (foundAccount is null)
-        {
-            return AccountResult<Account>.NotFoundError();
-        }
-        
-        if (request.Amount > foundAccount.Balance)
-        {
-            return AccountResult<Account>.InsufficientFundsError();
-        }
-        foundAccount.Balance -= request.Amount;
         try
         {
-            await _repository.Update(foundAccount);
+            var foundAccount = await _repository.TryGetById(request.Id);
+
+            if (request.Amount > foundAccount.Balance)
+            {
+                return AccountResult<Account>.InsufficientFundsError();
+            }
+            foundAccount.Balance -= request.Amount;
+            await _repository.TryUpdate(foundAccount);
+
+            return foundAccount.CreateResult();
         }
-        catch (DbUpdateConcurrencyException ex) 
+        catch (KeyNotFoundException ex)
+        {
+            return new AccountResult<Account>(HttpStatusCode.NotFound, ex.Message);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return new AccountResult<Account>(HttpStatusCode.BadRequest, ex.Message);
+        }
+        catch (DbUpdateConcurrencyException ex)
         {
             return new AccountResult<Account>(HttpStatusCode.InternalServerError, ex.Message);
         }
-        
-        return foundAccount.CreateResult();
     }
     
     public async Task<AccountResult<TransferDetails>> Transfer(Transaction request)
@@ -108,41 +137,50 @@ public class AccountService : IAccountService
         {
             return AccountResult<TransferDetails>.DuplicateIdError();
         }
-        var sender = await  _repository.GetById(senderId);
-        var recipient = await  _repository.GetById(recipientId);
 
-        if (sender is null  || recipient is null)
-        {
-            return AccountResult<TransferDetails>.NotFoundError();
-        }
-
-        if (amount <= 0)
-        {
-            return AccountResult<TransferDetails>.NonpositiveAmountError();
-        }
-        
-        if (amount > sender.Balance)
-        {
-            return AccountResult<TransferDetails>.InsufficientFundsError();
-        }
-        sender.Balance -= request.Amount;
-        recipient.Balance +=  request.Amount;
         try
         {
-            await _repository.Update(sender);
-            await _repository.Update(recipient);
+            var sender = await  _repository.TryGetById(senderId);
+            var recipient = await  _repository.TryGetById(recipientId);
+
+            if (sender is null  || recipient is null)
+            {
+                return AccountResult<TransferDetails>.NotFoundError();
+            }
+
+            if (amount <= 0)
+            {
+                return AccountResult<TransferDetails>.NonpositiveAmountError();
+            }
+        
+            if (amount > sender.Balance)
+            {
+                return AccountResult<TransferDetails>.InsufficientFundsError();
+            }
+            sender.Balance -= request.Amount;
+            recipient.Balance +=  request.Amount;
+            await _repository.TryUpdate(sender);
+            await _repository.TryUpdate(recipient);
+        
+            return new AccountResult<TransferDetails>(HttpStatusCode.OK, new TransferDetails(sender.ToDto(), recipient.ToDto()));
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return new AccountResult<TransferDetails>(HttpStatusCode.NotFound, ex.Message);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return new AccountResult<TransferDetails>(HttpStatusCode.BadRequest, ex.Message);
         }
         catch (DbUpdateConcurrencyException ex) 
         {
             return new AccountResult<TransferDetails>(HttpStatusCode.InternalServerError, ex.Message);
         }
-        
-        return new AccountResult<TransferDetails>(HttpStatusCode.OK, new TransferDetails(sender.ToDto(), recipient.ToDto()));
     }
     
     public async Task<AccountResult<ConvertedBalances>> ConvertBalances(ConvertCommand command)
     {
-        var foundAccount = await _repository.GetById(command.Id);
+        var foundAccount = await _repository.TryGetById(command.Id);
 
         if (foundAccount is null)
         {
@@ -165,7 +203,10 @@ public class AccountService : IAccountService
         {
             balances.Add(currency, balanceInUsd * rate);
         }
+
+        var convertedBalances =
+            new ConvertedBalances(foundAccount.Id, foundAccount.Name, foundAccount.Balance, balances);
         
-        return new AccountResult<ConvertedBalances>(HttpStatusCode.OK, new ConvertedBalances(foundAccount.Id, foundAccount.Name, foundAccount.Balance, balances));
+        return new AccountResult<ConvertedBalances>(HttpStatusCode.OK, convertedBalances);
     }
 }
