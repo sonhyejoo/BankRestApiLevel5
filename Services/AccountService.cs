@@ -32,30 +32,16 @@ public class AccountService : IAccountService
             Name = name,
             Balance = 0
         };
-        try
-        {
-            var addedAccount = await _repository.TryInsert(accountToAdd);
-            
-            return addedAccount.CreateResult();
-        }
-        catch (DbUpdateConcurrencyException ex)
-        {
-            return new AccountResult<Account>(HttpStatusCode.InternalServerError, ex.Message);
-        }
+        var (insertSuccess, addedAccount) = await _repository.TryInsert(accountToAdd);
+        
+        return insertSuccess ? addedAccount.CreateResult() : AccountResult<Account>.InternalServerError();
     }
 
     public async Task<AccountResult<Account>> Get(GetAccount request)
     {
-        try
-        {
-            var foundAccount = await _repository.TryGetById(request.Id);
+        var (getSuccess, foundAccount) = await _repository.TryGetById(request.Id);
 
-            return foundAccount.CreateResult();
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return new AccountResult<Account>(HttpStatusCode.NotFound, ex.Message);
-        }
+        return getSuccess ? foundAccount.CreateResult() : AccountResult<Account>.InternalServerError();
     }
     
     public async Task<AccountResult<Account>> Deposit(Transaction request)
@@ -64,33 +50,17 @@ public class AccountService : IAccountService
         {
             return AccountResult<Account>.NonpositiveAmountError();
         }
+        var foundAccount = await _repository.TryGetById(request.Id);
 
-        try
+        if (foundAccount is null)
         {
-            var foundAccount = await _repository.TryGetById(request.Id);
+            return AccountResult<Account>.NotFoundError();
+        }
 
-            if (foundAccount is null)
-            {
-                return AccountResult<Account>.NotFoundError();
-            }
+        foundAccount.Balance += request.Amount;
+        await _repository.TryUpdate(foundAccount);
 
-            foundAccount.Balance += request.Amount;
-            await _repository.TryUpdate(foundAccount);
-
-            return foundAccount.CreateResult();
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return new AccountResult<Account>(HttpStatusCode.NotFound, ex.Message);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return new AccountResult<Account>(HttpStatusCode.BadRequest, ex.Message);
-        }
-        catch (DbUpdateConcurrencyException ex)
-        {
-            return new AccountResult<Account>(HttpStatusCode.InternalServerError, ex.Message);
-        }
+        return foundAccount.CreateResult();
     }
     
     public async Task<AccountResult<Account>> Withdraw(Transaction request)
