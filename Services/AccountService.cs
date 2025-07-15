@@ -24,7 +24,7 @@ public class AccountService : IAccountService
     {
         var name = request.Name;
         
-        if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
+        if (string.IsNullOrWhiteSpace(name))
         {
             return AccountResult<Account>.EmptyNameError();
         }
