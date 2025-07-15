@@ -1,6 +1,6 @@
 ﻿using BankRestApi.Models;
 
-namespace BankRestApi.Services;
+namespace BankRestApi.Interfaces;
 
 public interface IAccountRepository
 {

@@ -1,6 +1,4 @@
-﻿using BankRestApi.Models.DTOs;
-
-namespace BankRestApi.Services;
+﻿namespace BankRestApi.Interfaces;
 
 public interface IExchangeService
 {

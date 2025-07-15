@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Text;
 using BankRestApi.ExtensionMethods;
+using BankRestApi.Interfaces;
 using BankRestApi.Models;
 using BankRestApi.Models.DTOs;
 using BankRestApi.Models.DTOs.Requests;
