@@ -34,12 +34,7 @@ public class AccountsController : ControllerBase
         var request = new GetAccount(id);
         var result = await _service.Get(request);
 
-        if (!result.IsSuccess)
-        {
-            return NotFound(result.ErrorMessage);
-        }
-
-        return Ok(result.Result);
+        return result.IsSuccess ? Ok(result.Result) : StatusCode((int)result.StatusCode!, result.ErrorMessage);
     }
 
     /// <summary>
@@ -55,13 +50,11 @@ public class AccountsController : ControllerBase
     public async Task<ActionResult<Account>> CreateAccount(CreateAccount request)
     {
         var result = await _service.Create(request);
-        if (!result.IsSuccess)
-        {
-            return BadRequest(result.ErrorMessage);
-        }
         var createdAccount = result.Result;
 
-        return CreatedAtAction(nameof(GetAccount), new { id = createdAccount.Id }, createdAccount);
+        return result.IsSuccess ? CreatedAtAction(
+            nameof(GetAccount), new { id = createdAccount.Id }, createdAccount) 
+            : StatusCode((int)result.StatusCode!, result.ErrorMessage);
     }
 
     /// <summary>

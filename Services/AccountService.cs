@@ -42,7 +42,6 @@ public class AccountService : IAccountService
         {
             return new AccountResult<Account>(HttpStatusCode.InternalServerError, ex.Message);
         }
-
     }
 
     public async Task<AccountResult<Account>> Get(GetAccount request)
