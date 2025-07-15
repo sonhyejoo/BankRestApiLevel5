@@ -191,7 +191,7 @@ public class AccountService : IAccountService
         try
         {
             exchangeRates = await _exchangeService.GetExchangeRatesAsync(
-                string.Join(',', command.Currencies))!;
+                string.Join(',', command.Currencies));
         }
         catch (HttpRequestException ex)
         {
