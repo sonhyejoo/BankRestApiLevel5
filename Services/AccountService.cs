@@ -1,8 +1,6 @@
 ﻿using System.Net;
-using System.Text;
 using BankRestApi.ExtensionMethods;
 using BankRestApi.Interfaces;
-using BankRestApi.Models;
 using BankRestApi.Models.DTOs;
 using BankRestApi.Models.DTOs.Requests;
 using Microsoft.EntityFrameworkCore;
@@ -163,7 +161,8 @@ public class AccountService : IAccountService
             await _repository.TryUpdate(sender);
             await _repository.TryUpdate(recipient);
         
-            return new AccountResult<TransferDetails>(HttpStatusCode.OK, new TransferDetails(sender.ToDto(), recipient.ToDto()));
+            return new AccountResult<TransferDetails>(HttpStatusCode.OK, 
+                new TransferDetails(sender.ToDto(), recipient.ToDto()));
         }
         catch (KeyNotFoundException ex)
         {
@@ -192,7 +191,8 @@ public class AccountService : IAccountService
         
         try
         {
-            exchangeRates = await _exchangeService.GetExchangeRatesAsync(string.Join(',', command.Currencies))!;
+            exchangeRates = await _exchangeService.GetExchangeRatesAsync(
+                string.Join(',', command.Currencies))!;
         }
         catch (HttpRequestException ex)
         {

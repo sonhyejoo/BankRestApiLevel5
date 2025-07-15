@@ -1,10 +1,7 @@
-using System.Net;
 using BankRestApi.Interfaces;
-using BankRestApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using BankRestApi.Models.DTOs;
 using BankRestApi.Models.DTOs.Requests;
-using BankRestApi.Services;
 using Account = BankRestApi.Models.DTOs.Account;
 
 namespace BankRestApi.Controllers;

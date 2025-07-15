@@ -1,5 +1,4 @@
-﻿using System.Net;
-using BankRestApi.Interfaces;
+﻿using BankRestApi.Interfaces;
 using BankRestApi.Models.DTOs;
 
 namespace BankRestApi.Services;

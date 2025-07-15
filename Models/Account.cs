@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace BankRestApi.Models;
+﻿namespace BankRestApi.Models;
 
 public class Account
 {
