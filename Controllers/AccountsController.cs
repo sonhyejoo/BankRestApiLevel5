@@ -78,7 +78,7 @@ public class AccountsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type=typeof(Account))]
     [ProducesResponseType(StatusCodes.Status400BadRequest,  Type=typeof(string))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type=typeof(string))]
-    public async Task<ActionResult<AccountResult<Account>>> DepositAccount(Guid id, [FromBody] decimal amount)
+    public async Task<ActionResult<Account>> DepositAccount(Guid id, [FromBody] decimal amount)
     {
         var request = new Transaction(amount, id);
         var result = await _service.Deposit(request);
@@ -97,7 +97,7 @@ public class AccountsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type=typeof(Account))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type=typeof(string))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type=typeof(string))]
-    public async Task<ActionResult<AccountResult<Account>>> WithdrawAccount(Guid id, [FromBody] decimal amount)
+    public async Task<ActionResult<Account>> WithdrawAccount(Guid id, [FromBody] decimal amount)
     {
         var request = new Transaction(amount, id);
         var result = await _service.Withdraw(request);
