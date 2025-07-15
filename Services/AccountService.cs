@@ -50,17 +50,17 @@ public class AccountService : IAccountService
         {
             return AccountResult<Account>.NonpositiveAmountError();
         }
-        var foundAccount = await _repository.TryGetById(request.Id);
+        var (getSuccess, foundAccount) = await _repository.TryGetById(request.Id);
 
-        if (foundAccount is null)
+        if (!getSuccess)
         {
             return AccountResult<Account>.NotFoundError();
         }
 
         foundAccount.Balance += request.Amount;
-        await _repository.TryUpdate(foundAccount);
+        var (updateSuccess, updatedAccount) = await _repository.TryUpdate(foundAccount);
 
-        return foundAccount.CreateResult();
+        return updateSuccess ? updatedAccount.CreateResult() : AccountResult<Account>.InternalServerError();
     }
     
     public async Task<AccountResult<Account>> Withdraw(Transaction request)
@@ -69,32 +69,21 @@ public class AccountService : IAccountService
         {
             return AccountResult<Account>.NonpositiveAmountError();
         }
+        var (getSuccess, foundAccount) = await _repository.TryGetById(request.Id);
+        
+        if (!getSuccess)
+        {
+            return AccountResult<Account>.NotFoundError();
+        }
+        
+        if (request.Amount > foundAccount.Balance)
+        {
+            return AccountResult<Account>.InsufficientFundsError();
+        }
+        foundAccount.Balance -= request.Amount;
+        var (updateSuccess, updatedAccount) = await _repository.TryUpdate(foundAccount);
 
-        try
-        {
-            var foundAccount = await _repository.TryGetById(request.Id);
-
-            if (request.Amount > foundAccount.Balance)
-            {
-                return AccountResult<Account>.InsufficientFundsError();
-            }
-            foundAccount.Balance -= request.Amount;
-            await _repository.TryUpdate(foundAccount);
-
-            return foundAccount.CreateResult();
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return new AccountResult<Account>(HttpStatusCode.NotFound, ex.Message);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return new AccountResult<Account>(HttpStatusCode.BadRequest, ex.Message);
-        }
-        catch (DbUpdateConcurrencyException ex)
-        {
-            return new AccountResult<Account>(HttpStatusCode.InternalServerError, ex.Message);
-        }
+        return updateSuccess ? updatedAccount.CreateResult() : AccountResult<Account>.InternalServerError();
     }
     
     public async Task<AccountResult<TransferDetails>> Transfer(Transaction request)
@@ -105,59 +94,46 @@ public class AccountService : IAccountService
         {
             return AccountResult<TransferDetails>.DuplicateIdError();
         }
-
-        try
-        {
-            var sender = await  _repository.TryGetById(senderId);
-            var recipient = await  _repository.TryGetById(recipientId);
-
-            if (sender is null  || recipient is null)
-            {
-                return AccountResult<TransferDetails>.NotFoundError();
-            }
-
-            if (amount <= 0)
-            {
-                return AccountResult<TransferDetails>.NonpositiveAmountError();
-            }
         
-            if (amount > sender.Balance)
-            {
-                return AccountResult<TransferDetails>.InsufficientFundsError();
-            }
-            sender.Balance -= request.Amount;
-            recipient.Balance +=  request.Amount;
-            await _repository.TryUpdate(sender);
-            await _repository.TryUpdate(recipient);
-        
-            return new AccountResult<TransferDetails>(HttpStatusCode.OK, 
-                new TransferDetails(sender.ToDto(), recipient.ToDto()));
-        }
-        catch (KeyNotFoundException ex)
+        if (amount <= 0)
         {
-            return new AccountResult<TransferDetails>(HttpStatusCode.NotFound, ex.Message);
+            return AccountResult<TransferDetails>.NonpositiveAmountError();
         }
-        catch (InvalidOperationException ex)
+        var (sendGetSuccess, sender) = await  _repository.TryGetById(senderId);
+        var (receiveGetSuccess, recipient) = await  _repository.TryGetById(recipientId);
+
+        if (!(sendGetSuccess && receiveGetSuccess))
         {
-            return new AccountResult<TransferDetails>(HttpStatusCode.BadRequest, ex.Message);
+            return AccountResult<TransferDetails>.NotFoundError();
         }
-        catch (DbUpdateConcurrencyException ex) 
+    
+        if (amount > sender.Balance)
         {
-            return new AccountResult<TransferDetails>(HttpStatusCode.InternalServerError, ex.Message);
+            return AccountResult<TransferDetails>.InsufficientFundsError();
         }
+        sender.Balance -= request.Amount;
+        recipient.Balance +=  request.Amount;
+        var (sendUpdated, updatedSender) = await _repository.TryUpdate(sender);
+        var (recipientUpdated, updatedRecipient) = await _repository.TryUpdate(recipient);
+    
+        return sendUpdated && recipientUpdated ? 
+            new AccountResult<TransferDetails>(HttpStatusCode.OK, 
+                new TransferDetails(sender.ToDto(), recipient.ToDto())) 
+            : AccountResult<TransferDetails>.InternalServerError();
     }
+    
     
     public async Task<AccountResult<ConvertedBalances>> ConvertBalances(ConvertCommand command)
     {
-        var foundAccount = await _repository.TryGetById(command.Id);
+        var (getSuccess, foundAccount) = await _repository.TryGetById(command.Id);
 
-        if (foundAccount is null)
+        if (!getSuccess)
         {
             return AccountResult<ConvertedBalances>.NotFoundError();
         }
         var balanceInUsd = foundAccount.Balance;
         Dictionary<string, decimal> exchangeRates;
-        
+
         try
         {
             exchangeRates = await _exchangeService.GetExchangeRatesAsync(
@@ -167,12 +143,8 @@ public class AccountService : IAccountService
         {
             return new AccountResult<ConvertedBalances>(ex.StatusCode, ex.Message);
         }
-        var balances = new Dictionary<string, decimal>();
-        
-        foreach (var (currency, rate) in exchangeRates)
-        {
-            balances.Add(currency, balanceInUsd * rate);
-        }
+        var balances = 
+            exchangeRates.ToDictionary(kvp => kvp.Key, kvp => kvp.Value * foundAccount.Balance);
 
         var convertedBalances =
             new ConvertedBalances(foundAccount.Id, foundAccount.Name, foundAccount.Balance, balances);
