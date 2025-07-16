@@ -23,8 +23,8 @@ public class AccountsController : ControllerBase
     /// <summary>
     /// Get specific account by unique id
     /// </summary>
-    /// <param name="id">Account ID.</param>
-    /// <returns>Account details.</returns>
+    /// <param name="id">Account ID</param>
+    /// <returns>Account details</returns>
     // GET: api/Accounts/0b4b7e2b-ffd1-4acf-81b3-e51d48155217
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type=typeof(Account))]
@@ -34,14 +34,16 @@ public class AccountsController : ControllerBase
         var request = new GetAccount(id);
         var result = await _service.Get(request);
 
-        return result.IsSuccess ? Ok(result.Result) : StatusCode((int)result.StatusCode!, result.ErrorMessage);
+        return result.IsSuccess
+            ? Ok(result.Result)
+            : StatusCode((int)result.StatusCode!, result.ErrorMessage);
     }
 
     /// <summary>
-    /// Create a new account.
+    /// Create a new account
     /// </summary>
-    /// <param name="request">Name of account holder.</param>
-    /// <returns>Created account details.</returns>
+    /// <param name="request">Name of account holder</param>
+    /// <returns>Created account details</returns>
     // POST: api/Accounts
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
@@ -52,17 +54,17 @@ public class AccountsController : ControllerBase
         var result = await _service.Create(request);
         var createdAccount = result.Result;
 
-        return result.IsSuccess ? CreatedAtAction(
-            nameof(GetAccount), new { id = createdAccount.Id }, createdAccount) 
+        return result.IsSuccess
+            ? CreatedAtAction(nameof(GetAccount), new { id = createdAccount.Id }, createdAccount)
             : StatusCode((int)result.StatusCode!, result.ErrorMessage);
     }
 
     /// <summary>
     /// Deposit funds into account
     /// </summary>
-    /// <param name="id">Account ID.</param>
-    /// <param name="amount">Deposit amount.</param>
-    /// <returns>Updated account details.</returns>
+    /// <param name="id">Account ID</param>
+    /// <param name="amount">Deposit amount</param>
+    /// <returns>Updated account details</returns>
     // POST: api/Accounts/0b4b7e2b-ffd1-4acf-81b3-e51d48155217/deposits
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost("{id}/deposits")]
@@ -73,15 +75,18 @@ public class AccountsController : ControllerBase
     {
         var request = new Transaction(amount, id);
         var result = await _service.Deposit(request);
-        return result.IsSuccess ? Ok(result.Result) : StatusCode((int)result.StatusCode!, result.ErrorMessage);
+        
+        return result.IsSuccess
+            ? Ok(result.Result)
+            : StatusCode((int)result.StatusCode!, result.ErrorMessage);
     }
     
     /// <summary>
-    /// Withdraws funds from an account.
+    /// Withdraws funds from an account
     /// </summary>
-    /// <param name="id">Account ID.</param>
-    /// <param name="amount">Withdrawal amount.</param>
-    /// <returns>Updated account details.</returns>
+    /// <param name="id">Account ID</param>
+    /// <param name="amount">Withdrawal amount</param>
+    /// <returns>Updated account details</returns>
     // POST: api/Accounts/0b4b7e2b-ffd1-4acf-81b3-e51d48155217/withdrawals
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost("{id}/withdrawals")]
@@ -92,14 +97,17 @@ public class AccountsController : ControllerBase
     {
         var request = new Transaction(amount, id);
         var result = await _service.Withdraw(request);
-        return result.IsSuccess ? Ok(result.Result) : StatusCode((int)result.StatusCode!, result.ErrorMessage);
+        
+        return result.IsSuccess
+            ? Ok(result.Result)
+            : StatusCode((int)result.StatusCode!, result.ErrorMessage);
     }
     
     /// <summary>
-    /// Transfers funds between two accounts.
+    /// Transfers funds between two accounts
     /// </summary>
-    /// <param name="request">Amount to transfer, sender's ID, recipient's ID.</param>
-    /// <returns>Updated accounts' balances.</returns>
+    /// <param name="request">Amount to transfer, sender's ID, recipient's ID</param>
+    /// <returns>Updated accounts' balances</returns>
     // POST: api/Accounts/transfers
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost("transfers")]
@@ -109,7 +117,10 @@ public class AccountsController : ControllerBase
     public async Task<ActionResult<TransferDetails>> Transfer(Transaction request)
     {
         var result = await _service.Transfer(request);
-        return result.IsSuccess ? Ok(result.Result) : StatusCode((int)result.StatusCode!, result.ErrorMessage);
+        
+        return result.IsSuccess
+            ? Ok(result.Result)
+            : StatusCode((int)result.StatusCode!, result.ErrorMessage);
     }
     
     /// <summary>
@@ -127,6 +138,9 @@ public class AccountsController : ControllerBase
     {
         var convertCommand = new ConvertCommand(id, request.Currencies);
         var result = await _service.ConvertBalances(convertCommand);
-        return result.IsSuccess ? Ok(result.Result) : StatusCode((int)result.StatusCode!, result.ErrorMessage);
+        
+        return result.IsSuccess
+            ? Ok(result.Result)
+            : StatusCode((int)result.StatusCode!, result.ErrorMessage);
     }
 }
