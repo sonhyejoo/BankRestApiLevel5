@@ -8,5 +8,5 @@ public interface IAccountRepository
     
     Task<Account?> Insert(Account account);
     
-    Task<Account?> Update(Account account);
+    Task<Account?> Update(Account account, decimal amount);
 }

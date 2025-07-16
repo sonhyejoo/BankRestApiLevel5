@@ -1,5 +1,6 @@
 ﻿using BankRestApi.Interfaces;
 using BankRestApi.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BankRestApi.Repositories;
 
@@ -12,24 +13,22 @@ public class AccountRepository : IAccountRepository
         _context = context;
     }
 
-    public async Task<Account?> GetById(Guid? id)
-        => await _context.Accounts.FindAsync(id);
+    public Task<Account?> GetById(Guid? id)
+        => _context.Accounts.FirstOrDefaultAsync(a => a.Id == id);
 
     public async Task<Account?> Insert(Account account)
     {
         var result = await _context.Accounts.AddAsync(account);
         await _context.SaveChangesAsync();
 
-        return  result.Entity;
+        return result.Entity;
     }
 
-    public async Task<Account?> Update(Account account)
+    public async Task<Account?> Update(Account account, decimal amount)
     {
-        var result = await _context.Accounts.FindAsync(account.Id);
-        result.Name = account.Name;
-        result.Balance = account.Balance;
+        account.Balance += amount;
         await _context.SaveChangesAsync();
 
-        return result;
+        return account;
     }
 }
