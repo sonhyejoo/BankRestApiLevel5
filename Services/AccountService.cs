@@ -3,7 +3,6 @@ using BankRestApi.ExtensionMethods;
 using BankRestApi.Interfaces;
 using BankRestApi.Models.DTOs;
 using BankRestApi.Models.DTOs.Requests;
-using Microsoft.EntityFrameworkCore;
 using Account = BankRestApi.Models.DTOs.Account;
 
 namespace BankRestApi.Services;
@@ -126,30 +125,28 @@ public class AccountService : IAccountService
     
     public async Task<AccountResult<ConvertedBalances>> ConvertBalances(ConvertCommand command)
     {
-        var (getSuccess, foundAccount) = await _repository.GetById(command.Id);
+        var foundAccount = await _repository.GetById(command.Id);
 
-        if (!getSuccess)
+        if (foundAccount is null)
         {
             return AccountResult<ConvertedBalances>.NotFoundError();
         }
-        var balanceInUsd = foundAccount.Balance;
-        Dictionary<string, decimal> exchangeRates;
 
         try
         {
-            exchangeRates = await _exchangeService.GetExchangeRatesAsync(
+            var exchangeRates = await _exchangeService.GetExchangeRatesAsync(
                 string.Join(',', command.Currencies));
+            var balances = exchangeRates.ToDictionary(currencyRate => 
+                currencyRate.Key, currencyRate => currencyRate.Value * foundAccount.Balance);
+
+            var convertedBalances =
+                new ConvertedBalances(foundAccount.Id, foundAccount.Name, foundAccount.Balance, balances);
+        
+            return new AccountResult<ConvertedBalances>(HttpStatusCode.OK, convertedBalances);
         }
         catch (HttpRequestException ex)
         {
             return new AccountResult<ConvertedBalances>(ex.StatusCode, ex.Message);
         }
-        var balances = exchangeRates.ToDictionary(currencyRate => 
-            currencyRate.Key, currencyRate => currencyRate.Value * foundAccount.Balance);
-
-        var convertedBalances =
-            new ConvertedBalances(foundAccount.Id, foundAccount.Name, foundAccount.Balance, balances);
-        
-        return new AccountResult<ConvertedBalances>(HttpStatusCode.OK, convertedBalances);
     }
 }
