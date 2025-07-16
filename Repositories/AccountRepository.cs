@@ -1,6 +1,5 @@
 ﻿using BankRestApi.Interfaces;
 using BankRestApi.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace BankRestApi.Repositories;
 
