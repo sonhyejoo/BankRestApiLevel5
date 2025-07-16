@@ -43,7 +43,7 @@ public class AccountRepository : IAccountRepository
     {
         var result = await TryGetById(account.Id);
         
-        if (result is not null)
+        if (result is null)
         {
             throw new KeyNotFoundException("No account found with that ID.");
         }
