@@ -20,6 +20,6 @@ public class ExchangeService : IExchangeService
         _httpClient.DefaultRequestHeaders.Add("apikey", _config["apikey"]);
         var response = await _httpClient.GetFromJsonAsync<CurrencyApiResponse>("?currencies=" + currencies);
 
-        return response.data;
+        return response.Data;
     }
 }
