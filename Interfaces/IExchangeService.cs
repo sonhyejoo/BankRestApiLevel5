@@ -2,5 +2,5 @@
 
 public interface IExchangeService
 {
-    Task<Dictionary<string, decimal>> GetExchangeRatesAsync(string currencies);
+    Task<Dictionary<string, decimal>?> GetExchangeRatesAsync(string currencies);
 }

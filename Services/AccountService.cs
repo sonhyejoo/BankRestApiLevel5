@@ -127,24 +127,21 @@ public class AccountService : IAccountService
             return AccountResult<ConvertedBalances>.NotFoundError();
         }
 
-        try
+        var exchangeRates = await _exchangeService.GetExchangeRatesAsync(
+            string.Join(',', command.Currencies));
+        if (exchangeRates is null)
         {
-            var exchangeRates = await _exchangeService.GetExchangeRatesAsync(
-                string.Join(',', command.Currencies));
-            var balances = exchangeRates.ToDictionary(
-                currencyRate => currencyRate.Key, 
-                currencyRate => currencyRate.Value * foundAccount.Balance);
-            var convertedBalances = new ConvertedBalances(
-                foundAccount.Id,
-                foundAccount.Name,
-                foundAccount.Balance,
-                balances);
-        
-            return new AccountResult<ConvertedBalances>(HttpStatusCode.OK, convertedBalances);
+            return AccountResult<ConvertedBalances>.InternalServerError();
         }
-        catch (HttpRequestException ex)
-        {
-            return new AccountResult<ConvertedBalances>(ex.StatusCode, ex.Message);
-        }
+        var balances = exchangeRates.ToDictionary(
+            currencyRate => currencyRate.Key, 
+            currencyRate => currencyRate.Value * foundAccount.Balance);
+        var convertedBalances = new ConvertedBalances(
+            foundAccount.Id,
+            foundAccount.Name,
+            foundAccount.Balance,
+            balances);
+    
+        return new AccountResult<ConvertedBalances>(HttpStatusCode.OK, convertedBalances);
     }
 }
