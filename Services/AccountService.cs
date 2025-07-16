@@ -41,7 +41,7 @@ public class AccountService : IAccountService
     {
         var (getSuccess, foundAccount) = await _repository.TryGetById(request.Id);
 
-        return getSuccess ? foundAccount.CreateResult() : AccountResult<Account>.InternalServerError();
+        return getSuccess ? foundAccount.CreateResult() : AccountResult<Account>.NotFoundError();
     }
     
     public async Task<AccountResult<Account>> Deposit(Transaction request)
@@ -143,8 +143,8 @@ public class AccountService : IAccountService
         {
             return new AccountResult<ConvertedBalances>(ex.StatusCode, ex.Message);
         }
-        var balances = 
-            exchangeRates.ToDictionary(kvp => kvp.Key, kvp => kvp.Value * foundAccount.Balance);
+        var balances = exchangeRates.ToDictionary(currencyRate => 
+            currencyRate.Key, currencyRate => currencyRate.Value * foundAccount.Balance);
 
         var convertedBalances =
             new ConvertedBalances(foundAccount.Id, foundAccount.Name, foundAccount.Balance, balances);
