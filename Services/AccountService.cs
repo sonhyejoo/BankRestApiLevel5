@@ -32,16 +32,16 @@ public class AccountService : IAccountService
             Name = name,
             Balance = 0
         };
-        var (insertSuccess, addedAccount) = await _repository.TryInsert(accountToAdd);
+        var addedAccount = await _repository.Insert(accountToAdd);
         
-        return insertSuccess ? addedAccount.CreateResult() : AccountResult<Account>.InternalServerError();
+        return addedAccount is null ? AccountResult<Account>.InternalServerError() : addedAccount.CreateResult();
     }
 
     public async Task<AccountResult<Account>> Get(GetAccount request)
     {
-        var (getSuccess, foundAccount) = await _repository.TryGetById(request.Id);
+        var foundAccount = await _repository.GetById(request.Id);
 
-        return getSuccess ? foundAccount.CreateResult() : AccountResult<Account>.NotFoundError();
+        return foundAccount is null ? AccountResult<Account>.NotFoundError() : foundAccount.CreateResult();
     }
     
     public async Task<AccountResult<Account>> Deposit(Transaction request)
@@ -50,17 +50,17 @@ public class AccountService : IAccountService
         {
             return AccountResult<Account>.NonpositiveAmountError();
         }
-        var (getSuccess, foundAccount) = await _repository.TryGetById(request.Id);
+        var foundAccount = await _repository.GetById(request.Id);
 
-        if (!getSuccess)
+        if (foundAccount is null)
         {
             return AccountResult<Account>.NotFoundError();
         }
 
         foundAccount.Balance += request.Amount;
-        var (updateSuccess, updatedAccount) = await _repository.TryUpdate(foundAccount);
+        var updatedAccount = await _repository.Update(foundAccount);
 
-        return updateSuccess ? updatedAccount.CreateResult() : AccountResult<Account>.InternalServerError();
+        return updatedAccount is null ? AccountResult<Account>.InternalServerError() : updatedAccount.CreateResult();
     }
     
     public async Task<AccountResult<Account>> Withdraw(Transaction request)
@@ -69,7 +69,7 @@ public class AccountService : IAccountService
         {
             return AccountResult<Account>.NonpositiveAmountError();
         }
-        var (getSuccess, foundAccount) = await _repository.TryGetById(request.Id);
+        var (getSuccess, foundAccount) = await _repository.GetById(request.Id);
         
         if (!getSuccess)
         {
@@ -81,7 +81,7 @@ public class AccountService : IAccountService
             return AccountResult<Account>.InsufficientFundsError();
         }
         foundAccount.Balance -= request.Amount;
-        var (updateSuccess, updatedAccount) = await _repository.TryUpdate(foundAccount);
+        var (updateSuccess, updatedAccount) = await _repository.Update(foundAccount);
 
         return updateSuccess ? updatedAccount.CreateResult() : AccountResult<Account>.InternalServerError();
     }
@@ -99,8 +99,8 @@ public class AccountService : IAccountService
         {
             return AccountResult<TransferDetails>.NonpositiveAmountError();
         }
-        var (sendGetSuccess, sender) = await  _repository.TryGetById(senderId);
-        var (receiveGetSuccess, recipient) = await  _repository.TryGetById(recipientId);
+        var (sendGetSuccess, sender) = await  _repository.GetById(senderId);
+        var (receiveGetSuccess, recipient) = await  _repository.GetById(recipientId);
 
         if (!(sendGetSuccess && receiveGetSuccess))
         {
@@ -113,8 +113,8 @@ public class AccountService : IAccountService
         }
         sender.Balance -= request.Amount;
         recipient.Balance +=  request.Amount;
-        var (sendUpdated, updatedSender) = await _repository.TryUpdate(sender);
-        var (recipientUpdated, updatedRecipient) = await _repository.TryUpdate(recipient);
+        var (sendUpdated, updatedSender) = await _repository.Update(sender);
+        var (recipientUpdated, updatedRecipient) = await _repository.Update(recipient);
     
         return sendUpdated && recipientUpdated ? 
             new AccountResult<TransferDetails>(HttpStatusCode.OK, 
@@ -125,7 +125,7 @@ public class AccountService : IAccountService
     
     public async Task<AccountResult<ConvertedBalances>> ConvertBalances(ConvertCommand command)
     {
-        var (getSuccess, foundAccount) = await _repository.TryGetById(command.Id);
+        var (getSuccess, foundAccount) = await _repository.GetById(command.Id);
 
         if (!getSuccess)
         {
