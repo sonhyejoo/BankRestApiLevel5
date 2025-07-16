@@ -69,9 +69,9 @@ public class AccountService : IAccountService
         {
             return AccountResult<Account>.NonpositiveAmountError();
         }
-        var (getSuccess, foundAccount) = await _repository.GetById(request.Id);
+        var foundAccount = await _repository.GetById(request.Id);
         
-        if (!getSuccess)
+        if (foundAccount is null)
         {
             return AccountResult<Account>.NotFoundError();
         }
@@ -81,9 +81,9 @@ public class AccountService : IAccountService
             return AccountResult<Account>.InsufficientFundsError();
         }
         foundAccount.Balance -= request.Amount;
-        var (updateSuccess, updatedAccount) = await _repository.Update(foundAccount);
+        var updatedAccount = await _repository.Update(foundAccount);
 
-        return updateSuccess ? updatedAccount.CreateResult() : AccountResult<Account>.InternalServerError();
+        return updatedAccount is null ? AccountResult<Account>.InternalServerError() : updatedAccount.CreateResult();
     }
     
     public async Task<AccountResult<TransferDetails>> Transfer(Transaction request)
@@ -99,10 +99,10 @@ public class AccountService : IAccountService
         {
             return AccountResult<TransferDetails>.NonpositiveAmountError();
         }
-        var (sendGetSuccess, sender) = await  _repository.GetById(senderId);
-        var (receiveGetSuccess, recipient) = await  _repository.GetById(recipientId);
+        var sender = await  _repository.GetById(senderId);
+        var recipient = await  _repository.GetById(recipientId);
 
-        if (!(sendGetSuccess && receiveGetSuccess))
+        if (sender is null || recipient is null)
         {
             return AccountResult<TransferDetails>.NotFoundError();
         }
@@ -113,13 +113,14 @@ public class AccountService : IAccountService
         }
         sender.Balance -= request.Amount;
         recipient.Balance +=  request.Amount;
-        var (sendUpdated, updatedSender) = await _repository.Update(sender);
-        var (recipientUpdated, updatedRecipient) = await _repository.Update(recipient);
-    
-        return sendUpdated && recipientUpdated ? 
-            new AccountResult<TransferDetails>(HttpStatusCode.OK, 
-                new TransferDetails(sender.ToDto(), recipient.ToDto())) 
-            : AccountResult<TransferDetails>.InternalServerError();
+        var updatedSender = await _repository.Update(sender);
+        var updatedRecipient = await _repository.Update(recipient);
+
+        return updatedSender is null || updatedRecipient is null
+            ? AccountResult<TransferDetails>.InternalServerError()
+            : new AccountResult<TransferDetails>(
+                HttpStatusCode.OK,
+                new TransferDetails(sender.ToDto(), recipient.ToDto()));
     }
     
     
