@@ -20,27 +20,24 @@ public class AccountService : IAccountService
     public async Task<AccountResult<Account>> Create(CreateAccount request)
     {
         var name = request.Name;
-        
         if (string.IsNullOrWhiteSpace(name))
         {
             return AccountResult<Account>.EmptyNameError();
         }
-        var accountToAdd = new Models.Account
-        {
-            Id = Guid.NewGuid(),
-            Name = name,
-            Balance = 0
-        };
-        var addedAccount = await _repository.Insert(accountToAdd);
+        var addedAccount = await _repository.Insert(name);
         
-        return addedAccount is null ? AccountResult<Account>.InternalServerError() : addedAccount.CreateResult();
+        return addedAccount is null
+            ? AccountResult<Account>.InternalServerError()
+            : addedAccount.CreateResult();
     }
 
     public async Task<AccountResult<Account>> Get(GetAccount request)
     {
         var foundAccount = await _repository.GetById(request.Id);
 
-        return foundAccount is null ? AccountResult<Account>.NotFoundError() : foundAccount.CreateResult();
+        return foundAccount is null
+            ? AccountResult<Account>.NotFoundError()
+            : foundAccount.CreateResult();
     }
     
     public async Task<AccountResult<Account>> Deposit(Transaction request)
@@ -49,17 +46,17 @@ public class AccountService : IAccountService
         {
             return AccountResult<Account>.NonpositiveAmountError();
         }
+        
         var foundAccount = await _repository.GetById(request.Id);
-
         if (foundAccount is null)
         {
             return AccountResult<Account>.NotFoundError();
         }
+        var updatedAccount = await _repository.Update(foundAccount, request.Amount);
 
-        foundAccount.Balance += request.Amount;
-        var updatedAccount = await _repository.Update(foundAccount);
-
-        return updatedAccount is null ? AccountResult<Account>.InternalServerError() : updatedAccount.CreateResult();
+        return updatedAccount is null
+            ? AccountResult<Account>.InternalServerError()
+            : updatedAccount.CreateResult();
     }
     
     public async Task<AccountResult<Account>> Withdraw(Transaction request)
@@ -68,8 +65,8 @@ public class AccountService : IAccountService
         {
             return AccountResult<Account>.NonpositiveAmountError();
         }
-        var foundAccount = await _repository.GetById(request.Id);
         
+        var foundAccount = await _repository.GetById(request.Id);
         if (foundAccount is null)
         {
             return AccountResult<Account>.NotFoundError();
@@ -79,41 +76,40 @@ public class AccountService : IAccountService
         {
             return AccountResult<Account>.InsufficientFundsError();
         }
-        foundAccount.Balance -= request.Amount;
-        var updatedAccount = await _repository.Update(foundAccount);
+        var updatedAccount = await _repository.Update(foundAccount, -1 * request.Amount);
 
-        return updatedAccount is null ? AccountResult<Account>.InternalServerError() : updatedAccount.CreateResult();
+        return updatedAccount is null
+            ? AccountResult<Account>.InternalServerError()
+            : updatedAccount.CreateResult();
     }
     
     public async Task<AccountResult<TransferDetails>> Transfer(Transaction request)
     {
-        var (amount, senderId, recipientId) = request;
-
+        var (amount,
+            senderId,
+            recipientId) = request;
         if (senderId == recipientId)
         {
             return AccountResult<TransferDetails>.DuplicateIdError();
         }
-        
         if (amount <= 0)
         {
             return AccountResult<TransferDetails>.NonpositiveAmountError();
         }
-        var sender = await  _repository.GetById(senderId);
-        var recipient = await  _repository.GetById(recipientId);
-
+        
+        var sender = await _repository.GetById(senderId);
+        var recipient = await _repository.GetById(recipientId);
         if (sender is null || recipient is null)
         {
             return AccountResult<TransferDetails>.NotFoundError();
         }
-    
         if (amount > sender.Balance)
         {
             return AccountResult<TransferDetails>.InsufficientFundsError();
         }
-        sender.Balance -= request.Amount;
-        recipient.Balance +=  request.Amount;
-        var updatedSender = await _repository.Update(sender);
-        var updatedRecipient = await _repository.Update(recipient);
+        
+        var updatedSender = await _repository.Update(sender, -1 * request.Amount);
+        var updatedRecipient = await _repository.Update(recipient, request.Amount);
 
         return updatedSender is null || updatedRecipient is null
             ? AccountResult<TransferDetails>.InternalServerError()
@@ -126,7 +122,6 @@ public class AccountService : IAccountService
     public async Task<AccountResult<ConvertedBalances>> ConvertBalances(ConvertCommand command)
     {
         var foundAccount = await _repository.GetById(command.Id);
-
         if (foundAccount is null)
         {
             return AccountResult<ConvertedBalances>.NotFoundError();
@@ -136,11 +131,14 @@ public class AccountService : IAccountService
         {
             var exchangeRates = await _exchangeService.GetExchangeRatesAsync(
                 string.Join(',', command.Currencies));
-            var balances = exchangeRates.ToDictionary(currencyRate => 
-                currencyRate.Key, currencyRate => currencyRate.Value * foundAccount.Balance);
-
-            var convertedBalances =
-                new ConvertedBalances(foundAccount.Id, foundAccount.Name, foundAccount.Balance, balances);
+            var balances = exchangeRates.ToDictionary(
+                currencyRate => currencyRate.Key, 
+                currencyRate => currencyRate.Value * foundAccount.Balance);
+            var convertedBalances = new ConvertedBalances(
+                foundAccount.Id,
+                foundAccount.Name,
+                foundAccount.Balance,
+                balances);
         
             return new AccountResult<ConvertedBalances>(HttpStatusCode.OK, convertedBalances);
         }

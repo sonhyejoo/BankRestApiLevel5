@@ -16,9 +16,15 @@ public class AccountRepository : IAccountRepository
     public Task<Account?> GetById(Guid? id)
         => _context.Accounts.FirstOrDefaultAsync(a => a.Id == id);
 
-    public async Task<Account?> Insert(Account account)
+    public async Task<Account?> Insert(string name)
     {
-        var result = await _context.Accounts.AddAsync(account);
+        var accountToAdd = new Account
+        {
+            Id = Guid.NewGuid(),
+            Name = name,
+            Balance = 0
+        };
+        var result = await _context.Accounts.AddAsync(accountToAdd);
         await _context.SaveChangesAsync();
 
         return result.Entity;
