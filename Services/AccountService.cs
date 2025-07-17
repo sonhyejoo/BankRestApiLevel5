@@ -132,8 +132,9 @@ public class AccountService : IAccountService
             string.Join(',', command.Currencies));
         if (exchangeRateResult.ErrorMessage != string.Empty)
         {
-            // return AccountResult<ConvertedBalances>.InternalServerError();
-            return new AccountResult<ConvertedBalances>(exchangeRateResult.StatusCode, exchangeRateResult.ErrorMessage);
+            return new AccountResult<ConvertedBalances>(
+                exchangeRateResult.StatusCode,
+                exchangeRateResult.ErrorMessage);
         }
         var balances = exchangeRateResult.ExchangeRates.ToDictionary(
             currencyRate => currencyRate.Key, 
