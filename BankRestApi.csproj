@@ -7,6 +7,10 @@
       <UserSecretsId>88e07d0f-4893-4d7e-b732-5fddacd09470</UserSecretsId>
   </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <DocumentationFile>bin\Debug\BankRestApi.xml</DocumentationFile>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.6" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.17" />

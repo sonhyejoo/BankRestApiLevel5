@@ -1,3 +1,4 @@
+using System.Reflection;
 using BankRestApi.Interfaces;
 using BankRestApi.Models;
 using BankRestApi.Repositories;
@@ -10,7 +11,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml");
+    options.IncludeXmlComments(xmlPath);
+});
 builder.Services.AddDbContext<AccountContext>(opt =>
     opt.UseInMemoryDatabase("AccountsList"));
 builder.Services.AddScoped<IAccountService, AccountService>();
