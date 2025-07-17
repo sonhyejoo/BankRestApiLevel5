@@ -13,16 +13,16 @@ public class ExchangeService : IExchangeService
         _httpClient = httpClient;
         _config = config;
     }
-    public async Task<Dictionary<string, decimal>?> GetExchangeRatesAsync(string currencies)
+    public async Task<ExchangeRateResult> GetExchangeRatesAsync(string currencies)
     {
         _httpClient.DefaultRequestHeaders.Add("apikey", _config["apikey"]);
         var response = await _httpClient.GetAsync("?currencies=" + currencies);
         if (!response.IsSuccessStatusCode)
         {
-            return null;
+            return new ExchangeRateResult(response.StatusCode, response.ToString());
         }
         
         var jsonContent = await response.Content.ReadFromJsonAsync<CurrencyApiResponse>();
-        return jsonContent.Data;
+        return new ExchangeRateResult(response.StatusCode, jsonContent.Data);
     }
 }
