@@ -1,4 +1,5 @@
-﻿using BankRestApi.Interfaces;
+﻿using System.Net;
+using BankRestApi.Interfaces;
 using BankRestApi.Models.DTOs;
 
 namespace BankRestApi.Services;
@@ -17,12 +18,17 @@ public class ExchangeService : IExchangeService
     {
         _httpClient.DefaultRequestHeaders.Add("apikey", _config["apikey"]);
         var response = await _httpClient.GetAsync("?currencies=" + currencies);
+        if (response is { StatusCode: HttpStatusCode.UnprocessableEntity})
+        {
+            return new ExchangeRateResult(response.StatusCode, "Invalid currencies inputted.");
+        }
         if (!response.IsSuccessStatusCode)
         {
-            return new ExchangeRateResult(response.StatusCode, response.ToString());
+            return new ExchangeRateResult(response.StatusCode, response.ReasonPhrase!);
         }
         
         var jsonContent = await response.Content.ReadFromJsonAsync<CurrencyApiResponse>();
+        
         return new ExchangeRateResult(response.StatusCode, jsonContent.Data);
     }
 }

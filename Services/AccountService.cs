@@ -3,6 +3,7 @@ using BankRestApi.ExtensionMethods;
 using BankRestApi.Interfaces;
 using BankRestApi.Models.DTOs;
 using BankRestApi.Models.DTOs.Requests;
+using Microsoft.IdentityModel.Tokens;
 using Account = BankRestApi.Models.DTOs.Account;
 
 namespace BankRestApi.Services;
@@ -127,13 +128,14 @@ public class AccountService : IAccountService
             return AccountResult<ConvertedBalances>.NotFoundError();
         }
 
-        var exchangeRates = await _exchangeService.GetExchangeRatesAsync(
+        var exchangeRateResult = await _exchangeService.GetExchangeRatesAsync(
             string.Join(',', command.Currencies));
-        if (exchangeRates is null)
+        if (exchangeRateResult.ErrorMessage != string.Empty)
         {
-            return AccountResult<ConvertedBalances>.InternalServerError();
+            // return AccountResult<ConvertedBalances>.InternalServerError();
+            return new AccountResult<ConvertedBalances>(exchangeRateResult.StatusCode, exchangeRateResult.ErrorMessage);
         }
-        var balances = exchangeRates.ToDictionary(
+        var balances = exchangeRateResult.ExchangeRates.ToDictionary(
             currencyRate => currencyRate.Key, 
             currencyRate => currencyRate.Value * foundAccount.Balance);
         var convertedBalances = new ConvertedBalances(
