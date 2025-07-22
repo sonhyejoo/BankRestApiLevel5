@@ -13,6 +13,9 @@ public class AccountRepository : IAccountRepository
         _context = context;
     }
 
+    public Task<IEnumerable<Account>> GetAccounts()
+        => _context.Accounts.ToListAsync();
+
     public Task<Account?> GetById(Guid? id)
         => _context.Accounts.FirstOrDefaultAsync(a => a.Id == id);
 
