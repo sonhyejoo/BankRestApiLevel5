@@ -3,7 +3,6 @@ using BankRestApi.ExtensionMethods;
 using BankRestApi.Interfaces;
 using BankRestApi.Models.DTOs;
 using BankRestApi.Models.DTOs.Requests;
-using Microsoft.IdentityModel.Tokens;
 using Account = BankRestApi.Models.DTOs.Account;
 
 namespace BankRestApi.Services;
@@ -16,6 +15,14 @@ public class AccountService : IAccountService
     {
         _repository = accountRepository;
         _exchangeService = exchangeService;
+    }
+
+    public async Task<AccountResult<IEnumerable<Account>>> GetAccounts()
+    {
+        var accounts = await _repository.GetAccounts();
+        return new AccountResult<IEnumerable<Account>>(
+            HttpStatusCode.OK, 
+            accounts.Select(a => a.ToDto()));
     }
 
     public async Task<AccountResult<Account>> Create(CreateAccount request)
