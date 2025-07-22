@@ -19,6 +19,22 @@ public class AccountsController : ControllerBase
     {
         _service = accountService;
     }
+
+    /// <summary>
+    /// Get list of accounts
+    /// </summary>
+    /// <returns>List of accounts</returns>
+    /// GET: api/Accounts
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Account>))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
+    public async Task<ActionResult<IEnumerable<Account>>> GetAccounts()
+    {
+        var result = await _service.GetAccounts();
+        return result.IsSuccess
+            ? Ok(result.Result)
+            : StatusCode((int)result.StatusCode!, result.ErrorMessage);
+    }
     
     /// <summary>
     /// Get specific account by unique id
