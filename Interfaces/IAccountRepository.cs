@@ -4,6 +4,8 @@ namespace BankRestApi.Interfaces;
 
 public interface IAccountRepository
 {
+    Task<IEnumerable<Account>> GetAccounts();
+    
     Task<Account?> GetById(Guid? id);
     
     Task<Account?> Insert(string name);
