@@ -13,8 +13,37 @@ public class AccountRepository : IAccountRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<Account>> GetAccounts()
-        => await _context.Accounts.ToListAsync();
+    public async Task<IEnumerable<Account>> GetAccounts(
+        string? name,
+        string sort,
+        bool desc,
+        int pageNumber,
+        int pageSize)
+    {
+        var result = _context.Accounts as IQueryable<Account>;
+        
+        if (!string.IsNullOrWhiteSpace(name))
+        {
+            name = name.Trim();
+            result = result.Where(a => a.Name == name);
+        }
+
+        sort = sort.Trim().ToLower();
+        switch (sort)
+        {
+            case "name":
+                result = result.OrderBy(a => a.Name);
+                break;
+            case "balance":
+                result = result.OrderBy(a => a.Balance);
+                break;
+        }
+
+        result = result
+            .Skip(pageSize * (pageNumber - 1))
+            .Take(pageSize);
+        return desc ? await result.Reverse().ToListAsync() : await result.ToListAsync();
+    }
 
     public Task<Account?> GetById(Guid? id)
         => _context.Accounts.FirstOrDefaultAsync(a => a.Id == id);

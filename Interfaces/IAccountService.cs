@@ -5,7 +5,12 @@ namespace BankRestApi.Interfaces;
 
 public interface IAccountService
 {
-    Task<AccountResult<IEnumerable<Account>>> GetAccounts();
+    Task<AccountResult<IEnumerable<Account>>> GetAccounts(
+        string? name,
+        string sort,
+        bool desc,
+        int pageNumber,
+        int pageSize);
     
     Task<AccountResult<Account>> Create(CreateAccount request);
     

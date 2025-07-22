@@ -17,9 +17,14 @@ public class AccountService : IAccountService
         _exchangeService = exchangeService;
     }
 
-    public async Task<AccountResult<IEnumerable<Account>>> GetAccounts()
+    public async Task<AccountResult<IEnumerable<Account>>> GetAccounts(
+        string? name,
+        string sort,
+        bool desc,
+        int pageNumber = 1,
+        int pageSize = 5)
     {
-        var accounts = await _repository.GetAccounts();
+        var accounts = await _repository.GetAccounts(name, sort, desc, pageNumber, pageSize);
         return new AccountResult<IEnumerable<Account>>(
             HttpStatusCode.OK, 
             accounts.Select(a => a.ToDto()));

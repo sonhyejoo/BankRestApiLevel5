@@ -28,9 +28,23 @@ public class AccountsController : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Account>))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-    public async Task<ActionResult<IEnumerable<Account>>> GetAccounts()
+    public async Task<ActionResult<IEnumerable<Account>>> GetAccounts(
+        string? name,
+        string sort = "",
+        bool desc = false,
+        int pageNumber = 1,
+        int pageSize = 5)
     {
-        var result = await _service.GetAccounts();
+        if (pageNumber > 10)
+        {
+            pageNumber = 10;
+        }
+        if (pageSize > 32)
+        {
+            pageSize = 32;
+        }
+        
+        var result = await _service.GetAccounts(name, sort, desc, pageNumber, pageSize);
         return result.IsSuccess
             ? Ok(result.Result)
             : StatusCode((int)result.StatusCode!, result.ErrorMessage);
