@@ -21,7 +21,9 @@ public class AccountsController : ControllerBase
     }
 
     /// <summary>
-    /// Get list of accounts
+    /// Get list of accounts;
+    /// Filter by name, sort by "name" or "balance", set sorting order to descending by desc=true,
+    /// set page size and page number
     /// </summary>
     /// <returns>List of accounts</returns>
     /// GET: api/Accounts
