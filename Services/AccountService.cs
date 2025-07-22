@@ -24,10 +24,12 @@ public class AccountService : IAccountService
         int pageNumber = 1,
         int pageSize = 5)
     {
-        var accounts = await _repository.GetAccounts(name, sort, desc, pageNumber, pageSize);
+        var (accounts, paginationMetadata)
+            = await _repository.GetAccounts(name, sort, desc, pageNumber, pageSize);
+        var result = accounts.Select(a => a.ToDto());
         return new AccountResult<IEnumerable<Account>>(
             HttpStatusCode.OK, 
-            accounts.Select(a => a.ToDto()));
+            (accounts.Select(a => a.ToDto()), paginationMetadata));
     }
 
     public async Task<AccountResult<Account>> Create(CreateAccount request)

@@ -25,6 +25,11 @@ public class AccountResult<T>
         ErrorMessage = errorMessage;
     }
 
+    public AccountResult(HttpStatusCode statusCode, (IEnumerable<Account>, PaginationMetadata paginationMetadata) accountsAnd)
+    {
+        throw new NotImplementedException();
+    }
+
     public static AccountResult<T> NonpositiveAmountError() =>
         new(HttpStatusCode.BadRequest, "Please enter valid decimal amount greater than zero.");
     

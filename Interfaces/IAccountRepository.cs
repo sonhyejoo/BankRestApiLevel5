@@ -1,11 +1,11 @@
-﻿using BankRestApi.Models;
+﻿using BankRestApi.Models.DTOs;
+using Account = BankRestApi.Models.Account;
 
 namespace BankRestApi.Interfaces;
 
 public interface IAccountRepository
 {
-    Task<IEnumerable<Account>> GetAccounts(
-        string? name,
+    Task<(IEnumerable<Account>, PaginationMetadata)> GetAccounts(string? name,
         string sort,
         bool desc,
         int pageNumber,
