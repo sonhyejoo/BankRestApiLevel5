@@ -1,4 +1,5 @@
 using System.Reflection;
+using BankRestApi.Formatters;
 using BankRestApi.Interfaces;
 using BankRestApi.Models;
 using BankRestApi.Repositories;
@@ -8,7 +9,11 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.OutputFormatters.Add(new CsvOutputFormatter());
+    options.RespectBrowserAcceptHeader = true;
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
