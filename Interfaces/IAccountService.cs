@@ -5,8 +5,7 @@ namespace BankRestApi.Interfaces;
 
 public interface IAccountService
 {
-    Task<AccountResult<IEnumerable<Account>>> GetAccounts(
-        string? name,
+    Task<AccountResult<AccountsAndPageData>> GetAccounts(string? name,
         string sort,
         bool desc,
         int pageNumber,
