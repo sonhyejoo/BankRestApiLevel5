@@ -17,19 +17,16 @@ public class AccountService : IAccountService
         _exchangeService = exchangeService;
     }
 
-    public async Task<AccountResult<IEnumerable<Account>>> GetAccounts(
-        string? name,
+    public async Task<AccountResult<AccountsAndPageData>> GetAccounts(string? name,
         string sort,
         bool desc,
-        int pageNumber = 1,
-        int pageSize = 5)
+        int pageNumber,
+        int pageSize)
     {
         var (accounts, paginationMetadata)
             = await _repository.GetAccounts(name, sort, desc, pageNumber, pageSize);
-        var result = accounts.Select(a => a.ToDto());
-        return new AccountResult<IEnumerable<Account>>(
-            HttpStatusCode.OK, 
-            (accounts.Select(a => a.ToDto()), paginationMetadata));
+        var result = new AccountsAndPageData(accounts.Select(a => a.ToDto()), paginationMetadata);
+        return new AccountResult<AccountsAndPageData>(HttpStatusCode.OK, result);
     }
 
     public async Task<AccountResult<Account>> Create(CreateAccount request)

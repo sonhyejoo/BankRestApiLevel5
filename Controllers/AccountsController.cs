@@ -1,3 +1,4 @@
+using System.Text.Json;
 using BankRestApi.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using BankRestApi.Models.DTOs;
@@ -47,8 +48,12 @@ public class AccountsController : ControllerBase
         }
         
         var result = await _service.GetAccounts(name, sort, desc, pageNumber, pageSize);
+        var accounts = result.Result.Accounts;
+        var pageData = result.Result.PageData;
+        Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pageData));
+        
         return result.IsSuccess
-            ? Ok(result.Result)
+            ? Ok(accounts)
             : StatusCode((int)result.StatusCode!, result.ErrorMessage);
     }
     
