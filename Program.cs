@@ -1,4 +1,5 @@
 using System.Reflection;
+using BankRestApi;
 using BankRestApi.Formatters;
 using BankRestApi.Interfaces;
 using BankRestApi.Models;
@@ -35,6 +36,10 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+else
+{
+    app.UseMiddleware<ExceptionMiddleware>();
 }
 
 app.UseHttpsRedirection();

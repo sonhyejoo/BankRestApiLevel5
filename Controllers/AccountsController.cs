@@ -3,6 +3,7 @@ using BankRestApi.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using BankRestApi.Models.DTOs;
 using BankRestApi.Models.DTOs.Requests;
+using Microsoft.EntityFrameworkCore;
 using Account = BankRestApi.Models.DTOs.Account;
 
 namespace BankRestApi.Controllers;
