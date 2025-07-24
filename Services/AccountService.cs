@@ -38,9 +38,7 @@ public class AccountService : IAccountService
         }
         var addedAccount = await _repository.Insert(name);
         
-        return addedAccount is null
-            ? AccountResult<Account>.InternalServerError()
-            : addedAccount.CreateResult();
+        return addedAccount.CreateResult();
     }
 
     public async Task<AccountResult<Account>> Get(GetAccount request)
@@ -66,9 +64,7 @@ public class AccountService : IAccountService
         }
         var updatedAccount = await _repository.Update(foundAccount, request.Amount);
 
-        return updatedAccount is null
-            ? AccountResult<Account>.InternalServerError()
-            : updatedAccount.CreateResult();
+        return updatedAccount.CreateResult();
     }
     
     public async Task<AccountResult<Account>> Withdraw(Transaction request)
@@ -90,9 +86,7 @@ public class AccountService : IAccountService
         }
         var updatedAccount = await _repository.Update(foundAccount, -1 * request.Amount);
 
-        return updatedAccount is null
-            ? AccountResult<Account>.InternalServerError()
-            : updatedAccount.CreateResult();
+        return updatedAccount.CreateResult();
     }
     
     public async Task<AccountResult<TransferDetails>> Transfer(Transaction request)
@@ -123,9 +117,7 @@ public class AccountService : IAccountService
         var updatedSender = await _repository.Update(sender, -1 * request.Amount);
         var updatedRecipient = await _repository.Update(recipient, request.Amount);
 
-        return updatedSender is null || updatedRecipient is null
-            ? AccountResult<TransferDetails>.InternalServerError()
-            : new AccountResult<TransferDetails>(
+        return new AccountResult<TransferDetails>(
                 HttpStatusCode.OK,
                 new TransferDetails(sender.ToDto(), recipient.ToDto()));
     }
