@@ -23,7 +23,9 @@ builder.Services.AddSwaggerGen(options =>
     options.IncludeXmlComments(xmlPath);
 });
 builder.Services.AddDbContext<AccountContext>(opt =>
-    opt.UseSqlServer(builder.Configuration.GetConnectionString(builder.Configuration["AccountsDatabaseConnection"])));
+    opt.UseSqlServer(builder.Configuration["AccountsDatabaseConnection"]));
+
+
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddTransient<IAccountRepository, AccountRepository>();
 builder.Services.AddHttpClient<IExchangeService, ExchangeService>(client =>
@@ -31,6 +33,12 @@ builder.Services.AddHttpClient<IExchangeService, ExchangeService>(client =>
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    SeedUsers.Initialize(services);
+}
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

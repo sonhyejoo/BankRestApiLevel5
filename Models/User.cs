@@ -1,6 +1,7 @@
 ﻿namespace BankRestApi.Models;
 
-public record User(
-    int Id,
-    string AccountName,
-    string HashedPassword);
+public class User{
+    public int Id { get; set; }
+    public string AccountName { get; set; }
+    public string HashedPassword { get; set; }
+}
