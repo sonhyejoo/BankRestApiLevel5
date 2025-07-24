@@ -23,7 +23,7 @@ builder.Services.AddSwaggerGen(options =>
     options.IncludeXmlComments(xmlPath);
 });
 builder.Services.AddDbContext<AccountContext>(opt =>
-    opt.UseInMemoryDatabase("AccountsList"));
+    opt.UseSqlServer(builder.Configuration.GetConnectionString(builder.Configuration["AccountsDatabaseConnection"])));
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddTransient<IAccountRepository, AccountRepository>();
 builder.Services.AddHttpClient<IExchangeService, ExchangeService>(client =>
