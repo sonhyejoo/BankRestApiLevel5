@@ -7,5 +7,5 @@ public interface IUserService
 {
     User CreateUserAsync(AuthenticationRequest request);
 
-    User GetByName(string name);
+    Task<User?> GetByName(string name);
 }

@@ -26,8 +26,5 @@ public class UserService: IUserService
         return user;
     }
 
-    public User GetByName(string name)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<User?> GetByName(string name) => await _repository.GetByName(name);
 }
