@@ -21,7 +21,7 @@ namespace BankRestApi.Controllers
             _context = context;
             _config = config;
         }
-        
+
         [HttpPost("authenticate")]
         public async Task<ActionResult<string>> Authenticate(AuthenticationRequest request)
         {
@@ -59,6 +59,6 @@ namespace BankRestApi.Controllers
         {
             var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.AccountName == accountName);
             return currentUser is null || currentUser.HashedPassword != password ? null : currentUser;
-        } 
+        }
     }
 }

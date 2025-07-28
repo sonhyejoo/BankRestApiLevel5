@@ -6,6 +6,7 @@ using BankRestApi.Models;
 using BankRestApi.Repositories;
 using BankRestApi.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,21 @@ builder.Services.AddTransient<IAccountRepository, AccountRepository>();
 builder.Services.AddHttpClient<IExchangeService, ExchangeService>(client =>
     client.BaseAddress = new Uri(builder.Configuration["ExchangeService:BaseAddress"]));
 
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new()
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Authentication:Issuer"],
+            ValidAudience = builder.Configuration["Authentication:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Convert.FromBase64String(builder.Configuration["Authentication:SecretForKey"]))
+        };
+    });
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -52,6 +68,7 @@ else
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

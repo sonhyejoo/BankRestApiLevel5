@@ -3,7 +3,7 @@ using BankRestApi.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using BankRestApi.Models.DTOs;
 using BankRestApi.Models.DTOs.Requests;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using Account = BankRestApi.Models.DTOs.Account;
 
 namespace BankRestApi.Controllers;
@@ -12,6 +12,7 @@ namespace BankRestApi.Controllers;
 /// Controller for managing bank interactions.
 /// </summary>
 [Route("api/[controller]")]
+[Authorize]
 [ApiController]
 public class AccountsController : ControllerBase
 {
