@@ -2,13 +2,13 @@
 
 namespace BankRestApi.Models;
 
-public class AccountContext : DbContext
+public class AppDbContext : DbContext
 {
     public DbSet<Account> Accounts { get; set; } = null!;
     
     public DbSet<User> Users { get; set; } = null!;
 
-    public AccountContext(DbContextOptions<AccountContext> options)
+    public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
     {
     }

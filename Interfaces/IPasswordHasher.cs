@@ -1,0 +1,10 @@
+﻿using BankRestApi.Models;
+
+namespace BankRestApi.Interfaces;
+
+public interface IPasswordHelper
+{
+    string GeneratePassword(User user, string password);
+    
+    bool PasswordMatches(User user, string providedPassword, string passwordHash);
+}

@@ -8,9 +8,9 @@ namespace BankRestApi.Repositories;
 
 public class AccountRepository : IAccountRepository
 {
-    private readonly AccountContext _context;
+    private readonly AppDbContext _context;
 
-    public AccountRepository(AccountContext context)
+    public AccountRepository(AppDbContext context)
     {
         _context = context;
     }

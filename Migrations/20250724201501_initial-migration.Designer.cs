@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BankRestApi.Migrations
 {
-    [DbContext(typeof(AccountContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20250724201501_initial-migration")]
     partial class initialmigration
     {

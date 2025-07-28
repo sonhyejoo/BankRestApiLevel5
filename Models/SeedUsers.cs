@@ -7,9 +7,9 @@ public static class SeedUsers
 {
     public static void Initialize(IServiceProvider serviceProvider)
     {
-        using (var context = new AccountContext(
+        using (var context = new AppDbContext(
                    serviceProvider.GetRequiredService<
-                       DbContextOptions<AccountContext>>()))
+                       DbContextOptions<AppDbContext>>()))
         {
             if (context?.Users == null)
             {

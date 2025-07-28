@@ -13,10 +13,10 @@ namespace BankRestApi.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private readonly AccountContext _context;
+        private readonly AppDbContext _context;
         private readonly IConfiguration _config;
 
-        public AuthenticationController(AccountContext context, IConfiguration config)
+        public AuthenticationController(AppDbContext context, IConfiguration config)
         {
             _context = context;
             _config = config;

@@ -23,12 +23,16 @@ builder.Services.AddSwaggerGen(options =>
     var xmlPath = Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml");
     options.IncludeXmlComments(xmlPath);
 });
-builder.Services.AddDbContext<AccountContext>(opt =>
+builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseSqlServer(builder.Configuration["AccountsDatabaseConnection"]));
-
 
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddTransient<IAccountRepository, AccountRepository>();
+
+builder.Services.AddScoped<IPasswordHelper, PasswordHelper>();
+builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+
 builder.Services.AddHttpClient<IExchangeService, ExchangeService>(client =>
     client.BaseAddress = new Uri(builder.Configuration["ExchangeService:BaseAddress"]));
 
