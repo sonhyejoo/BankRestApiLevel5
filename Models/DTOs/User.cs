@@ -1,3 +1,7 @@
 ﻿namespace BankRestApi.Models.DTOs;
 
-public class User(string AccountName, string Password);
+public record User(
+    string AccountName,
+    string Password,
+    string? RefreshToken,
+    DateTime RefreshTokenExpiry);

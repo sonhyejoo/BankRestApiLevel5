@@ -23,4 +23,13 @@ public class UserRepository : IUserRepository
 
     public Task<User?> GetByName(string name)
         => _context.Users.FirstOrDefaultAsync(u => u.AccountName == name);
+
+    public async Task<User?> Update(User user, string refreshToken, DateTime refreshTokenExpiry)
+    {
+        user.RefreshToken = refreshToken;
+        user.RefreshTokenExpiry = refreshTokenExpiry;
+        await _context.SaveChangesAsync();
+
+        return user;
+    }
 }

@@ -54,27 +54,6 @@ public class UserService: IUserService
             return new BaseResult<User>(HttpStatusCode.BadRequest, "Invalid name or password.");
         }
         
-        var securityKey = new SymmetricSecurityKey(
-            Convert.FromBase64String(_config["Authentication:SecretForKey"]));
-        var signingCredentials = new SigningCredentials(
-            securityKey, SecurityAlgorithms.HmacSha256);
-
-        var claimsForToken = new List<Claim>()
-        {
-            new Claim("sub", existingUser.Id.ToString()),
-            new Claim("name", existingUser.AccountName)
-        };
-
-        var jwtSecurityToken = new JwtSecurityToken(
-            _config["Authentication:Issuer"],
-            _config["Authentication:Audience"],
-            claimsForToken,
-            DateTime.UtcNow,
-            DateTime.UtcNow.AddHours(1),
-            signingCredentials);
-
-        var tokenToReturn = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
-
         return new BaseResult<User>(HttpStatusCode.OK, tokenToReturn);
     }
 }
