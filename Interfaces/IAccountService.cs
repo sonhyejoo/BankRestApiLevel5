@@ -5,21 +5,21 @@ namespace BankRestApi.Interfaces;
 
 public interface IAccountService
 {
-    Task<AccountResult<AccountsAndPageData>> GetAccounts(string? name,
+    Task<BaseResult<AccountsAndPageData>> GetAccounts(string? name,
         string sort,
         bool desc,
         int pageNumber,
         int pageSize);
     
-    Task<AccountResult<Account>> Create(CreateAccount request);
+    Task<BaseResult<Account>> Create(CreateAccount request);
     
-    Task<AccountResult<Account>> Get(GetAccount request);
+    Task<BaseResult<Account>> Get(GetAccount request);
     
-    Task<AccountResult<Account>> Deposit(Transaction request);
+    Task<BaseResult<Account>> Deposit(Transaction request);
     
-    Task<AccountResult<Account>> Withdraw(Transaction request);
+    Task<BaseResult<Account>> Withdraw(Transaction request);
     
-    Task<AccountResult<TransferDetails>> Transfer(Transaction request);
+    Task<BaseResult<TransferDetails>> Transfer(Transaction request);
     
-    Task<AccountResult<ConvertedBalances>> ConvertBalances(ConvertCommand command);
+    Task<BaseResult<ConvertedBalances>> ConvertBalances(ConvertCommand command);
 }

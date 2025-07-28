@@ -18,9 +18,9 @@ public class PasswordHelper : IPasswordHelper
         return _passwordHasher.HashPassword(user, password);
     }
 
-    public bool PasswordMatches(User user, string providedPassword, string passwordHash)
+    public bool PasswordMatches(User user, string providedPassword)
     {
-        var result = _passwordHasher.VerifyHashedPassword(user, providedPassword, passwordHash);
+        var result = _passwordHasher.VerifyHashedPassword(user, user.HashedPassword, providedPassword);
 
         return result == PasswordVerificationResult.Success;
     }

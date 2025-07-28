@@ -1,11 +1,12 @@
-﻿using BankRestApi.Models;
+﻿using BankRestApi.Models.DTOs;
 using BankRestApi.Models.DTOs.Requests;
+using User = BankRestApi.Models.DTOs.User;
 
 namespace BankRestApi.Interfaces;
 
 public interface IUserService
 {
-    User CreateUserAsync(AuthenticationRequest request);
+    Task<BaseResult<User>> CreateUserAsync(CreateUserRequest request);
 
-    Task<User?> GetByName(string name);
+    Task<BaseResult<User>> ValidateUserCredentials(AuthenticationRequest request);
 }

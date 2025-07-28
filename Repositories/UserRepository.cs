@@ -12,9 +12,15 @@ public class UserRepository : IUserRepository
     {
         _context = context;
     }
-    public async Task Insert(User user)
-        => await _context.Users.AddAsync(user);
 
-    public async Task<User?> GetByName(string name)
-        => await _context.Users.FirstOrDefaultAsync(u => u.AccountName == name);
+    public async Task<User?> Insert(User user)
+    {
+        var result = await _context.Users.AddAsync(user);
+        await _context.SaveChangesAsync();
+
+        return result.Entity;
+    }
+
+    public Task<User?> GetByName(string name)
+        => _context.Users.FirstOrDefaultAsync(u => u.AccountName == name);
 }

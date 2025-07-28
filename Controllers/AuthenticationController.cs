@@ -1,11 +1,7 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
+using BankRestApi.Interfaces;
 using BankRestApi.Models;
 using BankRestApi.Models.DTOs.Requests;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
 namespace BankRestApi.Controllers
 {
@@ -15,50 +11,21 @@ namespace BankRestApi.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IConfiguration _config;
+        private readonly IUserService _service;
 
-        public AuthenticationController(AppDbContext context, IConfiguration config)
+        public AuthenticationController(AppDbContext context, IConfiguration config, IUserService userService)
         {
             _context = context;
             _config = config;
+            _service = userService;
         }
 
         [HttpPost("authenticate")]
         public async Task<ActionResult<string>> Authenticate(AuthenticationRequest request)
         {
-            var user = await ValidateUserCredentials(request.AccountName, request.Password);
-            if (user is null)
-            {
-                return Unauthorized();
-            }
+            var result = await _service.ValidateUserCredentials(request);
 
-            var securityKey = new SymmetricSecurityKey(
-                Convert.FromBase64String(_config["Authentication:SecretForKey"]));
-            var signingCredentials = new SigningCredentials(
-                securityKey, SecurityAlgorithms.HmacSha256);
-
-            var claimsForToken = new List<Claim>()
-            {
-                new Claim("sub", user.Id.ToString()),
-                new Claim("name", user.AccountName)
-            };
-
-            var jwtSecurityToken = new JwtSecurityToken(
-                _config["Authentication:Issuer"],
-                _config["Authentication:Audience"],
-                claimsForToken,
-                DateTime.UtcNow,
-                DateTime.UtcNow.AddHours(1),
-                signingCredentials);
-
-            var tokenToReturn = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
-
-            return Ok(tokenToReturn);
-        }
-        
-        private async Task<User?> ValidateUserCredentials(string accountName, string password)
-        {
-            var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.AccountName == accountName);
-            return currentUser is null || currentUser.HashedPassword != password ? null : currentUser;
+            return result.IsSuccess ? Ok(result.Result) : StatusCode((int)result.StatusCode!, result.ErrorMessage);
         }
     }
 }
