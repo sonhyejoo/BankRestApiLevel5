@@ -8,5 +8,5 @@ public interface IUserRepository
 
     Task<User?> GetByName(string name);
 
-    Task<User?> Update(User user, string refreshToken, DateTime refreshTokenExpiry);
+    Task<User?> Update(User user, string? refreshToken, DateTime? refreshTokenExpiry);
 }

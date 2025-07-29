@@ -1,5 +1,6 @@
 using BankRestApi.Interfaces;
 using BankRestApi.Models;
+using BankRestApi.Models.DTOs;
 using BankRestApi.Models.DTOs.Requests;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,19 +12,22 @@ namespace BankRestApi.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IConfiguration _config;
-        private readonly IUserService _service;
+        private readonly IAuthenticationService _service;
 
-        public AuthenticationController(AppDbContext context, IConfiguration config, IUserService userService)
+        public AuthenticationController(
+            AppDbContext context,
+            IConfiguration config,
+            IAuthenticationService authenticationService)
         {
             _context = context;
             _config = config;
-            _service = userService;
+            _service = authenticationService;
         }
 
-        [HttpPost("authenticate")]
-        public async Task<ActionResult<string>> Authenticate(AuthenticationRequest request)
+        [HttpPost("login")]
+        public async Task<ActionResult<Token>> Login(AuthenticationRequest request)
         {
-            var result = await _service.ValidateUserCredentials(request);
+            var result = await _service.CreateAccessTokenAsync(request.AccountName, request.Password);
 
             return result.IsSuccess ? Ok(result.Result) : StatusCode((int)result.StatusCode!, result.ErrorMessage);
         }

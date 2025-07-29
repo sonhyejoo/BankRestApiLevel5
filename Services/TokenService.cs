@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using BankRestApi.Interfaces;
+using BankRestApi.Models.DTOs;
 using Microsoft.IdentityModel.Tokens;
 using User = BankRestApi.Models.User;
 
@@ -18,23 +19,30 @@ public class TokenService : ITokenService
         _config = config;
         _userRepository = userRepository;
     }
+    
+    public Token BuildToken(User user)
+    {
+        var accessToken = BuildAccessToken(user);
+        var refreshToken = BuildRefreshToken();
+        user.RefreshToken = refreshToken;
+        user.RefreshTokenExpiry = DateTime.UtcNow.AddHours(24);
+        
+        return new Token(accessToken, refreshToken);
+    }
 
-    public async Task<string?> TakeRefreshToken(string refreshToken, string name)
+    public async Task<bool> TakeRefreshToken(string token, string name)
     {
         var user = await _userRepository.GetByName(name);
-        if (user is null
-            || user.RefreshToken != refreshToken
-            || user.RefreshTokenExpiry <= DateTime.UtcNow)
+        if (user is not null
+            && user.RefreshToken == token
+            && user.RefreshTokenExpiry > DateTime.UtcNow)
         {
-            return null;
+            await _userRepository.Update(user, null, null);
+            
+            return true;
         }
 
-        var newRefreshToken = BuildRefreshToken();
-        var newExpiryTime = DateTime.UtcNow.AddHours(24);
-
-        await _userRepository.Update(user, newRefreshToken, newExpiryTime);
-
-        return newRefreshToken;
+        return false;
     }
 
     public string BuildRefreshToken()
@@ -54,7 +62,7 @@ public class TokenService : ITokenService
 
         var claimsForToken = new List<Claim>()
         {
-            new Claim("name", user.AccountName)
+            new Claim(ClaimTypes.Name, user.AccountName)
         };
 
         var jwtSecurityToken = new JwtSecurityToken(
@@ -66,5 +74,30 @@ public class TokenService : ITokenService
             signingCredentials);
 
         return new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+    }
+    
+    public ClaimsPrincipal? GetPrincipalFromExpiredToken(string accessToken)
+    {
+        var tokenValidationParameters = new TokenValidationParameters()
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = false,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Convert.FromBase64String(_config["Authentication:SecretForKey"]))
+        };
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var principal = tokenHandler.ValidateToken(
+            accessToken,
+            tokenValidationParameters,
+            out SecurityToken securityToken);
+        var jwtSecurityToken = securityToken as JwtSecurityToken;
+        if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+        {
+            return null;
+        }
+
+        return principal;
     }
 }

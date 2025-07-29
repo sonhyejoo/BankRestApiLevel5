@@ -3,5 +3,5 @@
 public record User(
     string AccountName,
     string Password,
-    string? RefreshToken,
-    DateTime RefreshTokenExpiry);
+    string? RefreshToken = null,
+    DateTime? RefreshTokenExpiry = null);

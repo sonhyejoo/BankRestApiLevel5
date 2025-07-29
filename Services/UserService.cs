@@ -40,20 +40,4 @@ public class UserService: IUserService
 
         return new BaseResult<User>(HttpStatusCode.OK, user.ToDto(request.Password));
     }
-    
-    public async Task<BaseResult<User>> ValidateUserCredentials(AuthenticationRequest request)
-    {
-        var existingUser = await _repository.GetByName(request.AccountName);
-        if (existingUser is null)
-        {
-            return new BaseResult<User>(HttpStatusCode.NotFound, "Account not found.");
-        }
-
-        if (!_passwordHelper.PasswordMatches(existingUser, request.Password))
-        {
-            return new BaseResult<User>(HttpStatusCode.BadRequest, "Invalid name or password.");
-        }
-        
-        return new BaseResult<User>(HttpStatusCode.OK, tokenToReturn);
-    }
 }
