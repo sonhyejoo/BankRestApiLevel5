@@ -6,13 +6,11 @@ namespace BankRestApi.Interfaces;
 
 public interface ITokenService
 {
-    Token BuildToken(User user);
+    Task<Token> BuildToken(User user);
     
-    Task<bool> TakeRefreshToken(string token, string name);
+    Task<bool> TakeRefreshToken(string name, string refreshToken);
     
     string BuildRefreshToken();
 
     string BuildAccessToken(User user);
-
-    ClaimsPrincipal? GetPrincipalFromExpiredToken(string accessToken);
 }

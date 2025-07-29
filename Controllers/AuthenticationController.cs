@@ -2,6 +2,7 @@ using BankRestApi.Interfaces;
 using BankRestApi.Models;
 using BankRestApi.Models.DTOs;
 using BankRestApi.Models.DTOs.Requests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankRestApi.Controllers
@@ -30,6 +31,22 @@ namespace BankRestApi.Controllers
             var result = await _service.CreateAccessTokenAsync(request.AccountName, request.Password);
 
             return result.IsSuccess ? Ok(result.Result) : StatusCode((int)result.StatusCode!, result.ErrorMessage);
+        }
+
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult<Token>> Refresh(RefreshTokenRequest request)
+        {
+            var result = await _service.RefreshTokenAsync(request.AccountName, request.RefreshToken);
+
+            return result.IsSuccess ? Ok(result.Result) : StatusCode((int)result.StatusCode!, result.ErrorMessage);
+        }
+
+        [HttpPost("revoke")]
+        public async Task<ActionResult<Token>> Revoke(string refreshToken)
+        {
+            var result = await _service.RevokeRefreshToken(refreshToken);
+
+            return StatusCode((int)result.StatusCode!, result.ErrorMessage);
         }
     }
 }

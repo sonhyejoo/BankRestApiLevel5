@@ -26,7 +26,7 @@ public class AuthenticationService : IAuthenticationService
         var existingUser = await _userRepository.GetByName(name);
         if (existingUser is null)
         {
-            return new BaseResult<Token>(HttpStatusCode.Unauthorized, "Account not found.");
+            return new BaseResult<Token>(HttpStatusCode.Unauthorized, "Invalid name or password.");
         }
 
         if (!_passwordHelper.PasswordMatches(existingUser, password))
@@ -34,35 +34,40 @@ public class AuthenticationService : IAuthenticationService
             return new BaseResult<Token>(HttpStatusCode.Unauthorized, "Invalid name or password.");
         }
 
-        var tokenToReturn = _tokenService.BuildToken(existingUser);
+        var tokenToReturn = await _tokenService.BuildToken(existingUser);
         
         return new BaseResult<Token>(HttpStatusCode.OK, tokenToReturn);
     }
     
-    public async Task<BaseResult<Token>> RefreshTokenAsync(Token token)
+    public async Task<BaseResult<Token>> RefreshTokenAsync(string name, string refreshToken)
     {
-        var principal = _tokenService.GetPrincipalFromExpiredToken(token.AccessToken);
-        if (principal is null)
-        {
-            return new BaseResult<Token>(HttpStatusCode.Unauthorized, "Please log in again");
-        }
-
-        var name = principal.Identity?.Name;
-        
-        if (!await _tokenService.TakeRefreshToken(token.RefreshToken, name))
+        if (!await _tokenService.TakeRefreshToken(name, refreshToken))
         {
             return new BaseResult<Token>(HttpStatusCode.BadRequest, "Please log in again.");
         }
 
         var user = await _userRepository.GetByName(name);
 
-        var tokenToReturn = _tokenService.BuildToken(user);
+        if (user is null)
+        {
+            return new BaseResult<Token>(HttpStatusCode.BadRequest, "Please log in again.");
+        }
+        
+        var tokenToReturn = await _tokenService.BuildToken(user);
 
         return new BaseResult<Token>(HttpStatusCode.OK, tokenToReturn);
     }
 
-    public async Task RevokeRefreshToken(string refreshToken, string name)
+    public async Task<BaseResult<Token>> RevokeRefreshToken(string refreshToken)
     {
-        await _tokenService.TakeRefreshToken(refreshToken, name);
+        var user = await _userRepository.GetByRefreshToken(refreshToken);
+        if (user is null)
+        {
+            return new BaseResult<Token>(HttpStatusCode.BadRequest, "Invalid refresh token");
+        }
+
+        await _userRepository.Update(user, null, null);
+
+        return new BaseResult<Token>(HttpStatusCode.NoContent, "");
     }
 }

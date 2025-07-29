@@ -6,7 +6,7 @@ public interface IAuthenticationService
 {
     Task<BaseResult<Token>> CreateAccessTokenAsync(string name, string password);
 
-    Task<BaseResult<Token>> RefreshTokenAsync(Token token);
+    Task<BaseResult<Token>> RefreshTokenAsync(string name, string refreshToken);
 
-    Task RevokeRefreshToken(string refreshToken, string name);
+    Task<BaseResult<Token>> RevokeRefreshToken(string refreshToken);
 }

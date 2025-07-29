@@ -60,6 +60,9 @@ builder.Services.AddScoped<IPasswordHelper, PasswordHelper>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+
 builder.Services.AddHttpClient<IExchangeService, ExchangeService>(client =>
     client.BaseAddress = new Uri(builder.Configuration["ExchangeService:BaseAddress"]));
 
@@ -80,12 +83,6 @@ builder.Services.AddAuthentication("Bearer")
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-
-    SeedUsers.Initialize(services);
-}
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
