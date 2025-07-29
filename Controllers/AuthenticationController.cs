@@ -26,7 +26,7 @@ namespace BankRestApi.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<Token>> Login(AuthenticationRequest request)
+        public async Task<ActionResult<Token>> Login(LoginRequest request)
         {
             var result = await _service.CreateAccessTokenAsync(request.AccountName, request.Password);
 

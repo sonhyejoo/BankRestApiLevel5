@@ -31,19 +31,20 @@ public class TokenService : ITokenService
         return new Token(accessToken, refreshToken);
     }
 
-    public async Task<bool> TakeRefreshToken(string name, string token)
+    public async Task<User?> TakeRefreshToken(string name, string token)
     {
         var user = await _userRepository.GetByName(name);
-        if (user is not null
-            && user.RefreshToken == token
-            && user.RefreshTokenExpiry > DateTime.UtcNow)
+        if (user is null
+            || user.RefreshToken != token
+            || !(user.RefreshTokenExpiry > DateTime.UtcNow))
         {
-            await _userRepository.Update(user, null, null);
-            
-            return true;
+            return null;
         }
+        
+        await _userRepository.Update(user, null, null);
+            
+        return user;
 
-        return false;
     }
 
     public string BuildRefreshToken()

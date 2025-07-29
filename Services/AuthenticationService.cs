@@ -41,13 +41,7 @@ public class AuthenticationService : IAuthenticationService
     
     public async Task<BaseResult<Token>> RefreshTokenAsync(string name, string refreshToken)
     {
-        if (!await _tokenService.TakeRefreshToken(name, refreshToken))
-        {
-            return new BaseResult<Token>(HttpStatusCode.BadRequest, "Please log in again.");
-        }
-
-        var user = await _userRepository.GetByName(name);
-
+        var user = await _tokenService.TakeRefreshToken(name, refreshToken);
         if (user is null)
         {
             return new BaseResult<Token>(HttpStatusCode.BadRequest, "Please log in again.");

@@ -8,7 +8,7 @@ public interface ITokenService
 {
     Task<Token> BuildToken(User user);
     
-    Task<bool> TakeRefreshToken(string name, string refreshToken);
+    Task<User?> TakeRefreshToken(string name, string refreshToken);
     
     string BuildRefreshToken();
 
