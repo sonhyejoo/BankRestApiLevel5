@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankRestApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250729132315_InitialCreate")]
+    [Migration("20250729184350_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -61,10 +61,9 @@ namespace BankRestApi.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RefreshToken")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("RefreshTokenExpiry")
+                    b.Property<DateTime?>("RefreshTokenExpiry")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
