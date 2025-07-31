@@ -14,8 +14,7 @@ public class CsvOutputFormatter : TextOutputFormatter
     }
 
     protected bool CanWriteResult(Type? type)
-        => typeof(Account).IsAssignableFrom(type)
-           || typeof(IEnumerable<Account>).IsAssignableFrom(type);
+        => typeof(IEnumerable<Account>).IsAssignableFrom(type);
 
     public override async Task WriteResponseBodyAsync(OutputFormatterWriteContext context, Encoding selectedEncoding)
     {
@@ -26,17 +25,11 @@ public class CsvOutputFormatter : TextOutputFormatter
         var buffer = new StringBuilder();
 
         buffer.AppendLine("Id, Name, Balance");
-        
-        if (context.Object is IEnumerable<Account> accounts)
+
+        IEnumerable<Account> accounts = (IEnumerable<Account>)context.Object;
+        foreach (var account in accounts)
         {
-            foreach (var account in accounts)
-            {
-                FormatCsv(buffer, account, logger);
-            }
-        }
-        else
-        {
-            FormatCsv(buffer, (Account)context.Object!, logger);
+            FormatCsv(buffer, account, logger);
         }
         
         await httpContext.Response.WriteAsync(buffer.ToString(), selectedEncoding);    
