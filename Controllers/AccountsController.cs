@@ -50,12 +50,12 @@ public class AccountsController : ControllerBase
         }
         
         var result = await _service.GetAccounts(name, sort, desc, pageNumber, pageSize);
-        var accounts = result.Result.Accounts;
-        var pageData = result.Result.PageData;
-        Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pageData));
+        // var accounts = result.Result.Accounts;
+        // var pageData = result.Result.PageData;
+        // Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pageData));
         
         return result.IsSuccess
-            ? Ok(accounts)
+            ? Ok(result.Result)
             : StatusCode((int)result.StatusCode!, result.ErrorMessage);
     }
     

@@ -11,40 +11,48 @@ namespace BankRestApi.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private readonly AppDbContext _context;
-        private readonly IConfiguration _config;
         private readonly IAuthenticationService _service;
 
-        public AuthenticationController(
-            AppDbContext context,
-            IConfiguration config,
-            IAuthenticationService authenticationService)
+        public AuthenticationController(IAuthenticationService authenticationService)
         {
-            _context = context;
-            _config = config;
             _service = authenticationService;
         }
 
+        /// <summary>
+        /// Login using name and password for bank API authentication
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>Access token and refresh token to access routes requiring authentication</returns>
         [HttpPost("login")]
         public async Task<ActionResult<Token>> Login(LoginRequest request)
         {
-            var result = await _service.CreateAccessTokenAsync(request.AccountName, request.Password);
+            var result = await _service.CreateAccessTokenAsync(request);
 
             return result.IsSuccess ? Ok(result.Result) : StatusCode((int)result.StatusCode!, result.ErrorMessage);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>New access token and refresh token</returns>
         [HttpPost("refresh-token")]
         public async Task<ActionResult<Token>> Refresh(RefreshTokenRequest request)
         {
-            var result = await _service.RefreshTokenAsync(request.AccountName, request.RefreshToken);
+            var result = await _service.RefreshTokenAsync(request);
 
             return result.IsSuccess ? Ok(result.Result) : StatusCode((int)result.StatusCode!, result.ErrorMessage);
         }
 
+        /// <summary>
+        /// Revoke refresh token to prevent access until next valid login
+        /// </summary>
+        /// <param name="refreshToken"></param>
+        /// <returns>No content</returns>
         [HttpPost("revoke")]
-        public async Task<ActionResult<Token>> Revoke(string refreshToken)
+        public async Task<ActionResult<Token>> Revoke(RevokeRequest request)
         {
-            var result = await _service.RevokeRefreshToken(refreshToken);
+            var result = await _service.RevokeRefreshToken(request);
 
             return StatusCode((int)result.StatusCode!, result.ErrorMessage);
         }

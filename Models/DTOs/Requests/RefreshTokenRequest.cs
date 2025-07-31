@@ -1,3 +1,3 @@
 ﻿namespace BankRestApi.Models.DTOs.Requests;
 
-public record RefreshTokenRequest(string AccountName, string RefreshToken) : RevokeRequest(RefreshToken);
+public record RefreshTokenRequest(string AccountName, string RefreshToken) : UserRequest(RefreshToken);

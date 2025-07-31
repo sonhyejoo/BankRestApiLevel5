@@ -17,6 +17,11 @@ namespace BankRestApi.Controllers
             _service = userService;
         }
         
+        /// <summary>
+        /// Create user account for authentication to use bank
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>Created account details</returns>
         // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
