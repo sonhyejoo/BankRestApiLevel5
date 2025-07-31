@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using BankRestApi.Models.DTOs;
 using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.Extensions.Internal;
 using Microsoft.Net.Http.Headers;
 
 namespace BankRestApi.Formatters;
@@ -51,7 +50,7 @@ public class CsvOutputFormatter : TextOutputFormatter
         logger.LogInformation("Writing {Id}, {Name}, {Balance}", account.Id, account.Name, account.Balance);
     }
 
-    private static char[] _specialChars = new char[] { ',', '\n', '\r', '"' };
+    private static char[] _specialChars = [',', '\n', '\r', '"'];
 
     private string Escape(object o)
     {

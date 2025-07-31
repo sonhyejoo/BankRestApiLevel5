@@ -1,11 +1,8 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Net;
-using System.Security.Claims;
+﻿using System.Net;
 using BankRestApi.ExtensionMethods;
 using BankRestApi.Interfaces;
 using BankRestApi.Models.DTOs;
 using BankRestApi.Models.DTOs.Requests;
-using Microsoft.IdentityModel.Tokens;
 using User = BankRestApi.Models.DTOs.User;
 
 namespace BankRestApi.Services;

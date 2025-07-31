@@ -1,4 +1,3 @@
-using System.Text.Json;
 using BankRestApi.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using BankRestApi.Models.DTOs;
@@ -50,9 +49,6 @@ public class AccountsController : ControllerBase
         }
         
         var result = await _service.GetAccounts(name, sort, desc, pageNumber, pageSize);
-        // var accounts = result.Result.Accounts;
-        // var pageData = result.Result.PageData;
-        // Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pageData));
         
         return result.IsSuccess
             ? Ok(result.Result)
@@ -94,7 +90,7 @@ public class AccountsController : ControllerBase
         var createdAccount = result.Result;
 
         return result.IsSuccess
-            ? CreatedAtAction(nameof(GetAccount), new { id = createdAccount.Id }, createdAccount)
+            ? CreatedAtAction(nameof(GetAccount), new { id = createdAccount!.Id }, createdAccount)
             : StatusCode((int)result.StatusCode!, result.ErrorMessage);
     }
 
@@ -102,7 +98,7 @@ public class AccountsController : ControllerBase
     /// Deposit funds into account
     /// </summary>
     /// <param name="id">Account ID</param>
-    /// <param name="amount">Deposit amount</param>
+    /// <param name="request">Deposit amount</param>
     /// <returns>Updated account details</returns>
     // POST: api/Accounts/0b4b7e2b-ffd1-4acf-81b3-e51d48155217/deposits
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -119,12 +115,12 @@ public class AccountsController : ControllerBase
             ? Ok(result.Result)
             : StatusCode((int)result.StatusCode!, result.ErrorMessage);
     }
-    
+
     /// <summary>
     /// Withdraws funds from an account
     /// </summary>
     /// <param name="id">Account ID</param>
-    /// <param name="amount">Withdrawal amount</param>
+    /// <param name="request">Withdrawal amount</param>
     /// <returns>Updated account details</returns>
     // POST: api/Accounts/0b4b7e2b-ffd1-4acf-81b3-e51d48155217/withdrawals
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

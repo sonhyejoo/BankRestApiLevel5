@@ -1,5 +1,4 @@
 using BankRestApi.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using BankRestApi.Models;
 using BankRestApi.Models.DTOs.Requests;
