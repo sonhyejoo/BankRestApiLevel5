@@ -25,12 +25,7 @@ public class AuthenticationService : IAuthenticationService
     {
         var (name, password) = request;
         var existingUser = await _userRepository.GetByName(name);
-        if (existingUser is null)
-        {
-            return new BaseResult<Token>(HttpStatusCode.Unauthorized, "Invalid name or password.");
-        }
-
-        if (!_passwordHelper.PasswordMatches(existingUser, password))
+        if (existingUser is null || !_passwordHelper.PasswordMatches(existingUser, password))
         {
             return new BaseResult<Token>(HttpStatusCode.Unauthorized, "Invalid name or password.");
         }

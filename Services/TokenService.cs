@@ -44,7 +44,6 @@ public class TokenService : ITokenService
         await _userRepository.Update(user, null, null);
             
         return user;
-
     }
 
     public string BuildRefreshToken()
@@ -52,6 +51,7 @@ public class TokenService : ITokenService
         var randomNumber = new byte[32];
         using var rng = RandomNumberGenerator.Create();
         rng.GetBytes(randomNumber);
+        
         return Convert.ToBase64String(randomNumber);
     }
 
@@ -64,7 +64,7 @@ public class TokenService : ITokenService
 
         var claimsForToken = new List<Claim>()
         {
-            new Claim(ClaimTypes.Name, user.AccountName)
+            new Claim(ClaimTypes.Name, user.Name)
         };
 
         var jwtSecurityToken = new JwtSecurityToken(

@@ -26,6 +26,7 @@ public class AccountService : IAccountService
         var (accounts, paginationMetadata)
             = await _repository.GetAccounts(name, sort, desc, pageNumber, pageSize);
         var result = new AccountsAndPageData(accounts.Select(a => a.ToDto()), paginationMetadata);
+        
         return new BaseResult<AccountsAndPageData>(HttpStatusCode.OK, result);
     }
 
@@ -121,7 +122,6 @@ public class AccountService : IAccountService
                 HttpStatusCode.OK,
                 new TransferDetails(sender.ToDto(), recipient.ToDto()));
     }
-    
     
     public async Task<BaseResult<ConvertedBalances>> ConvertBalances(ConvertCommand command)
     {

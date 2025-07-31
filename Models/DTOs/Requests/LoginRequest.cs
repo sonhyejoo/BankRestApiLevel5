@@ -1,3 +1,3 @@
 ﻿namespace BankRestApi.Models.DTOs.Requests;
 
-public record LoginRequest(string AccountName, string Password) : UserRequest(AccountName);
+public record LoginRequest(string Name, string Password) : UserRequest(Name);

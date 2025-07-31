@@ -14,25 +14,23 @@ public class UserService: IUserService
 {
     private readonly IUserRepository _repository;
     private readonly IPasswordHelper _passwordHelper;
-    private readonly IConfiguration _config;
 
-    public UserService(IUserRepository userRepository, IPasswordHelper passwordHelper, IConfiguration config)
+    public UserService(IUserRepository userRepository, IPasswordHelper passwordHelper)
     {
         _repository = userRepository;
         _passwordHelper = passwordHelper;
-        _config = config;
     }
     
     public async Task<BaseResult<User>> CreateUserAsync(CreateUserRequest request)
     {
-        var existingUser = await _repository.GetByName(request.AccountName);
+        var existingUser = await _repository.GetByName(request.Name);
         if (existingUser is not null)
         {
             return new BaseResult<User>(HttpStatusCode.BadRequest, "Please choose different name.");
         }
         var user = new Models.User
         {
-            AccountName = request.AccountName
+            Name = request.Name
         };
         user.HashedPassword = _passwordHelper.GeneratePassword(user, request.Password);
 
