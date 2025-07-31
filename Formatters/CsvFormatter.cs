@@ -50,7 +50,7 @@ public class CsvOutputFormatter : TextOutputFormatter
         logger.LogInformation("Writing {Id}, {Name}, {Balance}", account.Id, account.Name, account.Balance);
     }
 
-    private static char[] _specialChars = [',', '\n', '\r', '"'];
+    private static readonly char[] SpecialChars = [',', '\n', '\r', '"'];
 
     private string Escape(object o)
     {
@@ -60,7 +60,7 @@ public class CsvOutputFormatter : TextOutputFormatter
         }
 
         string field = o.ToString();
-        if (field.IndexOfAny(_specialChars) != -1)
+        if (field.IndexOfAny(SpecialChars) != -1)
         {
             return String.Format("\"{0}\"", field.Replace("\"", "\"\""));
         }

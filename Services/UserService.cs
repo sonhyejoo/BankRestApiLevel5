@@ -21,7 +21,7 @@ public class UserService: IUserService
     public async Task<BaseResult<User>> CreateUserAsync(CreateUserRequest request)
     {
         var existingUser = await _repository.GetByName(request.Name);
-        if (existingUser is not null)
+        if (existingUser is not null || string.IsNullOrEmpty(request.Password))
         {
             return new BaseResult<User>(HttpStatusCode.BadRequest, "Please choose different name.");
         }

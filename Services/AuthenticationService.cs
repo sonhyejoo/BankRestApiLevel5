@@ -27,7 +27,7 @@ public class AuthenticationService : IAuthenticationService
         var existingUser = await _userRepository.GetByName(name);
         if (existingUser is null || !_passwordHelper.PasswordMatches(existingUser, password))
         {
-            return new BaseResult<Token>(HttpStatusCode.Unauthorized, "Invalid name or password.");
+            return new BaseResult<Token>(HttpStatusCode.NotFound, "Invalid name or password.");
         }
 
         var tokenToReturn = await _tokenService.BuildToken(existingUser);
@@ -38,10 +38,11 @@ public class AuthenticationService : IAuthenticationService
     public async Task<BaseResult<Token>> RefreshTokenAsync(RefreshTokenRequest request)
     {
         var (name, refreshToken) = request;
+        Console.WriteLine($"{name}, {refreshToken}");
         var user = await _tokenService.TakeRefreshToken(name, refreshToken);
         if (user is null)
         {
-            return new BaseResult<Token>(HttpStatusCode.BadRequest, "Please log in again.");
+            return new BaseResult<Token>(HttpStatusCode.NotFound, "Please log in again.");
         }
 
         var tokenToReturn = await _tokenService.BuildToken(user);
@@ -55,7 +56,7 @@ public class AuthenticationService : IAuthenticationService
         var user = await _userRepository.GetByName(name);
         if (user is null || user.RefreshToken != refreshToken)
         {
-            return new BaseResult<Token>(HttpStatusCode.BadRequest, "Invalid name or refresh token");
+            return new BaseResult<Token>(HttpStatusCode.NotFound, "Invalid name or refresh token");
         }
         
         await _userRepository.Update(user, null, null);

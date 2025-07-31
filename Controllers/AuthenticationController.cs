@@ -23,8 +23,7 @@ namespace BankRestApi.Controllers
         /// <returns>Access token and refresh token to access routes requiring authentication</returns>
         [HttpPost("login")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Token))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest,  Type=typeof(string))]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound,  Type=typeof(string))]
         public async Task<ActionResult<Token>> Login(LoginRequest request)
         {
             var result = await _service.CreateAccessTokenAsync(request);
@@ -39,8 +38,7 @@ namespace BankRestApi.Controllers
         /// <returns>New access token and refresh token</returns>
         [HttpPost("refresh-token")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Token))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest,  Type=typeof(string))]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound,  Type=typeof(string))]
         public async Task<ActionResult<Token>> Refresh(RefreshTokenRequest request)
         {
             var result = await _service.RefreshTokenAsync(request);
@@ -55,8 +53,7 @@ namespace BankRestApi.Controllers
         /// <returns>No content</returns>
         [HttpPost("revoke")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest,  Type=typeof(string))]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound,  Type=typeof(string))]
         public async Task<IActionResult> Revoke(RevokeRequest request)
         {
             var result = await _service.RevokeRefreshToken(request);

@@ -1,6 +1,6 @@
 using BankRestApi.Interfaces;
+using BankRestApi.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
-using BankRestApi.Models;
 using BankRestApi.Models.DTOs.Requests;
 
 namespace BankRestApi.Controllers
@@ -24,6 +24,8 @@ namespace BankRestApi.Controllers
         // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK, Type=typeof(User))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type=typeof(string))]
         public async Task<ActionResult<User>> Create(CreateUserRequest request)
         {
             var result = await _service.CreateUserAsync(request);

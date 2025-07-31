@@ -36,8 +36,9 @@ public class TokenService : ITokenService
         var user = await _userRepository.GetByName(name);
         if (user is null
             || user.RefreshToken != token
-            || !(user.RefreshTokenExpiry > DateTime.UtcNow))
+            || user.RefreshTokenExpiry < DateTime.UtcNow)
         {
+            Console.WriteLine($"{user is null}");
             return null;
         }
         
