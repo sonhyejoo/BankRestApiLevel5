@@ -22,7 +22,7 @@ public class TokenService : ITokenService
     
     public async Task<Token> BuildToken(User user)
     {
-        var accessToken = BuildAccessToken(user);
+        var accessToken = BuildAccessToken(user.Name);
         var refreshToken = BuildRefreshToken();
         user.RefreshToken = refreshToken;
         user.RefreshTokenExpiry = DateTime.UtcNow.AddHours(24);
@@ -56,7 +56,7 @@ public class TokenService : ITokenService
         return Convert.ToBase64String(randomNumber);
     }
 
-    public string BuildAccessToken(User user)
+    public string BuildAccessToken(string name)
     {
         var securityKey = new SymmetricSecurityKey(
             Convert.FromBase64String(_config["Authentication:SecretForKey"]));
@@ -65,7 +65,7 @@ public class TokenService : ITokenService
 
         var claimsForToken = new List<Claim>()
         {
-            new Claim(ClaimTypes.Name, user.Name)
+            new Claim(ClaimTypes.Name, name)
         };
 
         var jwtSecurityToken = new JwtSecurityToken(

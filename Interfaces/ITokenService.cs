@@ -12,5 +12,5 @@ public interface ITokenService
     
     string BuildRefreshToken();
 
-    string BuildAccessToken(User user);
+    string BuildAccessToken(string name);
 }
