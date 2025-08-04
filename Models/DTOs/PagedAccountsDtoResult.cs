@@ -1,5 +1,5 @@
 ﻿namespace BankRestApi.Models.DTOs;
 
-public record AccountsAndPageData(
+public record PagedAccountsDtoResult(
     IEnumerable<Account> Accounts,
     PaginationMetadata PageData);

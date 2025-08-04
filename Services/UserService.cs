@@ -20,7 +20,7 @@ public class UserService: IUserService
     
     public async Task<BaseResult<User>> CreateUserAsync(CreateUserRequest request)
     {
-        var existingUser = await _repository.GetByName(request.Name);
+        var existingUser = await _repository.Get(request.Name);
         if (existingUser is not null || string.IsNullOrEmpty(request.Password))
         {
             return new BaseResult<User>(HttpStatusCode.BadRequest, "Please choose different name.");
@@ -31,7 +31,7 @@ public class UserService: IUserService
         };
         user.HashedPassword = _passwordHelper.GeneratePassword(user, request.Password);
 
-        await _repository.Insert(user);
+        await _repository.Add(user);
 
         return new BaseResult<User>(HttpStatusCode.OK, user.ToDto(request.Password));
     }

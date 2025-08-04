@@ -17,7 +17,7 @@ public class AccountRepository : IAccountRepository
 
     public async Task<(IEnumerable<Account>, PaginationMetadata)> GetAccounts(
         string? name,
-        string sort,
+        string sortBy,
         bool desc,
         int pageNumber,
         int pageSize)
@@ -30,8 +30,8 @@ public class AccountRepository : IAccountRepository
             queryBuilder = queryBuilder.Where(a => a.Name == name);
         }
 
-        sort = sort.Trim().ToLower();
-        switch (sort)
+        sortBy = sortBy.Trim().ToLower();
+        switch (sortBy)
         {
             case "name":
                 queryBuilder = queryBuilder.OrderBy(a => a.Name);
@@ -42,7 +42,7 @@ public class AccountRepository : IAccountRepository
         }
 
         var totalItemCount = await queryBuilder.CountAsync();
-        var paginationMetaData = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
+        var pageData = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
 
         queryBuilder = queryBuilder
             .Skip(pageSize * (pageNumber - 1))
@@ -51,13 +51,13 @@ public class AccountRepository : IAccountRepository
             ? await queryBuilder.Reverse().ToListAsync() 
             : await queryBuilder.ToListAsync();
 
-        return (result, paginationMetaData);
+        return (result, pageData);
     }
 
     public Task<Account?> GetById(Guid? id)
         => _context.Accounts.FirstOrDefaultAsync(a => a.Id == id);
 
-    public async Task<Account?> Insert(string name)
+    public async Task<Account?> AddAsync(string name)
     {
         var accountToAdd = new Account
         {
@@ -71,7 +71,7 @@ public class AccountRepository : IAccountRepository
         return result.Entity;
     }
 
-    public async Task<Account?> Update(Account account, decimal amount)
+    public async Task<Account?> UpdateAsync(Account account, decimal amount)
     {
         account.Balance += amount;
         await _context.SaveChangesAsync();

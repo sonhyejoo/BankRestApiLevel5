@@ -135,6 +135,28 @@ This project implements a simple RESTful API for a banking system using C# and A
 
 ## Bank API Endpoints
 
+### 1. Get List of Accounts
+
+**GET** `/api/accounts`
+- **Request Query Parameters**
+  - string? name
+  - string sortBy = ""
+  - bool desc = false
+  - int pageNumber = 1
+  - int pageSize = 5
+- **Response**
+   - `200 OK`
+    ```json
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "name": "Alice Smith",
+      "balance": 0
+    }
+    ```
+  - `400 Bad Request` if name is empty or whitespace
+
+---
+
 ### 1. Create a New Account
 
 **POST** `/api/accounts`
@@ -145,15 +167,22 @@ This project implements a simple RESTful API for a banking system using C# and A
     }
     ```
 - **Response**
-   - `201 Created`
-    ```json
+  - `201 Created`
+  ```json
+  [
     {
       "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
       "name": "Alice Smith",
       "balance": 0
-    }
-    ```
-  - `400 Bad Request` if name is empty or whitespace
+    },
+    {
+      "id": "2ee2ea74-76a3-4666-b667-63fbe2435cd1",
+      "name": "John Smith",
+      "balance": 0
+    }  
+  ]
+  ```
+    - `400 Bad Request` if name is empty or whitespace
 
 ---
 

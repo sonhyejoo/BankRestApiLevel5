@@ -9,8 +9,4 @@ public interface ITokenService
     Task<Token> BuildToken(User user);
     
     Task<User?> TakeRefreshToken(string name, string refreshToken);
-    
-    string BuildRefreshToken();
-
-    string BuildAccessToken(string name);
 }

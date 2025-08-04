@@ -17,17 +17,24 @@ public class AccountService : IAccountService
         _exchangeService = exchangeService;
     }
 
-    public async Task<BaseResult<AccountsAndPageData>> GetAccounts(string? name,
-        string sort,
+    public async Task<BaseResult<PagedAccountsDtoResult>> GetAccounts(
+        string? name,
+        string sortBy,
         bool desc,
         int pageNumber,
         int pageSize)
     {
-        var (accounts, paginationMetadata)
-            = await _repository.GetAccounts(name, sort, desc, pageNumber, pageSize);
-        var result = new AccountsAndPageData(accounts.Select(a => a.ToDto()), paginationMetadata);
+        var (accounts, pageData) = 
+            await _repository.GetAccounts(
+                name,
+                sortBy,
+                desc,
+                pageNumber,
+                pageSize);
+        var accountDtoList = accounts.Select(a => a.ToDto());
+        var result = new PagedAccountsDtoResult(accountDtoList, pageData);
         
-        return new BaseResult<AccountsAndPageData>(HttpStatusCode.OK, result);
+        return new BaseResult<PagedAccountsDtoResult>(HttpStatusCode.OK, result);
     }
 
     public async Task<BaseResult<Account>> Create(CreateAccount request)
@@ -37,7 +44,7 @@ public class AccountService : IAccountService
         {
             return BaseResult<Account>.EmptyNameError();
         }
-        var addedAccount = await _repository.Insert(name);
+        var addedAccount = await _repository.AddAsync(name);
         
         return addedAccount.CreateResult();
     }
@@ -63,7 +70,7 @@ public class AccountService : IAccountService
         {
             return BaseResult<Account>.NotFoundError();
         }
-        var updatedAccount = await _repository.Update(foundAccount, request.Amount);
+        var updatedAccount = await _repository.UpdateAsync(foundAccount, request.Amount);
 
         return updatedAccount.CreateResult();
     }
@@ -85,7 +92,7 @@ public class AccountService : IAccountService
         {
             return BaseResult<Account>.InsufficientFundsError();
         }
-        var updatedAccount = await _repository.Update(foundAccount, -1 * request.Amount);
+        var updatedAccount = await _repository.UpdateAsync(foundAccount, -1 * request.Amount);
 
         return updatedAccount.CreateResult();
     }
@@ -115,8 +122,8 @@ public class AccountService : IAccountService
             return BaseResult<TransferDetails>.InsufficientFundsError();
         }
         
-        var updatedSender = await _repository.Update(sender, -1 * request.Amount);
-        var updatedRecipient = await _repository.Update(recipient, request.Amount);
+        var updatedSender = await _repository.UpdateAsync(sender, -1 * request.Amount);
+        var updatedRecipient = await _repository.UpdateAsync(recipient, request.Amount);
 
         return new BaseResult<TransferDetails>(
                 HttpStatusCode.OK,

@@ -6,8 +6,8 @@ namespace BankRestApi.ExtensionMethods;
 
 public static class ExtensionMethods
 {
-    public static BaseResult<Account> CreateResult(this Models.Account account) =>
-        new(HttpStatusCode.OK, result: account.ToDto());
+    public static BaseResult<Account> CreateResult(this Models.Account account)
+        => new(HttpStatusCode.OK, result: account.ToDto());
     
     public static Account ToDto(this Models.Account account)
         => new (account.Id, account.Name, account.Balance);

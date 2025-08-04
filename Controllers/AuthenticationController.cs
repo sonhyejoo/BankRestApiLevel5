@@ -21,6 +21,7 @@ namespace BankRestApi.Controllers
         /// </summary>
         /// <param name="request">User name and password</param>
         /// <returns>Access token and refresh token to access routes requiring authentication</returns>
+        /// POST: api/Authentication/login
         [HttpPost("login")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Token))]
         [ProducesResponseType(StatusCodes.Status404NotFound,  Type=typeof(string))]
@@ -36,6 +37,7 @@ namespace BankRestApi.Controllers
         /// </summary>
         /// <param name="request">User name and refresh token to use for renewal</param>
         /// <returns>New access token and refresh token</returns>
+        /// POST: api/Authentication/login
         [HttpPost("refresh-token")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Token))]
         [ProducesResponseType(StatusCodes.Status404NotFound,  Type=typeof(string))]
@@ -51,6 +53,7 @@ namespace BankRestApi.Controllers
         /// </summary>
         /// <param name="request">User name and refresh token to revoke</param>
         /// <returns>No content</returns>
+        /// POST: api/Awuthentication/revoke
         [HttpPost("revoke")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound,  Type=typeof(string))]

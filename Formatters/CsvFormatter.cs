@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections;
+using System.Text;
 using BankRestApi.Models.DTOs;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
@@ -20,12 +21,12 @@ public class CsvOutputFormatter : TextOutputFormatter
     {
         var httpContext = context.HttpContext;
         var serviceProvider = httpContext.RequestServices;
-
+    
         var logger = serviceProvider.GetService<ILogger<CsvOutputFormatter>>();
         var buffer = new StringBuilder();
-
+    
         buffer.AppendLine("Id, Name, Balance");
-
+    
         IEnumerable<Account> accounts = (IEnumerable<Account>)context.Object;
         foreach (var account in accounts)
         {
@@ -34,7 +35,7 @@ public class CsvOutputFormatter : TextOutputFormatter
         
         await httpContext.Response.WriteAsync(buffer.ToString(), selectedEncoding);    
     }
-
+    
     private void FormatCsv(StringBuilder buffer, Account account, ILogger logger)
     {
         var newLine = $"{Escape(account.Id)}, {Escape(account.Name)}, {Escape(account.Balance)}";

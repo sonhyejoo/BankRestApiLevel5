@@ -22,42 +22,12 @@ public class TokenService : ITokenService
     
     public async Task<Token> BuildToken(User user)
     {
-        var accessToken = BuildAccessToken(user.Name);
-        var refreshToken = BuildRefreshToken();
-        user.RefreshToken = refreshToken;
-        user.RefreshTokenExpiry = DateTime.UtcNow.AddHours(24);
-        await _userRepository.Update(user, refreshToken, DateTime.UtcNow.AddHours(24));
-        
-        return new Token(accessToken, refreshToken);
-    }
-
-    public async Task<User?> TakeRefreshToken(string name, string token)
-    {
-        var user = await _userRepository.GetByName(name);
-        if (user is null
-            || user.RefreshToken != token
-            || user.RefreshTokenExpiry < DateTime.UtcNow)
-        {
-            Console.WriteLine($"{user is null}");
-            return null;
-        }
-        
-        await _userRepository.Update(user, null, null);
-            
-        return user;
-    }
-
-    public string BuildRefreshToken()
-    {
         var randomNumber = new byte[32];
         using var rng = RandomNumberGenerator.Create();
         rng.GetBytes(randomNumber);
         
-        return Convert.ToBase64String(randomNumber);
-    }
+        var refreshToken = Convert.ToBase64String(randomNumber);
 
-    public string BuildAccessToken(string name)
-    {
         var securityKey = new SymmetricSecurityKey(
             Convert.FromBase64String(_config["Authentication:SecretForKey"]));
         var signingCredentials = new SigningCredentials(
@@ -65,7 +35,7 @@ public class TokenService : ITokenService
 
         var claimsForToken = new List<Claim>()
         {
-            new Claim(ClaimTypes.Name, name)
+            new(ClaimTypes.Name, user.Name)
         };
 
         var jwtSecurityToken = new JwtSecurityToken(
@@ -76,6 +46,27 @@ public class TokenService : ITokenService
             DateTime.UtcNow.AddHours(1),
             signingCredentials);
 
-        return new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+        var accessToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+
+        user.RefreshToken = refreshToken;
+        user.RefreshTokenExpiry = DateTime.UtcNow.AddHours(24);
+        await _userRepository.Update(user, refreshToken, DateTime.UtcNow.AddHours(24));
+        
+        return new Token(accessToken, refreshToken);
+    }
+
+    public async Task<User?> TakeRefreshToken(string name, string token)
+    {
+        var user = await _userRepository.Get(name);
+        if (user is null
+            || user.RefreshToken != token
+            || user.RefreshTokenExpiry < DateTime.UtcNow)
+        {
+            return null;
+        }
+        
+        await _userRepository.Update(user, null, null);
+            
+        return user;
     }
 }

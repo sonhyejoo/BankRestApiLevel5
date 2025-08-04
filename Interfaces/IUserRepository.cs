@@ -4,9 +4,9 @@ namespace BankRestApi.Interfaces;
 
 public interface IUserRepository
 {
-    Task<User?> Insert(User user);
+    Task<User?> Add(User user);
 
-    Task<User?> GetByName(string name);
+    Task<User?> Get(string name);
     
     Task Update(User user, string? refreshToken, DateTime? refreshTokenExpiry);
 }

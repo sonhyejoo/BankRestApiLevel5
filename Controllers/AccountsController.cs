@@ -1,3 +1,4 @@
+using System.Text.Json;
 using BankRestApi.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using BankRestApi.Models.DTOs;
@@ -13,6 +14,7 @@ namespace BankRestApi.Controllers;
 [Route("api/[controller]")]
 [Authorize]
 [ApiController]
+[Produces("application/json")]
 public class AccountsController : ControllerBase
 {
     private readonly IAccountService _service;
@@ -34,7 +36,7 @@ public class AccountsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
     public async Task<ActionResult<IEnumerable<Account>>> GetAccounts(
         string? name,
-        string sort = "",
+        string sortBy = "",
         bool desc = false,
         int pageNumber = 1,
         int pageSize = 5)
@@ -48,10 +50,13 @@ public class AccountsController : ControllerBase
             pageSize = 32;
         }
         
-        var result = await _service.GetAccounts(name, sort, desc, pageNumber, pageSize);
+        var result = await _service.GetAccounts(name, sortBy, desc, pageNumber, pageSize);
+        var accounts = result.Result.Accounts;
+        var pageData = result.Result.PageData;
+        Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(pageData));
         
         return result.IsSuccess
-            ? Ok(result.Result)
+            ? Ok(accounts)
             : StatusCode((int)result.StatusCode!, result.ErrorMessage);
     }
     
