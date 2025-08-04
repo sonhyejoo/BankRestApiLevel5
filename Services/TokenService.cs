@@ -33,7 +33,7 @@ public class TokenService : ITokenService
         var signingCredentials = new SigningCredentials(
             securityKey, SecurityAlgorithms.HmacSha256);
 
-        var claimsForToken = new List<Claim>()
+        var claimsForToken = new List<Claim>
         {
             new(ClaimTypes.Name, user.Name)
         };

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Text;
+﻿using System.Text;
 using BankRestApi.Models.DTOs;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;

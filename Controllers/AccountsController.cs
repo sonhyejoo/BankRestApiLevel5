@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 using BankRestApi.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +15,6 @@ namespace BankRestApi.Controllers;
 [Route("api/[controller]")]
 [Authorize]
 [ApiController]
-[Produces("application/json")]
 public class AccountsController : ControllerBase
 {
     private readonly IAccountService _service;
@@ -38,22 +38,15 @@ public class AccountsController : ControllerBase
         string? name,
         string sortBy = "",
         bool desc = false,
-        int pageNumber = 1,
-        int pageSize = 5)
+        uint pageNumber = 1,
+        [Range (1, 32)] uint pageSize = 5)
     {
-        if (pageNumber < 0)
-        {
-            pageNumber = 1;
-        }
-        
-        pageSize = pageSize switch
-        {
-            < 0 => 5,
-            > 32 => 32,
-            _ => pageSize
-        };
-
-        var queryParameters = new GetAccountsQueryParameters(name, sortBy, desc, pageNumber, pageSize);
+        var queryParameters = new GetAccountsQueryParameters(
+            name,
+            sortBy,
+            desc,
+            (int)pageNumber,
+            (int)pageSize);
         
         var result = await _service.GetAccounts(queryParameters);
         Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(result.Result.PageData));
