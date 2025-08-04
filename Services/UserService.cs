@@ -23,7 +23,7 @@ public class UserService: IUserService
         var existingUser = await _repository.Get(request.Name);
         if (existingUser is not null || string.IsNullOrEmpty(request.Password))
         {
-            return new BaseResult<User>(HttpStatusCode.BadRequest, "Please choose different name.");
+            return new BaseResult<User>(HttpStatusCode.BadRequest, "Name or password is invalid.");
         }
         var user = new Models.User
         {

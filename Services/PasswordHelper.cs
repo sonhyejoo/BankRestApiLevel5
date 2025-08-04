@@ -14,9 +14,7 @@ public class PasswordHelper : IPasswordHelper
     }
     
     public string GeneratePassword(User user, string password)
-    {
-        return _passwordHasher.HashPassword(user, password);
-    }
+        => _passwordHasher.HashPassword(user, password);
 
     public bool PasswordMatches(User user, string providedPassword)
     {

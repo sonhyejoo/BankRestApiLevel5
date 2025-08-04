@@ -53,7 +53,7 @@ namespace BankRestApi.Controllers
         /// </summary>
         /// <param name="request">User name and refresh token to revoke</param>
         /// <returns>No content</returns>
-        /// POST: api/Awuthentication/revoke
+        /// POST: api/Authentication/revoke
         [HttpPost("revoke")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound,  Type=typeof(string))]
