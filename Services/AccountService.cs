@@ -17,20 +17,10 @@ public class AccountService : IAccountService
         _exchangeService = exchangeService;
     }
 
-    public async Task<BaseResult<PagedAccountsDtoResult>> GetAccounts(
-        string? name,
-        string sortBy,
-        bool desc,
-        int pageNumber,
-        int pageSize)
+    public async Task<BaseResult<PagedAccountsDtoResult>> GetAccounts(GetAccountsQueryParameters queryParameters)
     {
         var (accounts, pageData) = 
-            await _repository.GetAccounts(
-                name,
-                sortBy,
-                desc,
-                pageNumber,
-                pageSize);
+            await _repository.GetAccounts(queryParameters);
         var accountDtoList = accounts.Select(a => a.ToDto());
         var result = new PagedAccountsDtoResult(accountDtoList, pageData);
         

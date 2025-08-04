@@ -5,11 +5,7 @@ namespace BankRestApi.Interfaces;
 
 public interface IAccountService
 {
-    Task<BaseResult<PagedAccountsDtoResult>> GetAccounts(string? name,
-        string sortBy,
-        bool desc,
-        int pageNumber,
-        int pageSize);
+    Task<BaseResult<PagedAccountsDtoResult>> GetAccounts(GetAccountsQueryParameters queryParameters);
     
     Task<BaseResult<Account>> Create(CreateAccount request);
     

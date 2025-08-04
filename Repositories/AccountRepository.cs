@@ -1,6 +1,7 @@
 ﻿using BankRestApi.Interfaces;
 using BankRestApi.Models;
 using BankRestApi.Models.DTOs;
+using BankRestApi.Models.DTOs.Requests;
 using Microsoft.EntityFrameworkCore;
 using Account = BankRestApi.Models.Account;
 
@@ -16,30 +17,24 @@ public class AccountRepository : IAccountRepository
     }
 
     public async Task<(IEnumerable<Account>, PaginationMetadata)> GetAccounts(
-        string? name,
-        string sortBy,
-        bool desc,
-        int pageNumber,
-        int pageSize)
+        GetAccountsQueryParameters queryParameters)
     {
+        var (name, sortBy, desc, pageNumber, pageSize) = queryParameters;
         var queryBuilder = _context.Accounts as IQueryable<Account>;
         
-        if (!string.IsNullOrWhiteSpace(name))
+        if (!string.IsNullOrWhiteSpace(queryParameters.Name))
         {
             name = name.Trim();
             queryBuilder = queryBuilder.Where(a => a.Name == name);
         }
 
         sortBy = sortBy.Trim().ToLower();
-        switch (sortBy)
+        queryBuilder = sortBy switch
         {
-            case "name":
-                queryBuilder = queryBuilder.OrderBy(a => a.Name);
-                break;
-            case "balance":
-                queryBuilder = queryBuilder.OrderBy(a => a.Balance);
-                break;
-        }
+            "name" => queryBuilder.OrderBy(a => a.Name),
+            "balance" => queryBuilder.OrderBy(a => a.Balance),
+            _ => queryBuilder
+        };
 
         var totalItemCount = await queryBuilder.CountAsync();
         var pageData = new PaginationMetadata(totalItemCount, pageSize, pageNumber);

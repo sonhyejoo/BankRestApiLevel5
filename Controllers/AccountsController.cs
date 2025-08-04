@@ -41,22 +41,25 @@ public class AccountsController : ControllerBase
         int pageNumber = 1,
         int pageSize = 5)
     {
-        if (pageNumber > 10)
+        if (pageNumber < 0)
         {
-            pageNumber = 10;
-        }
-        if (pageSize > 32)
-        {
-            pageSize = 32;
+            pageNumber = 1;
         }
         
-        var result = await _service.GetAccounts(name, sortBy, desc, pageNumber, pageSize);
-        var accounts = result.Result.Accounts;
-        var pageData = result.Result.PageData;
-        Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(pageData));
+        pageSize = pageSize switch
+        {
+            < 0 => 5,
+            > 32 => 32,
+            _ => pageSize
+        };
+
+        var queryParameters = new GetAccountsQueryParameters(name, sortBy, desc, pageNumber, pageSize);
+        
+        var result = await _service.GetAccounts(queryParameters);
+        Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(result.Result.PageData));
         
         return result.IsSuccess
-            ? Ok(accounts)
+            ? Ok(result.Result.Accounts)
             : StatusCode((int)result.StatusCode!, result.ErrorMessage);
     }
     
