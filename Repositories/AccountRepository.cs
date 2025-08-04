@@ -57,7 +57,7 @@ public class AccountRepository : IAccountRepository
     public Task<Account?> GetById(Guid? id)
         => _context.Accounts.FirstOrDefaultAsync(a => a.Id == id);
 
-    public async Task<Account?> AddAsync(string name)
+    public async Task<Account?> Add(string name)
     {
         var accountToAdd = new Account
         {
@@ -71,7 +71,7 @@ public class AccountRepository : IAccountRepository
         return result.Entity;
     }
 
-    public async Task<Account?> UpdateAsync(Account account, decimal amount)
+    public async Task<Account?> Update(Account account, decimal amount)
     {
         account.Balance += amount;
         await _context.SaveChangesAsync();

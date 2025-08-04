@@ -4,5 +4,5 @@ namespace BankRestApi.Interfaces;
 
 public interface IExchangeService
 {
-    Task<ExchangeRateResult> GetExchangeRatesAsync(string currencies);
+    Task<ExchangeRateResult> GetExchangeRates(string currencies);
 }

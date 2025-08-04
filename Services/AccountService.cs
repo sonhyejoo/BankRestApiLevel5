@@ -44,7 +44,7 @@ public class AccountService : IAccountService
         {
             return BaseResult<Account>.EmptyNameError();
         }
-        var addedAccount = await _repository.AddAsync(name);
+        var addedAccount = await _repository.Add(name);
         
         return addedAccount.CreateResult();
     }
@@ -70,7 +70,7 @@ public class AccountService : IAccountService
         {
             return BaseResult<Account>.NotFoundError();
         }
-        var updatedAccount = await _repository.UpdateAsync(foundAccount, request.Amount);
+        var updatedAccount = await _repository.Update(foundAccount, request.Amount);
 
         return updatedAccount.CreateResult();
     }
@@ -92,7 +92,7 @@ public class AccountService : IAccountService
         {
             return BaseResult<Account>.InsufficientFundsError();
         }
-        var updatedAccount = await _repository.UpdateAsync(foundAccount, -1 * request.Amount);
+        var updatedAccount = await _repository.Update(foundAccount, -1 * request.Amount);
 
         return updatedAccount.CreateResult();
     }
@@ -122,8 +122,8 @@ public class AccountService : IAccountService
             return BaseResult<TransferDetails>.InsufficientFundsError();
         }
         
-        var updatedSender = await _repository.UpdateAsync(sender, -1 * request.Amount);
-        var updatedRecipient = await _repository.UpdateAsync(recipient, request.Amount);
+        var updatedSender = await _repository.Update(sender, -1 * request.Amount);
+        var updatedRecipient = await _repository.Update(recipient, request.Amount);
 
         return new BaseResult<TransferDetails>(
                 HttpStatusCode.OK,
@@ -138,7 +138,7 @@ public class AccountService : IAccountService
             return BaseResult<ConvertedBalances>.NotFoundError();
         }
 
-        var exchangeRateResult = await _exchangeService.GetExchangeRatesAsync(
+        var exchangeRateResult = await _exchangeService.GetExchangeRates(
             string.Join(',', command.Currencies));
         if (exchangeRateResult.ErrorMessage != string.Empty)
         {

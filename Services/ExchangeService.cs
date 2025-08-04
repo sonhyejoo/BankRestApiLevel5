@@ -14,7 +14,7 @@ public class ExchangeService : IExchangeService
         _httpClient = httpClient;
         _config = config;
     }
-    public async Task<ExchangeRateResult> GetExchangeRatesAsync(string currencies)
+    public async Task<ExchangeRateResult> GetExchangeRates(string currencies)
     {
         _httpClient.DefaultRequestHeaders.Add("apikey", _config["apikey"]);
         var response = await _httpClient.GetAsync("?currencies=" + currencies);

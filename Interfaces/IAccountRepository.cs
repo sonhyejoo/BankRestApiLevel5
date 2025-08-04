@@ -13,7 +13,7 @@ public interface IAccountRepository
     
     Task<Account?> GetById(Guid? id);
     
-    Task<Account?> AddAsync(string name);
+    Task<Account?> Add(string name);
     
-    Task<Account?> UpdateAsync(Account account, decimal amount);
+    Task<Account?> Update(Account account, decimal amount);
 }
