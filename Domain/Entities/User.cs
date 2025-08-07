@@ -1,4 +1,4 @@
-﻿namespace BankRestApi.Models;
+﻿namespace BankRestApi.Domain.Entities;
 
 public class User{
     public int Id { get; set; }

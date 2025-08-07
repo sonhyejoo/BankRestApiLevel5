@@ -2,7 +2,6 @@
 
 namespace BankRestApi;
 
-public class ExceptionMiddleware
 {
     private readonly RequestDelegate _next;
 

@@ -1,4 +1,4 @@
-﻿namespace BankRestApi.Models;
+﻿namespace BankRestApi.Domain.Entities;
 
 public class Account
 {
