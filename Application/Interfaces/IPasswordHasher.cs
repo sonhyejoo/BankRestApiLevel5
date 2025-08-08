@@ -1,6 +1,4 @@
-﻿using BankRestApi.Models;
-
-namespace BankRestApi.Interfaces;
+﻿namespace Application.Interfaces;
 
 public interface IPasswordHelper
 {

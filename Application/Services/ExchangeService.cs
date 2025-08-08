@@ -1,6 +1,6 @@
 ﻿using System.Net;
+using Application.DTOs.Accounts.Results;
 using BankRestApi.Interfaces;
-using BankRestApi.Models.DTOs;
 
 namespace BankRestApi.Services;
 

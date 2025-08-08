@@ -1,6 +1,6 @@
+using BankRestApi.Application.DTOs.Authentication;
 using BankRestApi.Interfaces;
 using BankRestApi.Models.DTOs;
-using BankRestApi.Models.DTOs.Requests;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankRestApi.Controllers

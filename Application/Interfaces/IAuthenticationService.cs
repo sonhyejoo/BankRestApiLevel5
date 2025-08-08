@@ -1,7 +1,7 @@
-﻿using BankRestApi.Models.DTOs;
-using BankRestApi.Models.DTOs.Requests;
+﻿using Application.DTOs;
+using BankRestApi.Application.DTOs.Authentication;
 
-namespace BankRestApi.Interfaces;
+namespace Application.Interfaces;
 
 public interface IAuthenticationService
 {

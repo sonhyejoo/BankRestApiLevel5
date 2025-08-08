@@ -1,4 +1,4 @@
-﻿namespace BankRestApi.Models.DTOs;
+﻿namespace Application.DTOs.Accounts.Results;
 
 public record PagedAccountsDtoResult(
     IEnumerable<Account> Accounts,

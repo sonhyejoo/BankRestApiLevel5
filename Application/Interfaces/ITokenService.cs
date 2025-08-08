@@ -1,8 +1,7 @@
-﻿using System.Security.Claims;
-using BankRestApi.Models.DTOs;
+﻿using BankRestApi.Application.DTOs.Authentication;
 using User = BankRestApi.Models.User;
 
-namespace BankRestApi.Interfaces;
+namespace Application.Interfaces;
 
 public interface ITokenService
 {

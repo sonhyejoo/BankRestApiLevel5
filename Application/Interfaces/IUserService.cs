@@ -1,8 +1,8 @@
-﻿using BankRestApi.Models.DTOs;
-using BankRestApi.Models.DTOs.Requests;
-using User = BankRestApi.Models.DTOs.User;
+﻿using Application.DTOs;
+using BankRestApi.Application.DTOs.Authentication;
+using User = BankRestApi.Application.DTOs.Authentication.User;
 
-namespace BankRestApi.Interfaces;
+namespace Application.Interfaces;
 
 public interface IUserService
 {

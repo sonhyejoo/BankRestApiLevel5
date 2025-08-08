@@ -1,6 +1,6 @@
-﻿using BankRestApi.Models.DTOs;
+﻿using Application.DTOs.Accounts.Results;
 
-namespace BankRestApi.Interfaces;
+namespace Application.Interfaces;
 
 public interface IExchangeService
 {

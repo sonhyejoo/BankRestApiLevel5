@@ -1,6 +1,6 @@
 ﻿using System.Net;
-using BankRestApi.Models.DTOs;
-using Account = BankRestApi.Models.DTOs.Account;
+using Application.DTOs;
+using Account = Application.DTOs.Accounts.Account;
 
 namespace BankRestApi.ExtensionMethods;
 

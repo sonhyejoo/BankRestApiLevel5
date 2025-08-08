@@ -1,8 +1,6 @@
-﻿using BankRestApi.Models.DTOs;
-using BankRestApi.Models.DTOs.Requests;
-using Account = BankRestApi.Models.Account;
+﻿using Account = BankRestApi.Domain.Entities.Account;
 
-namespace BankRestApi.Interfaces;
+namespace Application.Interfaces;
 
 public interface IAccountRepository
 {

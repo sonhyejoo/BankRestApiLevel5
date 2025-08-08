@@ -1,7 +1,4 @@
-﻿using BankRestApi.Models.DTOs;
-using BankRestApi.Models.DTOs.Requests;
-
-namespace BankRestApi.Interfaces;
+﻿namespace Application.Interfaces;
 
 public interface IAccountService
 {

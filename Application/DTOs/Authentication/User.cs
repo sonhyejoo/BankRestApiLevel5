@@ -1,4 +1,4 @@
-﻿namespace BankRestApi.Models.DTOs;
+﻿namespace BankRestApi.Application.DTOs.Authentication;
 
 public record User(
     string Name,

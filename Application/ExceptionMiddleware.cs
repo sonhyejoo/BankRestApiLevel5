@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace BankRestApi;
+namespace BankRestApi.Application
 
 {
     private readonly RequestDelegate _next;
