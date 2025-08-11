@@ -1,10 +1,9 @@
-using BankRestApi.Application.DTOs;
 using BankRestApi.Application.DTOs.Requests;
 using BankRestApi.Application.DTOs.Results;
 using BankRestApi.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BankRestApi.Controllers
+namespace BankRestApi.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

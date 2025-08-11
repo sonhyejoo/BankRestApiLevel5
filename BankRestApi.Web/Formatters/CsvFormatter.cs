@@ -3,7 +3,7 @@ using BankRestApi.Application.DTOs;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
 
-namespace BankRestApi.Formatters;
+namespace BankRestApi.Web.Formatters;
 
 public class CsvOutputFormatter : TextOutputFormatter
 {

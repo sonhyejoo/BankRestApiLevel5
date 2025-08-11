@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace BankRestApi.Application;
+namespace BankRestApi.Web;
 
 public class ExceptionMiddleware
 {

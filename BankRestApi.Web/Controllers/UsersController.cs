@@ -3,7 +3,7 @@ using BankRestApi.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using User = BankRestApi.Domain.Entities.User;
 
-namespace BankRestApi.Controllers
+namespace BankRestApi.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

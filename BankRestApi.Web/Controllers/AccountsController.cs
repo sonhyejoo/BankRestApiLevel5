@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Account = BankRestApi.Application.DTOs.Account;
 
-namespace BankRestApi.Controllers;
+namespace BankRestApi.Web.Controllers;
 
 /// <summary>
 /// Controller for managing bank interactions.
