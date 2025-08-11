@@ -1,6 +1,8 @@
 ﻿using System.Net;
+using System.Net.Http.Json;
 using BankRestApi.Application.DTOs.Accounts.Results;
 using BankRestApi.Application.Interfaces;
+using Microsoft.Extensions.Configuration;
 
 namespace BankRestApi.Application.Services;
 

@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
+using BankRestApi.Application.DTOs.Accounts.Requests;
 using BankRestApi.Application.DTOs.Accounts.Results;
-using BankRestApi.Interfaces;
-using BankRestApi.Models.DTOs;
+using BankRestApi.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Account = BankRestApi.Application.DTOs.Accounts.Account;

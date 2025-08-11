@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using BankRestApi.Application.DTOs.Authentication;
 using BankRestApi.Application.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using User = BankRestApi.Domain.Entities.User;
 

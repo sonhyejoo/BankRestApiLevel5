@@ -1,9 +1,11 @@
 using System.Reflection;
-using BankRestApi;
+using BankRestApi.Application;
+using BankRestApi.Application.Interfaces;
+using BankRestApi.Application.Services;
+using BankRestApi.Domain.Entities;
 using BankRestApi.Formatters;
-using BankRestApi.Interfaces;
-using BankRestApi.Models;
-using BankRestApi.Repositories;
+using BankRestApi.Infrastructure;
+using BankRestApi.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -48,6 +50,7 @@ builder.Services.AddSwaggerGen(options =>
     var xmlPath = Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml");
     options.IncludeXmlComments(xmlPath);
 });
+
 builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseSqlServer(builder.Configuration["AccountsDatabaseConnection"]));
 

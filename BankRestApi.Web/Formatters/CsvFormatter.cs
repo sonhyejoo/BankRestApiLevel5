@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using BankRestApi.Models.DTOs;
+using BankRestApi.Application.DTOs.Accounts;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
 
