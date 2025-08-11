@@ -1,8 +1,9 @@
 ﻿using System.Net;
 using BankRestApi.Application.DTOs;
-using Account = BankRestApi.Application.DTOs.Accounts.Account;
+using BankRestApi.Application.DTOs.Results;
+using Account = BankRestApi.Application.DTOs.Account;
 using EntityAccount = BankRestApi.Domain.Entities.Account;
-using User = BankRestApi.Application.DTOs.Authentication.User;
+using User = BankRestApi.Application.DTOs.User;
 using EntityUser = BankRestApi.Domain.Entities.User;
 
 namespace BankRestApi.Application;

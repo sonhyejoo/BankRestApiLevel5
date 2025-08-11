@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace BankRestApi.Application.DTOs.Accounts.Results;
+namespace BankRestApi.Application.DTOs.Results;
 
 public record ExchangeRateResult(
     HttpStatusCode StatusCode,

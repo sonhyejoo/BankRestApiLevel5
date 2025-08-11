@@ -1,4 +1,4 @@
-using BankRestApi.Application.DTOs.Authentication;
+using BankRestApi.Application.DTOs.Requests;
 using BankRestApi.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using User = BankRestApi.Domain.Entities.User;

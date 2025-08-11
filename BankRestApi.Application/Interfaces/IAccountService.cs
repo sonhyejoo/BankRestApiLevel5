@@ -1,7 +1,6 @@
 ﻿using BankRestApi.Application.DTOs;
-using BankRestApi.Application.DTOs.Accounts;
-using BankRestApi.Application.DTOs.Accounts.Requests;
-using BankRestApi.Application.DTOs.Accounts.Results;
+using BankRestApi.Application.DTOs.Requests;
+using BankRestApi.Application.DTOs.Results;
 
 namespace BankRestApi.Application.Interfaces;
 

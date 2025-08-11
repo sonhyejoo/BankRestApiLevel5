@@ -1,5 +1,5 @@
 ﻿using BankRestApi.Application.Interfaces;
 
-namespace BankRestApi.Application.DTOs.Authentication;
+namespace BankRestApi.Application.DTOs.Requests;
 
 public record RefreshTokenRequest(string Name, string RefreshToken) : IUserRequest;

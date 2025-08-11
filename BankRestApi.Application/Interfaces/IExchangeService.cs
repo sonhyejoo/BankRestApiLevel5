@@ -1,4 +1,4 @@
-﻿using BankRestApi.Application.DTOs.Accounts.Results;
+﻿using BankRestApi.Application.DTOs.Results;
 
 namespace BankRestApi.Application.Interfaces;
 

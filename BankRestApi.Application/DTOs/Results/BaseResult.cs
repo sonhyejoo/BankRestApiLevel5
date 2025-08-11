@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace BankRestApi.Application.DTOs;
+namespace BankRestApi.Application.DTOs.Results;
 
 public class BaseResult<T>
 {

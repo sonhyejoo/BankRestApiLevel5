@@ -1,4 +1,4 @@
-﻿namespace BankRestApi.Application.DTOs.Accounts.Requests;
+﻿namespace BankRestApi.Application.DTOs.Requests;
 
 public record GetAccountsQueryParameters(
     string? Name,

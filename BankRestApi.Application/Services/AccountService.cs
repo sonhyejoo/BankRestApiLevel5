@@ -1,9 +1,9 @@
 ﻿using System.Net;
 using BankRestApi.Application.DTOs;
-using BankRestApi.Application.DTOs.Accounts.Requests;
-using BankRestApi.Application.DTOs.Accounts.Results;
+using BankRestApi.Application.DTOs.Requests;
+using BankRestApi.Application.DTOs.Results;
 using BankRestApi.Application.Interfaces;
-using Account = BankRestApi.Application.DTOs.Accounts.Account;
+using Account = BankRestApi.Application.DTOs.Account;
 
 namespace BankRestApi.Application.Services;
 

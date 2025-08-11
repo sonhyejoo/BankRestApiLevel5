@@ -1,5 +1,5 @@
-﻿using BankRestApi.Application.DTOs.Accounts.Requests;
-using BankRestApi.Application.DTOs.Accounts.Results;
+﻿using BankRestApi.Application.DTOs.Requests;
+using BankRestApi.Application.DTOs.Results;
 using BankRestApi.Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Account = BankRestApi.Domain.Entities.Account;
