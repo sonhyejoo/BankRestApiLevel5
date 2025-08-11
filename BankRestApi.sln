@@ -2,13 +2,13 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankRestApi", "BankRestApi.csproj", "{E12B9597-7911-49DD-B4A6-6181AB6C9161}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{33519479-168E-4846-B142-4674B845E16A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankRestApi.Domain", "BankRestApi.Domain\BankRestApi.Domain.csproj", "{33519479-168E-4846-B142-4674B845E16A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{4E44B194-D1C6-4769-ABC3-7E53EBE120CD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankRestApi.Infrastructure", "BankRestApi.Infrastructure\BankRestApi.Infrastructure.csproj", "{4E44B194-D1C6-4769-ABC3-7E53EBE120CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{5FDA1D1D-EDAD-4607-94C6-42D89A63C194}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankRestApi.Web", "BankRestApi.Web\BankRestApi.Web.csproj", "{C267DA89-5E93-4469-9F31-B20214F151BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "Presentation\Presentation.csproj", "{C267DA89-5E93-4469-9F31-B20214F151BC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankRestApi.Application", "BankRestApi.Application\BankRestApi.Application.csproj", "{35098C45-0C56-4B0A-A0B1-9193AC74A95F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,13 +28,13 @@ Global
 		{4E44B194-D1C6-4769-ABC3-7E53EBE120CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E44B194-D1C6-4769-ABC3-7E53EBE120CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E44B194-D1C6-4769-ABC3-7E53EBE120CD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5FDA1D1D-EDAD-4607-94C6-42D89A63C194}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5FDA1D1D-EDAD-4607-94C6-42D89A63C194}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5FDA1D1D-EDAD-4607-94C6-42D89A63C194}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5FDA1D1D-EDAD-4607-94C6-42D89A63C194}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C267DA89-5E93-4469-9F31-B20214F151BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C267DA89-5E93-4469-9F31-B20214F151BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C267DA89-5E93-4469-9F31-B20214F151BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C267DA89-5E93-4469-9F31-B20214F151BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35098C45-0C56-4B0A-A0B1-9193AC74A95F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35098C45-0C56-4B0A-A0B1-9193AC74A95F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35098C45-0C56-4B0A-A0B1-9193AC74A95F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35098C45-0C56-4B0A-A0B1-9193AC74A95F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
