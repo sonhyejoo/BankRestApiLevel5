@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BankRestApi.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
-namespace BankRestApi.Models;
+namespace BankRestApi.Infrastructure;
 
 public class AppDbContext : DbContext
 {

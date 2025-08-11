@@ -1,11 +1,10 @@
-﻿using BankRestApi.Application.DTOs.Accounts.Results;
-using BankRestApi.Interfaces;
-using BankRestApi.Models;
-using BankRestApi.Models.DTOs;
+﻿using BankRestApi.Application.DTOs.Accounts.Requests;
+using BankRestApi.Application.DTOs.Accounts.Results;
+using BankRestApi.Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Account = BankRestApi.Models.Account;
+using Account = BankRestApi.Domain.Entities.Account;
 
-namespace BankRestApi.Repositories;
+namespace BankRestApi.Infrastructure.Repositories;
 
 public class AccountRepository : IAccountRepository
 {

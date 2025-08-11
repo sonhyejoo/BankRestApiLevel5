@@ -1,8 +1,8 @@
-﻿using BankRestApi.Interfaces;
-using BankRestApi.Models;
+﻿using BankRestApi.Application.Interfaces;
+using BankRestApi.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace BankRestApi.Repositories;
+namespace BankRestApi.Infrastructure.Repositories;
 
 public class UserRepository : IUserRepository
 {
