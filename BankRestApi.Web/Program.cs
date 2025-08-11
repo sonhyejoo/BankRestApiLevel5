@@ -1,10 +1,11 @@
 using System.Reflection;
-using BankRestApi.Application;
 using BankRestApi.Application.Interfaces;
 using BankRestApi.Application.Services;
 using BankRestApi.Domain.Entities;
 using BankRestApi.Infrastructure;
+using BankRestApi.Infrastructure.Clients;
 using BankRestApi.Infrastructure.Repositories;
+using BankRestApi.Infrastructure.Services;
 using BankRestApi.Web;
 using BankRestApi.Web.Formatters;
 using Microsoft.AspNetCore.Identity;

@@ -1,4 +1,4 @@
-﻿namespace BankRestApi.Application.Interfaces;
+﻿namespace BankRestApi.Application.DTOs.Interfaces;
 
 public interface IUserRequest
 {

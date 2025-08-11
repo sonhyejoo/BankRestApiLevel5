@@ -2,7 +2,7 @@
 using BankRestApi.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 
-namespace BankRestApi.Application.Services;
+namespace BankRestApi.Infrastructure.Services;
 
 public class PasswordHelper : IPasswordHelper
 {

@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using BankRestApi.Application.DTOs;
 using BankRestApi.Application.DTOs.Requests;
 using BankRestApi.Application.DTOs.Results;
 using BankRestApi.Application.Interfaces;
