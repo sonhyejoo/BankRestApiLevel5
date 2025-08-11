@@ -64,6 +64,7 @@
       <Content Update="BankRestApi.Web\appsettings.Development.json">
         <Link>Presentation\appsettings.Development.json</Link>
       </Content>
+      <Content Remove="Old Diagrams\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -241,6 +242,7 @@
       <Compile Update="BankRestApi.Web\Program.cs">
         <Link>Presentation\Program.cs</Link>
       </Compile>
+      <Compile Remove="Old Diagrams\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -253,6 +255,11 @@
       <None Update="BankRestApi.Web\Presentation.http">
         <Link>Presentation\Presentation.http</Link>
       </None>
+      <None Remove="Old Diagrams\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Old Diagrams\**" />
     </ItemGroup>
 
 </Project>
