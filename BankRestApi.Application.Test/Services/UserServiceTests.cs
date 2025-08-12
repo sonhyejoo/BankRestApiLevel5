@@ -21,7 +21,7 @@ public class UserServiceTests
     [Fact]
     public async Task CreateUserAsync_ValidUser_CreatesUser()
     {
-        var userService = new UserService(_userRepository, _passwordHelper);
+        var userService = CreateDefaultUserService();
         var request = new CreateUserRequest("name", "password");
 
         var result = await userService.CreateUserAsync(request);
@@ -32,7 +32,7 @@ public class UserServiceTests
     [Fact]
     public async Task CreateUserAsync_EmptyName_ReturnsBadRequest()
     {
-        var userService = new UserService(_userRepository, _passwordHelper);
+        var userService = CreateDefaultUserService();
         var request = new CreateUserRequest("", "password");
 
         var result = await userService.CreateUserAsync(request);
@@ -43,11 +43,16 @@ public class UserServiceTests
     [Fact]
     public async Task CreateUserAsync_EmptyPassword_ReturnsBadRequest()
     {
-        var userService = new UserService(_userRepository, _passwordHelper);
+        var userService = CreateDefaultUserService();
         var request = new CreateUserRequest("name", "");
 
         var result = await userService.CreateUserAsync(request);
 
         Assert.Equal(result.StatusCode, HttpStatusCode.BadRequest);
+    }
+
+    private UserService CreateDefaultUserService()
+    {
+        return new UserService(_userRepository, _passwordHelper);
     }
 }
