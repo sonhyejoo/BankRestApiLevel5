@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using BankRestApi.Application.DTOs.Requests;
+using BankRestApi.Application.DTOs.Results;
 using BankRestApi.Application.Interfaces;
 using BankRestApi.Application.Services;
 using BankRestApi.Infrastructure.Fake;
@@ -37,7 +38,9 @@ public class UserServiceTests
 
         var result = await userService.CreateUserAsync(request);
 
-        Assert.Equal(result.StatusCode, HttpStatusCode.BadRequest);
+        Assert.Equivalent(
+            result,
+            new BaseResult<User>(HttpStatusCode.BadRequest, "Name or password is invalid."));
     }
 
     [Fact]
@@ -48,11 +51,10 @@ public class UserServiceTests
 
         var result = await userService.CreateUserAsync(request);
 
-        Assert.Equal(result.StatusCode, HttpStatusCode.BadRequest);
+        Assert.Equivalent(
+            result,
+            new BaseResult<User>(HttpStatusCode.BadRequest, "Name or password is invalid."));
     }
 
-    private UserService CreateDefaultUserService()
-    {
-        return new UserService(_userRepository, _passwordHelper);
-    }
+    private UserService CreateDefaultUserService() => new(_userRepository, _passwordHelper);
 }
