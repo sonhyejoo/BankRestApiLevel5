@@ -22,6 +22,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\BankRestApi.Application\BankRestApi.Application.csproj" />
+      <ProjectReference Include="..\BankRestApi.Infrastructure.Fake\BankRestApi.Infrastructure.Fake.csproj" />
     </ItemGroup>
 
 </Project>

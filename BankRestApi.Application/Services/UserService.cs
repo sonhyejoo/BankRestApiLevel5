@@ -20,7 +20,9 @@ public class UserService: IUserService
     public async Task<BaseResult<User>> CreateUserAsync(CreateUserRequest request)
     {
         var existingUser = await _repository.Get(request.Name);
-        if (existingUser is not null || string.IsNullOrEmpty(request.Password))
+        if (existingUser is not null 
+            || string.IsNullOrEmpty(request.Name)
+            || string.IsNullOrEmpty(request.Password))
         {
             return new BaseResult<User>(HttpStatusCode.BadRequest, "Name or password is invalid.");
         }
