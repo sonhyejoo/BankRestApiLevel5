@@ -1,11 +1,11 @@
 ﻿using System.Net;
 using BankRestApi.Application.DTOs.Requests;
 using BankRestApi.Application.Interfaces;
-using BankRestApi.Domain.Entities;
+using BankRestApi.Application.Services;
 using BankRestApi.Infrastructure.Fake;
 using User = BankRestApi.Application.DTOs.User;
 
-namespace BankRestApi.Application.Test.UserService;
+namespace BankRestApi.Application.Test.Services;
 
 public class UserServiceTests
 {
@@ -21,7 +21,7 @@ public class UserServiceTests
     [Fact]
     public async Task CreateUserAsync_ValidUser_CreatesUser()
     {
-        var userService = new Services.UserService(_userRepository, _passwordHelper);
+        var userService = new UserService(_userRepository, _passwordHelper);
         var request = new CreateUserRequest("name", "password");
 
         var result = await userService.CreateUserAsync(request);
@@ -32,7 +32,7 @@ public class UserServiceTests
     [Fact]
     public async Task CreateUserAsync_EmptyName_ReturnsBadRequest()
     {
-        var userService = new Services.UserService(_userRepository, _passwordHelper);
+        var userService = new UserService(_userRepository, _passwordHelper);
         var request = new CreateUserRequest("", "password");
 
         var result = await userService.CreateUserAsync(request);
@@ -43,7 +43,7 @@ public class UserServiceTests
     [Fact]
     public async Task CreateUserAsync_EmptyPassword_ReturnsBadRequest()
     {
-        var userService = new Services.UserService(_userRepository, _passwordHelper);
+        var userService = new UserService(_userRepository, _passwordHelper);
         var request = new CreateUserRequest("name", "");
 
         var result = await userService.CreateUserAsync(request);
