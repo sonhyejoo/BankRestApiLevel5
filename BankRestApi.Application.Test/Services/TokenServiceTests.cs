@@ -6,14 +6,14 @@ using BankRestApi.Infrastructure.Fake;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-namespace BankRestApi.Application.Test.Services.TokenServiceTests;
+namespace BankRestApi.Application.Test.Services;
 
-public class TokenServiceTest
+public class TokenServiceTests
 {
     private readonly IConfiguration _config;
     private readonly IUserRepository _userRepository;
 
-    public TokenServiceTest()
+    public TokenServiceTests()
     {
         var inMemorySettings = new Dictionary<string, string> {
             {"Authentication:SecretForKey", "whg2k0wRcd9SswTahmgr45jydkM7vJNXWcElS6LsFMQ="},
