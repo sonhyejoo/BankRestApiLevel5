@@ -15,11 +15,12 @@ public class FakeTokenService : ITokenService
     }
     public async Task<Token> BuildToken(User user)
     {
-        var randomNumber = new byte[32];
-        using var rng = RandomNumberGenerator.Create();
-        rng.GetBytes(randomNumber);
-        
-        var refreshToken = Convert.ToBase64String(randomNumber);
+        // var randomNumber = new byte[32];
+        // using var rng = RandomNumberGenerator.Create();
+        // rng.GetBytes(randomNumber);
+        //
+        // var refreshToken = Convert.ToBase64String(randomNumber);
+        var refreshToken = "refresh";
         
         user.RefreshToken = refreshToken;
         user.RefreshTokenExpiry = DateTime.UtcNow.AddHours(24);
