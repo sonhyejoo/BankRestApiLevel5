@@ -142,27 +142,59 @@ public class AccountServiceTests
 
     
     [Fact]
-    public void Withdraw_ValidRequest_UpdatedAccount()
+    public async Task Withdraw_ValidRequest_UpdatedAccount()
     {
+        var accountService = CreateDefaultAccountService();
+        var addedAccount = await _accountRepository.Add("name");
+        await _accountRepository.Update(addedAccount, 2);
+        var request = new Transaction(1, addedAccount.Id);
+
+        var result = await accountService.Withdraw(request);
         
+        Assert.Equivalent(addedAccount.CreateResult(), result);
+        Assert.Equal(1, result.Result.Balance);
     }
 
     [Fact]
-    public void Withdraw_NonpositiveAmount_BadRequest()
+    public async Task Withdraw_NonpositiveAmount_BadRequest()
     {
+        var accountService = CreateDefaultAccountService();
+        var addedAccount = await _accountRepository.Add("name");
+        var balanceShouldBeOne = await _accountRepository.Update(addedAccount, 1);
+        var request = new Transaction(0, addedAccount.Id);
+
+        var result = await accountService.Withdraw(request);
         
+        Assert.Equivalent(BaseResult<Account>.NonpositiveAmountError(), result);
+        Assert.Equal(1, balanceShouldBeOne.Balance);
     }
 
     [Fact]
-    public void Withdraw_InvalidId_NotFound()
+    public async Task Withdraw_InvalidId_NotFound()
     {
+        var accountService = CreateDefaultAccountService();
+        var addedAccount = await _accountRepository.Add("name");
+        var balanceShouldBeTwo = await _accountRepository.Update(addedAccount, 2);
+        var request = new Transaction(1, Guid.NewGuid());
+
+        var result = await accountService.Withdraw(request);
         
+        Assert.Equivalent(BaseResult<Account>.NotFoundError(), result);
+        Assert.Equal(2, balanceShouldBeTwo.Balance);
     }
 
     [Fact]
-    public void Withdraw_AmountGreaterThanBalance_InsufficientFunds()
+    public async Task Withdraw_AmountGreaterThanBalance_InsufficientFunds()
     {
+        var accountService = CreateDefaultAccountService();
+        var addedAccount = await _accountRepository.Add("name");
+        var balanceShouldBeOne = await _accountRepository.Update(addedAccount, 1);
+        var request = new Transaction(3, addedAccount.Id);
+
+        var result = await accountService.Withdraw(request);
         
+        Assert.Equivalent(BaseResult<Account>.InsufficientFundsError(), result);
+        Assert.Equal(1, balanceShouldBeOne.Balance);
     }
 
     
