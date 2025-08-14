@@ -46,15 +46,25 @@ public class FakeExchangeService : IExchangeService
     public Task<ExchangeRateResult> GetExchangeRates(string currencies)
     {
         var splitCurrencies = currencies.Split(",");
-        if (splitCurrencies.Any(currency => _validCurrencies.Contains(currency)))
+        if (splitCurrencies.Any(currency 
+                => !_validCurrencies.Contains(currency) 
+                   || string.IsNullOrWhiteSpace(currency)))
         {
             return Task.FromResult(new ExchangeRateResult(HttpStatusCode.UnprocessableEntity, "Invalid currencies inputted."));
         }
 
-        var result = splitCurrencies.ToDictionary(
-            currency => currency,
-            _ => (decimal) 0);
+        Dictionary<string, decimal> result;
+        if (splitCurrencies.Length > 0)
+        {
+            result = splitCurrencies.ToDictionary(
+                currency => currency,
+                _ => (decimal) 0);
+        }
+        else
+        {
+            result = _validCurrencies.ToDictionary(currency => currency, _ => (decimal)0);
+        }
 
-        return Task.FromResult(new ExchangeRateResult(HttpStatusCode.OK, currencies));
+        return Task.FromResult(new ExchangeRateResult(HttpStatusCode.OK, result));
     }
 }
