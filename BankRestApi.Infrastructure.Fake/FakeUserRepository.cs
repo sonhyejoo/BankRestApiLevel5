@@ -6,7 +6,6 @@ namespace BankRestApi.Infrastructure.Fake;
 public class FakeUserRepository : IUserRepository
 {
     private static readonly User? NullUser = null;
-    
     private readonly Dictionary<string, User> _users;
 
     public FakeUserRepository()

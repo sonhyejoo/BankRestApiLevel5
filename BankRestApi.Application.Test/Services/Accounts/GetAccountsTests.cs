@@ -10,7 +10,6 @@ namespace BankRestApi.Application.Test.Services.Accounts;
 public class GetAccountsTests
 {
     private IAccountRepository _accountRepository;
-    
     private IExchangeService _exchangeService;
 
     public GetAccountsTests()
@@ -53,5 +52,5 @@ public class GetAccountsTests
             result);
     }
     
-    private AccountService CreateDefaultAccountService() => new AccountService(_accountRepository, _exchangeService);
+    private AccountService CreateDefaultAccountService() => new(_accountRepository, _exchangeService);
 }

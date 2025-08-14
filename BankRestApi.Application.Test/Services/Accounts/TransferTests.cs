@@ -10,7 +10,6 @@ namespace BankRestApi.Application.Test.Services.Accounts;
 public class TransferTests
 {
     private IAccountRepository _accountRepository;
-    
     private IExchangeService _exchangeService;
 
     public TransferTests()
@@ -132,5 +131,5 @@ public class TransferTests
         Assert.Equal(0, recipientBalanceShouldBeZero.Balance);
     }
 
-    private AccountService CreateDefaultAccountService() => new AccountService(_accountRepository, _exchangeService);
+    private AccountService CreateDefaultAccountService() => new(_accountRepository, _exchangeService);
 }

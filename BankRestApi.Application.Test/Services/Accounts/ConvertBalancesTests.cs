@@ -10,7 +10,6 @@ namespace BankRestApi.Application.Test.Services.Accounts;
 public class ConvertBalancesTests
 {
     private IAccountRepository _accountRepository;
-    
     private IExchangeService _exchangeService;
 
     public ConvertBalancesTests()
@@ -66,9 +65,7 @@ public class ConvertBalancesTests
     public async Task ConvertBalances_InvalidId_NotFound()
     {
         var accountService = CreateDefaultAccountService();
-        var addedAccount = await _accountRepository.Add("name");
         var request = new ConvertCommand(Guid.NewGuid(), ["EUR", "CAD"]);
-        var convertedBalances = await _exchangeService.GetExchangeRates("EUR,CAD");
 
         var result = await accountService.ConvertBalances(request);
         
@@ -80,10 +77,10 @@ public class ConvertBalancesTests
     [Fact]
     public async Task ConvertBalances_InvalidCurrencies_BadRequest()
     {
-        var accountService = CreateDefaultAccountService();
+        var systemUnderTest = CreateDefaultAccountService();
         var addedAccount = await _accountRepository.Add("name");
         var request = new ConvertCommand(addedAccount.Id, ["EUR", "Asdf"]);
-        var result = await accountService.ConvertBalances(request);
+        var result = await systemUnderTest.ConvertBalances(request);
         
         Assert.Equivalent(
             new BaseResult<ConvertedBalances>(
@@ -92,5 +89,5 @@ public class ConvertBalancesTests
             result);
     }
 
-    private AccountService CreateDefaultAccountService() => new AccountService(_accountRepository, _exchangeService);
+    private AccountService CreateDefaultAccountService() => new(_accountRepository, _exchangeService);
 }

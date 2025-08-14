@@ -10,7 +10,6 @@ namespace BankRestApi.Application.Test.Services.Accounts;
 public class WithdrawTests
 {
     private IAccountRepository _accountRepository;
-    
     private IExchangeService _exchangeService;
 
     public WithdrawTests()
@@ -75,5 +74,5 @@ public class WithdrawTests
         Assert.Equal(1, balanceShouldBeOne.Balance);
     }
 
-    private AccountService CreateDefaultAccountService() => new AccountService(_accountRepository, _exchangeService);
+    private AccountService CreateDefaultAccountService() => new(_accountRepository, _exchangeService);
 }

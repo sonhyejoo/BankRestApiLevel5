@@ -6,7 +6,7 @@ namespace BankRestApi.Infrastructure.Fake;
 
 public class FakeExchangeService : IExchangeService
 {
-    private List<string> _validCurrencies =
+    private readonly List<string> _validCurrencies =
     [
         "EUR",
         "USD",

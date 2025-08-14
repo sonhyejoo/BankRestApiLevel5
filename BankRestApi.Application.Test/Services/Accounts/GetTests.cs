@@ -10,7 +10,6 @@ namespace BankRestApi.Application.Test.Services.Accounts;
 public class GetTests
 {
     private IAccountRepository _accountRepository;
-    
     private IExchangeService _exchangeService;
 
     public GetTests()
@@ -42,5 +41,5 @@ public class GetTests
         Assert.Equivalent(BaseResult<Account>.NotFoundError(), result);
     }
     
-    private AccountService CreateDefaultAccountService() => new AccountService(_accountRepository, _exchangeService);
+    private AccountService CreateDefaultAccountService() => new(_accountRepository, _exchangeService);
 }

@@ -11,7 +11,6 @@ namespace BankRestApi.Application.Test.Services.Accounts;
 public class CreateTests
 {
     private IAccountRepository _accountRepository;
-    
     private IExchangeService _exchangeService;
 
     public CreateTests()
@@ -45,5 +44,5 @@ public class CreateTests
         Assert.Equivalent(BaseResult<Account>.EmptyNameError(), result);
     }
     
-    private AccountService CreateDefaultAccountService() => new AccountService(_accountRepository, _exchangeService);
+    private AccountService CreateDefaultAccountService() => new(_accountRepository, _exchangeService);
 }

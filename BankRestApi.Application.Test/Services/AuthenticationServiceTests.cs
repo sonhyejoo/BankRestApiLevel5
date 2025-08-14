@@ -11,9 +11,7 @@ namespace BankRestApi.Application.Test.Services;
 public class AuthenticationServiceTests
 {
     private readonly FakePasswordHelper _passwordHelper;
-
     private readonly IUserRepository _userRepository;
-    
     private readonly ITokenService _tokenService;
     
     public AuthenticationServiceTests()

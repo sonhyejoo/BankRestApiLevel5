@@ -8,7 +8,6 @@ namespace BankRestApi.Infrastructure.Fake;
 public class FakeAccountRepository : IAccountRepository
 {
     private static readonly Account? NullAccount = null;
-
     private readonly Dictionary<Guid, Account> _accounts;
 
     public FakeAccountRepository()
@@ -46,7 +45,6 @@ public class FakeAccountRepository : IAccountRepository
             : queryBuilder.ToList();
 
         return Task.FromResult<(IEnumerable<Account>, PaginationMetadata)>((result, pageData));
-
     }
 
     public Task<Account?> GetById(Guid? id)
