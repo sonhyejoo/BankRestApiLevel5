@@ -82,32 +82,62 @@ public class AccountServiceTests
     [Fact]
     public async Task Get_ValidId_Account()
     {
+        var accountService = CreateDefaultAccountService();
+        var addedAccount = await _accountRepository.Add("name");
+        var request = new GetAccount(addedAccount.Id);
+
+        var result = await accountService.Get(request);
         
+        Assert.Equivalent(addedAccount.CreateResult(), result);
     }
 
     [Fact]
-    public void Get_InvalidId_NotFound()
+    public async Task Get_InvalidId_NotFound()
     {
+        var accountService = CreateDefaultAccountService();
+        var request = new GetAccount(Guid.NewGuid());
+
+        var result = await accountService.Get(request);
         
+        Assert.Equivalent(BaseResult<Account>.NotFoundError(), result);
     }
 
     
     [Fact]
-    public void Deposit_ValidRequest_UpdatedAccount()
+    public async Task Deposit_ValidRequest_UpdatedAccount()
     {
+        var accountService = CreateDefaultAccountService();
+        var addedAccount = await _accountRepository.Add("name");
+        var request = new Transaction(1, addedAccount.Id);
+
+        var result = await accountService.Deposit(request);
         
+        Assert.Equivalent(addedAccount.CreateResult(), result);
+        Assert.Equal(1, result.Result.Balance);
     }
 
     [Fact]
-    public void Deposit_NonpositiveAmount_BadRequest()
+    public async Task Deposit_NonpositiveAmount_BadRequest()
     {
+        var accountService = CreateDefaultAccountService();
+        var addedAccount = await _accountRepository.Add("name");
+        var request = new Transaction(0, addedAccount.Id);
+
+        var result = await accountService.Deposit(request);
         
+        Assert.Equivalent(BaseResult<Account>.NonpositiveAmountError(), result);
     }
 
     [Fact]
-    public void Deposit_InvalidId_NotFound()
+    public async Task Deposit_InvalidId_NotFound()
     {
+        var accountService = CreateDefaultAccountService();
+        var addedAccount = await _accountRepository.Add("name");
+        var request = new Transaction(0, addedAccount.Id);
+
+        var result = await accountService.Deposit(request);
         
+        Assert.Equivalent(BaseResult<Account>.NonpositiveAmountError(), result);
     }
 
     
