@@ -27,7 +27,7 @@ public class UserServiceTests
 
         var result = await userService.CreateUserAsync(request);
 
-        Assert.Equivalent(result.Result, new User(request.Name, request.Password));
+        Assert.Equivalent(new User(request.Name, request.Password), result.Result);
     }
     
     [Fact]
@@ -39,8 +39,8 @@ public class UserServiceTests
         var result = await userService.CreateUserAsync(request);
 
         Assert.Equivalent(
-            result,
-            new BaseResult<User>(HttpStatusCode.BadRequest, "Name or password is invalid."));
+            new BaseResult<User>(HttpStatusCode.BadRequest, "Name or password is invalid."),
+            result);
     }
 
     [Fact]
@@ -52,8 +52,8 @@ public class UserServiceTests
         var result = await userService.CreateUserAsync(request);
 
         Assert.Equivalent(
-            result,
-            new BaseResult<User>(HttpStatusCode.BadRequest, "Name or password is invalid."));
+            new BaseResult<User>(HttpStatusCode.BadRequest, "Name or password is invalid."),
+            result);
     }
 
     private UserService CreateDefaultUserService() => new(_userRepository, _passwordHelper);

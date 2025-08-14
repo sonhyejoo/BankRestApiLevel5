@@ -33,8 +33,8 @@ public class AuthenticationServiceTests
         var result = await authenticationService.CreateAccessTokenAsync(request);
         
         Assert.Equivalent(
-            result, 
-            new BaseResult<Token>(HttpStatusCode.OK, new Token("accessToken", "refresh")));
+            new BaseResult<Token>(HttpStatusCode.OK, new Token("accessToken", "refresh")),
+            result);
     }
     
     [Fact]
@@ -47,8 +47,8 @@ public class AuthenticationServiceTests
         var result = await authenticationService.CreateAccessTokenAsync(request);
         
         Assert.Equivalent(
-            result, 
-            new BaseResult<Token>(HttpStatusCode.NotFound, "Invalid name or password."));
+            new BaseResult<Token>(HttpStatusCode.NotFound, "Invalid name or password."),
+            result);
     }
     
     [Fact]
@@ -61,8 +61,8 @@ public class AuthenticationServiceTests
         var result = await authenticationService.CreateAccessTokenAsync(request);
         
         Assert.Equivalent(
-            result, 
-            new BaseResult<Token>(HttpStatusCode.NotFound, "Invalid name or password."));
+            new BaseResult<Token>(HttpStatusCode.NotFound, "Invalid name or password."),
+            result);
     }
     
     
@@ -77,8 +77,8 @@ public class AuthenticationServiceTests
         var result = await authenticationService.RefreshTokenAsync(request);
         
         Assert.Equivalent(
-            result, 
-            new BaseResult<Token>(HttpStatusCode.OK, new Token("accessToken", "refresh")));
+            new BaseResult<Token>(HttpStatusCode.OK, new Token("accessToken", "refresh")),
+            result);
     }
     
     [Fact]
@@ -92,8 +92,8 @@ public class AuthenticationServiceTests
         var result = await authenticationService.RefreshTokenAsync(request);
         
         Assert.Equivalent(
-            result, 
-            new BaseResult<Token>(HttpStatusCode.NotFound, "Please log in again."));
+            new BaseResult<Token>(HttpStatusCode.NotFound, "Please log in again."),
+            result);
     }
     
     [Fact]
@@ -107,8 +107,8 @@ public class AuthenticationServiceTests
         var result = await authenticationService.RefreshTokenAsync(request);
         
         Assert.Equivalent(
-            result, 
-            new BaseResult<Token>(HttpStatusCode.NotFound, "Please log in again."));
+            new BaseResult<Token>(HttpStatusCode.NotFound, "Please log in again."),
+            result);
     }
 
     
@@ -123,8 +123,8 @@ public class AuthenticationServiceTests
         var result = await authenticationService.RevokeRefreshToken(request);
         
         Assert.Equivalent(
-            result, 
-            new BaseResult<Token>(HttpStatusCode.NoContent, ""));
+            new BaseResult<Token>(HttpStatusCode.NoContent, ""),
+            result);
     }
 
     
@@ -139,8 +139,8 @@ public class AuthenticationServiceTests
         var result = await authenticationService.RevokeRefreshToken(request);
         
         Assert.Equivalent(
-            result, 
-            new BaseResult<Token>(HttpStatusCode.NotFound, "Invalid name or refresh token"));
+            new BaseResult<Token>(HttpStatusCode.NotFound, "Invalid name or refresh token"),
+            result);
     }
     
     [Fact]
@@ -154,8 +154,8 @@ public class AuthenticationServiceTests
         var result = await authenticationService.RevokeRefreshToken(request);
         
         Assert.Equivalent(
-            result, 
-            new BaseResult<Token>(HttpStatusCode.NotFound, "Invalid name or refresh token"));
+            new BaseResult<Token>(HttpStatusCode.NotFound, "Invalid name or refresh token"),
+            result);
     }
 
 
