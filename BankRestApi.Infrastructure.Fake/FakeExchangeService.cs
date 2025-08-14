@@ -46,7 +46,8 @@ public class FakeExchangeService : IExchangeService
     public Task<ExchangeRateResult> GetExchangeRates(string currencies)
     {
         var splitCurrencies = currencies.Split(",");
-        if (splitCurrencies.Any(currency 
+        if (currencies is not ""
+            && splitCurrencies.Any(currency 
                 => !_validCurrencies.Contains(currency) 
                    || string.IsNullOrWhiteSpace(currency)))
         {
